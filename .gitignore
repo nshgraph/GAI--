@@ -11,3 +11,6 @@
 *.lai
 *.la
 *.a
+
+# xCode Projects
+*.xcodeproj
