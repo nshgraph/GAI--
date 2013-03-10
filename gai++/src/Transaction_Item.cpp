@@ -10,8 +10,10 @@ namespace GAI
         // sanity check input values
         if( aProductCode == "" )
             return NULL;
+		
         if( aProductName == "" )
             return NULL;
+		
         // create and return item
         TransactionItem* new_item = new TransactionItem();
         new_item->_productCode = aProductCode;
