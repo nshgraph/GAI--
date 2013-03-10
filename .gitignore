@@ -12,5 +12,8 @@
 *.la
 *.a
 
+# Binary Directory
+/bin
+
 # xCode Projects
 *.xcodeproj
