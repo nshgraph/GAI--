@@ -8,12 +8,15 @@
 namespace GAI
 {
     
-    Transaction* Transaction::createTransaction(std::string aTransactionId, std::string aAffiliation) {
+    Transaction* Transaction::createTransaction(std::string aTransactionId, std::string aAffiliation)
+	{
         if( aTransactionId == "" )
             return NULL;
+		
         Transaction* new_transaction = new Transaction();
         new_transaction->_transactionId = aTransactionId;
         new_transaction->_affiliation = aAffiliation;
+		
         return new_transaction;
     }
     
@@ -21,6 +24,7 @@ namespace GAI
     {
         
     }
+	
     Transaction::~Transaction()
     {
         // we need to empty the list of transaction items
@@ -29,16 +33,19 @@ namespace GAI
         _items.clear();
     }
     
-    void Transaction::addItem(TransactionItem* aItem) {
+    void Transaction::addItem(TransactionItem* aItem)
+	{
         if( aItem != NULL)
             _items.push_back(aItem);
     }
     
-    std::string Transaction::getTransactionId() {
+    std::string Transaction::getTransactionId()
+	{
         return this->_transactionId;
     }
     
-    std::string Transaction::getAffiliation() {
+    std::string Transaction::getAffiliation()
+	{
         return this->_affiliation;
     }
     
