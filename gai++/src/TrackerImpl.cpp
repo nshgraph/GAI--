@@ -12,7 +12,7 @@
 
 namespace GAI { 
 
-TrackerImpl::TrackerImpl(Dispatcher* aDispatcher, std::string& aTrackingID, std::string& aAppName, std::string& aAppVersion) {
+TrackerImpl::TrackerImpl(Dispatcher* aDispatcher, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion) {
 }
 
 bool TrackerImpl::sendView(std::string& aScreen) {
