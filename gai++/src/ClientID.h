@@ -1,4 +1,3 @@
-#include <exception>
 #include <string>
 
 
@@ -7,17 +6,9 @@
 
 namespace GAI
 {
-	class ClientID;
-}
-
-namespace GAI
-{
 	class ClientID
 	{
-
-		static std::string generateClientID() {
-			throw "Not yet implemented";
-		}
+		static std::string generateClientID();
 	};
 }
 

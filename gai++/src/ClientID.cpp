@@ -4,3 +4,12 @@
 
 #include "ClientID.h"
 
+namespace GAI
+{
+
+std::string ClientID::generateClientID() {
+    
+    return "";
+}
+    
+}
