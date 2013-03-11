@@ -31,6 +31,7 @@ namespace GAI
         
         // Functions for managing the datastore state
         bool hasChanges() const;
+        bool isOpen() const;
         
         bool deleteAllEntities();
         int entityCount();

@@ -47,6 +47,10 @@ namespace GAI
             sqlite3_close(mDB);
         mDB = NULL;
     }
+    bool DataStoreSqlite::isOpen() const
+    {
+        return (mDB != NULL);
+    }
     
     // Functions for managing the datastore state
     bool DataStoreSqlite::hasChanges() const
