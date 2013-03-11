@@ -15,7 +15,8 @@ namespace GAI
     
     DataStoreSqlite::DataStoreSqlite( const std::string& path ) :
     mPath(path),
-    mbHasChanges(false)
+    mbHasChanges(false),
+    mDB(NULL)
     {
         
     }
@@ -27,6 +28,11 @@ namespace GAI
     bool DataStoreSqlite::open()
     {
         int return_code = sqlite3_open(mPath.c_str(), &mDB);
+        if( return_code )
+        {
+            close();
+            return false;
+        }
         return true;
     }
     bool DataStoreSqlite::save()
@@ -37,7 +43,9 @@ namespace GAI
     }
     void DataStoreSqlite::close()
     {
-        sqlite3_close(mDB);
+        if( mDB )
+            sqlite3_close(mDB);
+        mDB = NULL;
     }
     
     // Functions for managing the datastore state

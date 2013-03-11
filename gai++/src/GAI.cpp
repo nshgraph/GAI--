@@ -42,7 +42,7 @@ void GAI::dispatch() {
 }
 
 void GAI::removeTracker(const std::string& aTrackerId) {
-    TrackerMap::const_iterator it = _trackers.find( aTrackerId );
+    TrackerMap::iterator it = _trackers.find( aTrackerId );
     if( it != _trackers.end() )
         _trackers.erase(it);
 }

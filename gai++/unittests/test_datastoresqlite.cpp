@@ -12,5 +12,8 @@
 
 TEST (DataStoreSqlLite, properties)
 {
-    
+    std::string test_db = "test.db";
+
+    // delete existing test db
+    GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
 }
