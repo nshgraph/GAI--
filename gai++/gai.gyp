@@ -4,14 +4,15 @@
       #todo compiler setting 'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
 
       'SYMROOT': '<(DEPTH)/bin',
-      'SDKROOT': 'macosx10.6',
+      'SDKROOT': 'macosx10.7',
       'MACOSX_DEPLOYMENT_TARGET': '10.6',
-      'ARCHS': '$(ARCHS_STANDARD_32_BIT)',
+      'ARCHS': '$(ARCHS_STANDARD_32_64_BIT)',
 
       'USE_HEADERMAP': 'NO',
 
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES',
       'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
+      'FRAMEWORK_SEARCH_PATHS':'/Library/Frameworks/'
       #todo warning settings
     },
     #todo win default settings
@@ -28,7 +29,8 @@
       'sources': [
         'src/ClientID.cpp',
         'src/ClientID.h',
-        'src/DataStore.cpp',
+        'src/DataStoreSqlite.h',
+        'src/DataStoreSqlite.cpp',
         'src/DataStore.h',
         'src/Dispatcher.cpp',
         'src/Dispatcher.h',
@@ -69,6 +71,52 @@
             },
           },
         }, { # OS != "win",
+          'libraries' : [
+            'libsqlite3.dylib'
+          ],
+          'configurations': {
+            'Debug': {
+              #todo symbol/optimisation settings
+            },
+            'Release': {
+              #todo symbol/optimisation settings
+            },
+          },
+        }],
+      ],
+    },
+    {
+      'target_name': 'gai++test',
+      'type': 'executable',
+      'dependencies': [
+      ],
+      'include_dirs': [
+        'src',
+      ],
+      'sources': [
+        'unittests/main.cpp',
+        'unittests/test_datastoresqlite.cpp',
+        'src/DataStoreSqlite.h',
+        'src/DataStoreSqlite.cpp',
+        'src/DataStore.h',
+      ],
+      'conditions': [
+        ['OS=="win"', {
+          'configurations': {
+            'Debug': {
+              #todo symbol/optimisation settings
+            },
+            'Release': {
+              #todo symbol/optimisation settings
+            },
+          },
+        }],
+        ['OS=="mac"', {
+
+          'libraries' : [
+            'gtest.framework',
+            'libsqlite3.dylib'
+          ],
           'configurations': {
             'Debug': {
               #todo symbol/optimisation settings
