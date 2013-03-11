@@ -29,6 +29,7 @@ namespace GAI
 {
 	class Dispatcher: public ReachabilityDelegate
 	{
+    public:
 		 std::string _clientID;
 		 bool _optOut;
 		 double _dispatchInterval;

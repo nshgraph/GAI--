@@ -6,6 +6,10 @@
 #include "ReachabilityDelegate.h"
 #include "Dispatcher.h"
 
+
+namespace GAI
+{
+
 ReachabilityChecker::ReachabilityChecker(ReachabilityDelegate* aDelegate, std::string& aHost) {
 }
 
@@ -21,3 +25,4 @@ int32_t ReachabilityChecker::getStatus() {
 	return this->_status;
 }
 
+}

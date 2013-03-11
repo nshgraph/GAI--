@@ -19,13 +19,7 @@ namespace GAI
 {
 	class Hit
 	{
-		 std::map<std::string, std::string> _parameters;
-		 std::string _dispatchURL;
-		 std::string _gaiVersion;
-		 double _timestamp;
-		RequestBuilder* _unnamed_RequestBuilder_;
-		HitBuilder* _unnamed_HitBuilder_;
-
+    public:
 		void setParameters(std::map<std::string, std::string> aParameters);
 
 		std::map<std::string, std::string> getParameters();
@@ -41,6 +35,11 @@ namespace GAI
 		void setTimestamp(double aTimestamp);
 
 		double getTimestamp();
+    private:
+        std::map<std::string, std::string> _parameters;
+        std::string _dispatchURL;
+        std::string _gaiVersion;
+        double _timestamp;
 	};
 }
 

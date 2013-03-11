@@ -7,6 +7,9 @@
 #include "Dispatcher.h"
 #include "Hit.h"
 
+namespace GAI
+{
+
 std::string RequestBuilder::requestForHit(Hit* aHit) {
 	throw "Not yet implemented";
 }
@@ -19,3 +22,4 @@ std::string RequestBuilder::encodeParameters(std::map<std::string, std::string>&
 	throw "Not yet implemented";
 }
 
+}

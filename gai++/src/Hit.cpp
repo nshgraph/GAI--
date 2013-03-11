@@ -6,6 +6,9 @@
 #include "RequestBuilder.h"
 #include "HitBuilder.h"
 
+namespace GAI
+{
+
 void Hit::setParameters(std::map<std::string, std::string> aParameters) {
 	this->_parameters = aParameters;
 }
@@ -38,3 +41,4 @@ double Hit::getTimestamp() {
 	return this->_timestamp;
 }
 
+}
