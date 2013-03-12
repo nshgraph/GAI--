@@ -46,9 +46,11 @@ namespace GAI
         bool deleteAllProperties();
         bool addProperty(const std::string& name, const std::string& value);
         std::string fetchProperty( const std::string& name );
-        std::map<std::string,std::string> fetchProperties();
+        PropertyMap fetchProperties();
         int propertyCount();
     private:
+        // ensure that the database has all strutures necessary
+        bool initializeDatabase();
         sqlite3* mDB;
         std::string mPath;
         bool mbHasChanges;

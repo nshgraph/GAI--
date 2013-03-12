@@ -28,7 +28,7 @@ namespace GAI
     bool DataStoreSqlite::open()
     {
         int return_code = sqlite3_open(mPath.c_str(), &mDB);
-        if( return_code )
+        if( return_code != SQLITE_OK || !initializeDatabase())
         {
             close();
             return false;
@@ -92,23 +92,91 @@ namespace GAI
     // Functions for managing properties in the datastore
     bool DataStoreSqlite::deleteAllProperties()
     {
+        int rc;
+        rc = sqlite3_exec(mDB, "DELETE FROM properties", 0, 0, 0);
+        if( rc != SQLITE_OK)
+            return false;
+        
         return true;
     }
     bool DataStoreSqlite::addProperty(const std::string& name, const std::string& value)
     {
+        int rc;
+        char *zSQL = sqlite3_mprintf("INSERT INTO properties(key,value) VALUES('%q','%q')", name.c_str(), value.c_str());
+        rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
+        sqlite3_free(zSQL);
+        if( rc != SQLITE_OK)
+            return false;
+        
         return true;
     }
     std::string DataStoreSqlite::fetchProperty( const std::string& name )
     {
-        return "";
+        int rc;
+        sqlite3_stmt *statement = NULL;
+        std::string result = "";
+        char *zSQL = sqlite3_mprintf("SELECT * FROM properties WHERE key='%q'", name.c_str() );
+        rc = sqlite3_prepare_v2(mDB, zSQL, -1, &statement, 0);
+        sqlite3_free(zSQL);
+        if( rc != SQLITE_OK)
+            return result;
+        
+        // step through all properties
+        sqlite3_step( statement );
+        if( sqlite3_column_text( statement, 0 ) )
+            result = (char *)sqlite3_column_text( statement, 1 );
+        
+        sqlite3_finalize(statement);
+        return result;
     }
-    std::map<std::string,std::string> DataStoreSqlite::fetchProperties()
+    DataStore::PropertyMap DataStoreSqlite::fetchProperties()
     {
-        std::map<std::string,std::string>  properties;
+        DataStore::PropertyMap  properties;
+        int rc;
+        sqlite3_stmt *statement = NULL;
+        rc = sqlite3_prepare_v2(mDB, "SELECT * FROM properties;", -1, &statement, 0);
+        if( rc != SQLITE_OK)
+            return properties;
+        // step through all properties
+        sqlite3_step( statement );
+        while( sqlite3_column_text( statement, 0 ) )
+        {
+            properties[(char *)sqlite3_column_text( statement, 0 )] = (char *)sqlite3_column_text( statement, 1 );
+            sqlite3_step( statement );
+        }
+        sqlite3_finalize(statement);
         return properties;
     }
     int DataStoreSqlite::propertyCount()
     {
-        return 0;
+        int rc;
+        int rows = 0;
+        sqlite3_stmt *statement = NULL;
+        rc = sqlite3_prepare_v2(mDB, "SELECT COUNT(*) FROM properties;", -1, &statement, 0);
+        if( rc != SQLITE_OK)
+            return rows;
+        
+        rc = sqlite3_step(statement);
+        if (rc == SQLITE_ROW ) {
+            rows = sqlite3_column_int(statement, 0);
+        }
+        
+        sqlite3_finalize(statement);
+
+        return rows;
+    }
+    
+    // ensure that the database has all strutures necessary
+    bool DataStoreSqlite::initializeDatabase()
+    {
+        int rc;
+        sqlite3_stmt *statement = NULL;
+        rc = sqlite3_prepare_v2(mDB, "CREATE TABLE properties (key TEXT PRIMARY KEY, value TEXT);", -1, &statement, 0);
+        if( rc != SQLITE_OK)
+            return true; // if there is an issue with this, it is probably because the table already exists
+        if (sqlite3_step(statement) != SQLITE_DONE)
+            return false;
+        sqlite3_finalize(statement);
+        return true;
     }
 }

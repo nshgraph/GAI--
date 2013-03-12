@@ -13,6 +13,8 @@ namespace GAI
 	class DataStore
 	{
     public:
+        typedef std::map<std::string,std::string> PropertyMap;
+    public:
         // Functions for managing the datastore as a whole
         virtual bool open() = 0;
         virtual bool save() = 0;
@@ -35,7 +37,7 @@ namespace GAI
         virtual bool deleteAllProperties() = 0;
         virtual bool addProperty(const std::string& name, const std::string& value) = 0;
         virtual std::string fetchProperty( const std::string& name ) = 0;
-        virtual std::map<std::string,std::string> fetchProperties() = 0;
+        virtual PropertyMap fetchProperties() = 0;
         virtual int propertyCount() = 0;
         
 	};
