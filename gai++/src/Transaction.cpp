@@ -1,6 +1,3 @@
-#include <exception>
-#include <string>
-
 
 #include "Transaction.h"
 #include "Transaction_Item.h"
@@ -8,45 +5,99 @@
 namespace GAI
 {
     
-    Transaction* Transaction::createTransaction(std::string aTransactionId, std::string aAffiliation)
+    Transaction* Transaction::createTransaction( std::string transaction_id, std::string affiliation )
+	///
+	/// Static function to create a Transaction. Transactions must have an ID, this function checks
+	/// the transaction_id string is not empty.
+	///
+	/// @param transaction_id
+	///  The ID string of this Transaction
+	///
+	/// @param affiliation
+	///  The affiliation string of this Transaction
+	///
+	/// @return
+	///  Transaction object
+	///
 	{
-        if( aTransactionId == "" )
+        if( transaction_id.empty() )
+		{
             return NULL;
+		}
 		
-        Transaction* new_transaction = new Transaction();
-        new_transaction->_transactionId = aTransactionId;
-        new_transaction->_affiliation = aAffiliation;
+        Transaction* new_transaction = new Transaction(transaction_id, affiliation);
 		
         return new_transaction;
     }
     
-    Transaction::Transaction()
+    Transaction::Transaction( std::string transaction_id, std::string affiliation )
+	///
+	/// Constructor
+	///
+	/// @param transaction_id
+	///  The ID string of this Transaction
+	///
+	/// @param affiliation
+	///  The affiliation string of this Transaction
+	///
+	:
+	mTransactionId( transaction_id ),
+	mAffiliation( affiliation )
     {
         
     }
 	
     Transaction::~Transaction()
+	///
+	/// Destructor
+	///
     {
-        // we need to empty the list of transaction items
-        for( TransactionItemList::iterator it = _items.begin(), it_end = _items.end(); it != it_end; it++ )
+        // We need to empty the list of transaction items
+        for( TransactionItemList::iterator it = mItems.begin(); it != mItems.end(); it++ )
+		{
             delete *it;
-        _items.clear();
+		}
+		
+        mItems.clear();
     }
     
-    void Transaction::addItem(TransactionItem* aItem)
+    void Transaction::addItem( TransactionItem* item )
+	///
+	/// Add a TransactionItem to this Transaction
+	///
+	/// @param item
+	///  The TransactionItem to add
+	///
+	/// @return
+	///  Nothing
+	///
 	{
-        if( aItem != NULL)
-            _items.push_back(aItem);
+        if( item != NULL )
+		{
+			mItems.push_back( item );
+		}
     }
     
-    std::string Transaction::getTransactionId()
+    std::string Transaction::getTransactionId() const
+	///
+	/// Get the Transaction ID
+	///
+	/// @return
+	///  The transaction ID string
+	///
 	{
-        return this->_transactionId;
+        return mTransactionId;
     }
     
-    std::string Transaction::getAffiliation()
+    std::string Transaction::getAffiliation() const
+	///
+	/// Get the Transaction affiliation
+	///
+	/// @return
+	///  The affiliation string
+	///
 	{
-        return this->_affiliation;
+        return mAffiliation;
     }
     
 }
