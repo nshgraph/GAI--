@@ -1,9 +1,8 @@
-#include <exception>
+
+#ifndef __TransactionItem_h__
+#define __TransactionItem_h__
+
 #include <string>
-
-
-#ifndef __Transaction_Item_h__
-#define __Transaction_Item_h__
 
 namespace GAI
 {
