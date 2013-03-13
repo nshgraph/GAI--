@@ -29,23 +29,23 @@ namespace GAI
         
     }
     
-    std::string TransactionItem::getProductCode() {
+    std::string TransactionItem::getProductCode() const{
         return this->_productCode;
     }
     
-    std::string TransactionItem::getProductName() {
+    std::string TransactionItem::getProductName() const{
         return this->_productName;
     }
     
-    std::string TransactionItem::getProductCategory() {
+    std::string TransactionItem::getProductCategory() const{
         return this->_productCategory;
     }
     
-    int64_t TransactionItem::getPriceMicros() {
-        return this->_priceMicros;
+    double TransactionItem::getPrice() const{
+        return this->_price;
     }
     
-    int32_t TransactionItem::getQuantity() {
+    int32_t TransactionItem::getQuantity() const{
         return this->_quantity;
     }
     
