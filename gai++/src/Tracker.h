@@ -23,12 +23,6 @@ namespace GAI
 
 		 virtual  bool sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget) = 0;
 
-		 virtual bool setParameter(const std::string& aName, const std::string& aValue) = 0;
-
-		 virtual std::string getParameter(const std::string& aName) const = 0;
-
-		 virtual bool sendParameters(const std::string& aTrackType, const std::map<std::string, std::string>& aParameters) = 0;
-
 		 virtual void close() = 0;
 
 		 virtual std::string getTrackingId() const = 0;

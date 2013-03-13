@@ -32,12 +32,6 @@ namespace GAI
 
 		bool sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget);
 
-		bool setParameter(const std::string& aName, const std::string& aValue);
-
-		std::string getParameter(const std::string& aName) const;
-
-		bool sendParameters(const std::string& aTrackType, const std::map<std::string, std::string>& aParameters);
-
 		void close();
         
         std::string getTrackingId() const;
@@ -85,7 +79,7 @@ namespace GAI
     private:
         void setTrackingId(const std::string& aTrackingId);
         void setClientId(const std::string& aClientId);
-        bool internalSend(HitType aType, ParameterMap aParameters);
+        bool internalSend(const HitType aType, const ParameterMap& aParameters);
         
         bool mbSessionStart;
         bool mbTrackerOpen;

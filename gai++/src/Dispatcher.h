@@ -21,6 +21,7 @@ namespace GAI
 	class ReachabilityChecker;
 	class TrackerImpl;
 	class GAI;
+    class Hit;
 	// class ReachabilityDelegate;
 	class Dispatcher;
 }
@@ -42,6 +43,8 @@ namespace GAI
 		Dispatcher(DataStore* aDataStore, std::string& aClientId, bool aOptOut, double aDispatchInterval);
 
 		void reachabilityStatusChanged(ReachabilityChecker aReachability, int aStatus);
+        
+        bool sendHit( Hit* hit);
 
 		void queueDispatch();
 

@@ -5,6 +5,7 @@
 #include "Dispatcher.h"
 #include "Transaction.h"
 #include "TransactionItem.h"
+#include "HitBuilder.h"
 #include "ClientID.h"
 
 namespace GAI {
@@ -34,9 +35,7 @@ namespace GAI {
         // pack parameters
         ParameterMap parameters;
         parameters[kScreenParamModelKey] = aScreen;
-        internalSend(kAppViewHit, parameters);
-        
-        return true;
+        return internalSend(kAppViewHit, parameters);
     }
     
     bool TrackerImpl::sendEvent(const std::string& aCategory, const std::string& aAction, const std::string& aLabel, const std::string& aValue) {
@@ -49,11 +48,11 @@ namespace GAI {
         parameters[kEventLabelParamModelKey] = aLabel;
         if( aValue != "" )
             parameters[kEventValueParamModelKey] = aValue;
-        internalSend(kEventHit, parameters);
-        return true;
+        return internalSend(kEventHit, parameters);
     }
     
     bool TrackerImpl::sendTransaction(const Transaction* aTransaction) {
+        bool success = true;
         // ensure tracker is open
         if( !mbTrackerOpen )
             return false;
@@ -64,55 +63,57 @@ namespace GAI {
         ParameterMap transaction_parameters;
         transaction_parameters[kTransationIdModelKey] = aTransaction->getTransactionId();
         transaction_parameters[kTransationAffiliationModelKey] = aTransaction->getAffiliation();
-        internalSend(kTransactionHit, transaction_parameters);
+        success &= internalSend(kTransactionHit, transaction_parameters);
         
         Transaction::TransactionItemList items = aTransaction->getTransactionItems();
         for( Transaction::TransactionItemList::const_iterator it = items.begin(), it_end = items.end(); it != it_end; it++)
         {
             ParameterMap item_parameters;
-            transaction_parameters[kTransationIdModelKey] = aTransaction->getTransactionId();
-            transaction_parameters[kTransationItemCodeModelKey] = (*it)->getProductCode();
-            transaction_parameters[kTransationItemNameModelKey] = (*it)->getProductName();
-            transaction_parameters[kTransationItemCategoryModelKey] = (*it)->getProductCategory();
-            transaction_parameters[kTransationItemQuantityModelKey] = (*it)->getQuantity();
-            transaction_parameters[kTransationItemPriceModelKey] = (*it)->getPrice();
-            internalSend(kTransactionItemHit, item_parameters);
+            item_parameters[kTransationIdModelKey] = aTransaction->getTransactionId();
+            item_parameters[kTransationItemCodeModelKey] = (*it)->getProductCode();
+            item_parameters[kTransationItemNameModelKey] = (*it)->getProductName();
+            item_parameters[kTransationItemCategoryModelKey] = (*it)->getProductCategory();
+            item_parameters[kTransationItemQuantityModelKey] = (*it)->getQuantity();
+            item_parameters[kTransationItemPriceModelKey] = (*it)->getPrice();
+            success &= internalSend(kTransactionItemHit, item_parameters);
         }
         
-        return true;
+        return success;
     }
     
     bool TrackerImpl::sendException(const bool aIsFatal, const std::string& aDescription) {
         // ensure tracker is open
         if( !mbTrackerOpen )
             return false;
-        return true;
+        
+        ParameterMap parameters;
+        parameters[kExceptionDescriptionModelKey] = aDescription;
+        parameters[kExceptionFatalModelKey] = aIsFatal ? "1" : "0";
+        return internalSend(kExceptionHit,parameters);
     }
     
     bool TrackerImpl::sendTimingWithCategory(const std::string& aCategory, const double aTime, const std::string& aName, const std::string& aLabel) {
         // ensure tracker is open
         if( !mbTrackerOpen )
             return false;
-        return true;
+        ParameterMap parameters;
+        parameters[kTimingCategoryModelKey] = aCategory;
+        parameters[kTimingValueModelKey] = aTime;
+        parameters[kTimingNameModelKey] = aName;
+        parameters[kTimingLabelModelKey] = aLabel;
+        return internalSend(kTimingHit,parameters);
     }
     
     bool TrackerImpl::sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget) {
         // ensure tracker is open
         if( !mbTrackerOpen )
             return false;
-        return true;
-    }
-    
-    bool TrackerImpl::setParameter(const std::string& aName, const std::string& aValue) {
-        throw "Not yet implemented";
-    }
-    
-    std::string TrackerImpl::getParameter(const std::string& aName) const{
-        throw "Not yet implemented";
-    }
-    
-    bool TrackerImpl::sendParameters(const std::string& aTrackType, const std::map<std::string, std::string>& aParameters) {
-        throw "Not yet implemented";
+        
+        ParameterMap parameters;
+        parameters[kSocialNetworkModelKey] = aNetwork;
+        parameters[kSocialActionModelKey] = aAction;
+        parameters[kSocialTargetModelKey] = aTarget;
+        return internalSend(kSocialHit,parameters);
     }
     
     void TrackerImpl::close() {
@@ -176,12 +177,12 @@ namespace GAI {
     
     void TrackerImpl::setAnonymize(const bool aAnonymize)
     {
-        mModel->set(kAnonymizeIpModelKey, aAnonymize ? "true" : "false");
+        mModel->set(kAnonymizeIpModelKey, aAnonymize ? "1" : "0");
     }
     
     bool TrackerImpl::isAnonymize()
     {
-        return mModel->get(kAnonymizeIpModelKey) == "true";
+        return mModel->get(kAnonymizeIpModelKey) == "1";
     }
     
     void TrackerImpl::setUseHttps(const bool aUseHttps)
@@ -236,10 +237,22 @@ namespace GAI {
     }
     
     
-    bool TrackerImpl::internalSend(HitType aType, ParameterMap aParameters) {
+    bool TrackerImpl::internalSend(const HitType aType, const ParameterMap& aParameters) {
         // if we are sending then the session has started
         mbSessionStart = true;
-        throw "Not yet implemented";
+        
+        // add the parameters as temporaries to the model
+        mModel->setAll(aParameters, true);
+        //create a hit
+        Hit* hit = HitBuilder::createHit( aType, mModel );
+        //reset the temporary values
+        mModel->clearTemporaryValues();
+        // no hit means we failed
+        if( !hit )
+            return false;
+        // send this hit
+        return mDispatcher->sendHit(hit);
+        
     }
     
 }

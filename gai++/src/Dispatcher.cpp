@@ -20,6 +20,12 @@ Dispatcher::Dispatcher(DataStore* aDataStore, std::string& aClientId, bool aOptO
 void Dispatcher::reachabilityStatusChanged(ReachabilityChecker aReachability, int aStatus) {
 	throw "Not yet implemented";
 }
+    
+    bool Dispatcher::sendHit( Hit* hit)
+    {
+        // really: add this to the datastore
+        throw "Not yet implemented";
+    }
 
 void Dispatcher::queueDispatch() {
 	throw "Not yet implemented";
