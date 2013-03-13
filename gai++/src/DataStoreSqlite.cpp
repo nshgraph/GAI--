@@ -15,7 +15,6 @@ namespace GAI
     
     DataStoreSqlite::DataStoreSqlite( const std::string& path ) :
     mPath(path),
-    mbHasChanges(false),
     mDB(NULL)
     {
         
@@ -37,8 +36,7 @@ namespace GAI
     }
     bool DataStoreSqlite::save()
     {
-        // all changes are now saved;
-        mbHasChanges = false;
+        // nothing to do on save as we don't cache state: the db is always updated
         return true;
     }
     void DataStoreSqlite::close()
@@ -55,7 +53,7 @@ namespace GAI
     // Functions for managing the datastore state
     bool DataStoreSqlite::hasChanges() const
     {
-        return mbHasChanges;
+        return false;
     }
     
     bool DataStoreSqlite::deleteAllEntities()
@@ -73,20 +71,49 @@ namespace GAI
     // Functions for managing hits in the datastore
     bool DataStoreSqlite::deleteAllHits()
     {
+        int rc;
+        rc = sqlite3_exec(mDB, "DELETE FROM hits", 0, 0, 0);
+        if( rc != SQLITE_OK)
+            return false;
+        
         return true;
     }
     bool DataStoreSqlite::addHit(const Hit& hit)
     {
+        int rc;
+        char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f) ", hit.getGaiVersion().c_str(), hit.getDispatchURL().c_str(),hit.getTimestamp());
+        rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
+        sqlite3_free(zSQL);
+        if( rc != SQLITE_OK)
+        {
+            return false;
+        }
+        
         return true;
-    }
-    int DataStoreSqlite::hitCount()
-    {
-        return 0;
+        return true;
     }
     std::list<Hit> DataStoreSqlite::fetchHits(const unsigned int limit, bool removeFetchedFromDataStore)
     {
         std::list<Hit> hits;
         return hits;
+    }
+    int DataStoreSqlite::hitCount()
+    {
+        int rc;
+        int rows = 0;
+        sqlite3_stmt *statement = NULL;
+        rc = sqlite3_prepare_v2(mDB, "SELECT COUNT(*) FROM hits;", -1, &statement, 0);
+        if( rc != SQLITE_OK)
+            return rows;
+        
+        rc = sqlite3_step(statement);
+        if (rc == SQLITE_ROW ) {
+            rows = sqlite3_column_int(statement, 0);
+        }
+        
+        sqlite3_finalize(statement);
+        
+        return rows;
     }
     
     // Functions for managing properties in the datastore
@@ -102,11 +129,22 @@ namespace GAI
     bool DataStoreSqlite::addProperty(const std::string& name, const std::string& value)
     {
         int rc;
-        char *zSQL = sqlite3_mprintf("INSERT INTO properties(key,value) VALUES('%q','%q')", name.c_str(), value.c_str());
+        sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
+        char *zSQL = sqlite3_mprintf("INSERT INTO properties(key,value) VALUES('%q','%q') ", name.c_str(), value.c_str());
         rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
         sqlite3_free(zSQL);
         if( rc != SQLITE_OK)
+        {
+            zSQL = sqlite3_mprintf("UPDATE properties SET value='%q' WHERE key='%q' ", value.c_str(), name.c_str());
+            rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
+            sqlite3_free(zSQL);
+        }
+        if( rc != SQLITE_OK)
+        {
+            sqlite3_exec(mDB, "ROLLBACK", NULL, NULL, NULL);
             return false;
+        }
+        sqlite3_exec(mDB, "COMMIT", NULL, NULL, NULL);
         
         return true;
     }
@@ -170,13 +208,10 @@ namespace GAI
     bool DataStoreSqlite::initializeDatabase()
     {
         int rc;
-        sqlite3_stmt *statement = NULL;
-        rc = sqlite3_prepare_v2(mDB, "CREATE TABLE properties (key TEXT PRIMARY KEY, value TEXT);", -1, &statement, 0);
-        if( rc != SQLITE_OK)
-            return true; // if there is an issue with this, it is probably because the table already exists
-        if (sqlite3_step(statement) != SQLITE_DONE)
-            return false;
-        sqlite3_finalize(statement);
+        rc = sqlite3_exec(mDB, "CREATE TABLE properties (key TEXT PRIMARY KEY, value TEXT);", NULL,NULL,NULL);
+        // ignore rc, if there is an issue with this, it is probably because the table already exists
+        rc = sqlite3_exec(mDB, "CREATE TABLE hits (id INTEGER PRIMARY KEY, version TEXT, url TEXT, timestamp REAL);", NULL,NULL,NULL);
+        // ignore rc, if there is an issue with this, it is probably because the table already exists
         return true;
     }
 }

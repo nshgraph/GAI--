@@ -111,3 +111,41 @@ TEST_F (DataStoreSqlLiteTest, properties)
         
     }
 }
+
+TEST_F (DataStoreSqlLiteTest, properties_kv)
+{
+    const std::string test_key = "test_key";
+    const std::string test_value = "test_value";
+    const std::string test_value2 = "test_value2";
+    // create db
+    GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
+    EXPECT_EQ(db.open(),true);
+    
+    // add the property
+    EXPECT_EQ(db.addProperty(test_key, test_value),true);
+    
+    // should have one property
+    EXPECT_EQ(db.propertyCount(), 1 );
+    
+    // change the value of a property
+    EXPECT_EQ(db.addProperty(test_key, test_value2),true);
+    
+    // should still have one property
+    
+    // should have one property
+    EXPECT_EQ(db.propertyCount(), 1 );
+    
+    // fetch the property by name
+    {
+        std::string ret_value = db.fetchProperty(test_key);
+        // check that it has the *new* value
+        EXPECT_TRUE( ret_value == test_value2 );
+    }
+
+}
+
+TEST_F (DataStoreSqlLiteTest, hits)
+{
+        
+}
+

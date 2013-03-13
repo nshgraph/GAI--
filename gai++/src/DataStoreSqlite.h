@@ -53,7 +53,6 @@ namespace GAI
         bool initializeDatabase();
         sqlite3* mDB;
         std::string mPath;
-        bool mbHasChanges;
     };
 }
 
