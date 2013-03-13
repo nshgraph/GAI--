@@ -100,4 +100,15 @@ namespace GAI
         return mAffiliation;
     }
     
+    Transaction::TransactionItemList Transaction::getTransactionItems() const
+	///
+	/// Get the list of items associated with this transaction
+	///
+	/// @return
+	///  The list of transaction items
+	///
+    {
+        return mItems;
+    }
+    
 }

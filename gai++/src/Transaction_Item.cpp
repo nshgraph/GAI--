@@ -5,7 +5,7 @@
 #include "Transaction_Item.h"
 namespace GAI
 {
-    TransactionItem* TransactionItem::createItem(std::string aProductCode, std::string aProductName, std::string aProductCategory, int64_t aPriceMicros, int32_t aQuantity)
+    TransactionItem* TransactionItem::createItem(std::string aProductCode, std::string aProductName, std::string aProductCategory, double aPrice, int32_t aQuantity)
     {
         // sanity check input values
         if( aProductCode == "" )
@@ -19,7 +19,7 @@ namespace GAI
         new_item->_productCode = aProductCode;
         new_item->_productName = aProductName;
         new_item->_productCategory = aProductCategory;
-        new_item->_priceMicros = aPriceMicros;
+        new_item->_price = aPrice;
         new_item->_quantity = aQuantity;
         
         return new_item;
