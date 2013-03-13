@@ -1,98 +1,75 @@
-#include <exception>
-#include <string>
-#include <map>
-
 
 #ifndef __Tracker_h__
 #define __Tracker_h__
 
+#include <string>
 
 namespace GAI
 {
-	class GAI;
 	class Transaction;
     
 	class Tracker
 	{
     public:
-		 virtual bool sendView(std::string& aScreen) = 0;
+		 virtual bool sendView(const std::string& aScreen) = 0;
 
-		 virtual bool sendEvent(std::string& aCategory, std::string& aAction, std::string& aLabel, std::string& aValue) = 0;
+		 virtual bool sendEvent(const std::string& aCategory, const std::string& aAction, const std::string& aLabel, const std::string& aValue) = 0;
 
-		 virtual bool sendTransaction(Transaction* aTransaction) = 0;
+		 virtual bool sendTransaction(const Transaction* aTransaction) = 0;
 
-		 virtual bool sendException(bool aIsFatal, std::string& aDescription) = 0;
+		 virtual bool sendException(const bool aIsFatal, const std::string& aDescription) = 0;
 
-		 virtual bool sendTimingWithCategory(std::string& aCategory, double aTime, std::string& aName, std::string& aLabel) = 0;
+		 virtual bool sendTimingWithCategory(const std::string& aCategory, const double aTime, const std::string& aName, const std::string& aLabel) = 0;
 
-		 virtual  bool sendSocial(std::string& aNetwork, std::string& aAction, std::string& aTarget) = 0;
+		 virtual  bool sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget) = 0;
 
-		 virtual bool setParameter(std::string& aName, std::string& aValue) = 0;
+		 virtual bool setParameter(const std::string& aName, const std::string& aValue) = 0;
 
-		 virtual std::string getParameter(std::string& aName) = 0;
+		 virtual std::string getParameter(const std::string& aName) const = 0;
 
-		 virtual bool sendParameters(std::string& aTrackType, std::map<std::string, std::string>& aParameters) = 0;
+		 virtual bool sendParameters(const std::string& aTrackType, const std::map<std::string, std::string>& aParameters) = 0;
 
 		 virtual void close() = 0;
 
-		 std::string getTrackingId();
+		 virtual std::string getTrackingId() const = 0;
 
-		 void setAppName(std::string aAppName);
+		 virtual void setAppName(const std::string& aAppName) = 0;
 
-		 std::string getAppName();
+		 virtual std::string getAppName() const = 0;
 
-		 void setAppId(std::string aAppId);
+		 virtual void setAppId(const std::string& aAppId) = 0;
 
-		 std::string getAppId();
+		 virtual std::string getAppId() const = 0;
 
-		 void setAppVersion(std::string aAppVersion);
+		 virtual void setAppVersion(const std::string& aAppVersion) = 0;
 
-		 std::string getAppVersion();
+		 virtual std::string getAppVersion() const = 0;
 
-		 void setAnonymize(bool aAnonymize);
+		 virtual void setAnonymize(const bool aAnonymize) = 0;
 
-		 bool isAnonymize();
+		 virtual bool isAnonymize() = 0;
 
-		 void setUseHttps(bool aUseHttps);
+		 virtual void setUseHttps(const bool aUseHttps) = 0;
 
-		 bool isUseHttps();
+		 virtual bool isUseHttps() = 0;
 
-		 void setSampleRate(double aSampleRate);
+		 virtual void setSampleRate(const double aSampleRate) = 0;
 
-		 double getSampleRate();
+		 virtual double getSampleRate() = 0;
 
-		 std::string getClientId();
+		 virtual std::string getClientId() const = 0;
 
-		 void setReferrerUrl(std::string aReferrerUrl);
+		 virtual void setReferrerUrl(const std::string& aReferrerUrl) = 0;
 
-		 std::string getReferrerUrl();
+		 virtual std::string getReferrerUrl() = 0;
 
-		 void setCampaignUrl(std::string aCampaignUrl);
+		 virtual void setCampaignUrl(const std::string& aCampaignUrl) = 0;
 
-		 std::string getCampaignUrl();
+		 virtual std::string getCampaignUrl() = 0;
 
-		 void setSessionStart(bool aSessionStart);
+		 virtual void setSessionTimeout(const double aSessionTimeout) = 0;
 
-		 bool isSessionStart();
-
-		 void setSessionTimeout(double aSessionTimeout);
-
-		 double getSessionTimeout();
-    protected:
-        Tracker();
-        
-		std::string _trackingId;
-		std::string _appName;
-		std::string _appId;
-		std::string _appVersion;
-		bool _anonymize;
-		bool _useHttps;
-		double _sampleRate;
-		std::string _clientId;
-		std::string _referrerUrl;
-		std::string _campaignUrl;
-		bool _sessionStart;
-		double _sessionTimeout;
+		 virtual double getSessionTimeout() = 0;
         
 	};
 }

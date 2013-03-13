@@ -48,11 +48,9 @@
         'src/ReachabilityDelegate.h',
         'src/RequestBuilder.cpp',
         'src/RequestBuilder.h',
-        'src/Tracker.cpp',
         'src/Tracker.h',
         'src/TrackerImpl.cpp',
         'src/TrackerImpl.h',
-        'src/TrackerState.h',
         'src/Transaction.cpp',
         'src/Transaction.h',
         'src/Transaction_Item.cpp',
@@ -70,7 +68,9 @@
               #todo symbol/optimisation settings
             },
           },
-        }, { # OS != "win",
+        }],
+        ['OS=="mac"', {
+
           'libraries' : [
             'libsqlite3.dylib'
           ],
@@ -99,6 +99,8 @@
         'src/DataStoreSqlite.h',
         'src/DataStoreSqlite.cpp',
         'src/DataStore.h',
+        'src/Hit.h',
+        'src/Hit.cpp',
       ],
       'conditions': [
         ['OS=="win"', {

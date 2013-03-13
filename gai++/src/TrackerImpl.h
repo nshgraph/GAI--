@@ -1,56 +1,108 @@
-#include <exception>
-#include <string>
-#include <map>
 
 
 #ifndef __TrackerImpl_h__
 #define __TrackerImpl_h__
 
-#include "Dispatcher.h"
-#include "TrackerState.h"
+#include <string>
+#include <map>
+
 #include "HitType.h"
 #include "Tracker.h"
 
 namespace GAI
 {
-	class Dispatcher;
 	class Transaction;
+	class Dispatcher;
+    class Model;
     
 	class TrackerImpl: public Tracker
 	{
     public:
 		TrackerImpl(Dispatcher* aDispatcher, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion);
 
-		bool sendView(std::string& aScreen);
+		bool sendView(const std::string& aScreen);
 
-		bool sendEvent(std::string& aCategory, std::string& aAction, std::string& aLabel, std::string& aValue);
+		bool sendEvent(const std::string& aCategory, const std::string& aAction, const std::string& aLabel, const std::string& aValue);
 
-		bool sendTransaction(Transaction* aTransaction);
+		bool sendTransaction(const Transaction* aTransaction);
 
-		bool sendException(bool aIsFatal, std::string& aDescription);
+		bool sendException(const bool aIsFatal, const std::string& aDescription);
 
-		bool sendTimingWithCategory(std::string& aCategory, double aTime, std::string& aName, std::string& aLabel);
+		bool sendTimingWithCategory(const std::string& aCategory, double aTime, const std::string& aName, const std::string& aLabel);
 
-		bool sendSocial(std::string& aNetwork, std::string& aAction, std::string& aTarget);
+		bool sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget);
 
-		bool setParameter(std::string& aName, std::string& aValue);
+		bool setParameter(const std::string& aName, const std::string& aValue);
 
-		std::string getParameter(std::string& aName);
+		std::string getParameter(const std::string& aName) const;
 
-		bool sendParameters(std::string& aTrackType, std::map<std::string, std::string>& aParameters);
+		bool sendParameters(const std::string& aTrackType, const std::map<std::string, std::string>& aParameters);
 
 		void close();
-
-		 
-    private:
-        bool internalSend(HitType aType, std::map<std::string, std::string> aParameters);
         
-        Dispatcher* _dispatcher;
-        TrackerState _trackerState;
-        int64_t _trackCount;
-        int64_t _hitCount;
-        double _lastActiveTime;
-        double _lastTrackTime;
+        std::string getTrackingId() const;
+        
+        void setAppName(const std::string& aAppName);
+        
+        std::string getAppName() const;
+        
+        void setAppId(const std::string& aAppId);
+        
+        std::string getAppId() const;
+        
+        void setAppVersion(const std::string& aAppVersion);
+        
+        std::string getAppVersion() const;
+        
+        void setAnonymize(const bool aAnonymize);
+        
+        bool isAnonymize();
+        
+        void setUseHttps(const bool aUseHttps);
+        
+        bool isUseHttps();
+        
+        void setSampleRate(const double aSampleRate);
+        
+        double getSampleRate();
+        
+        std::string getClientId() const;
+        
+        void setReferrerUrl(const std::string& aReferrerUrl);
+        
+        std::string getReferrerUrl();
+        
+        void setCampaignUrl(const std::string& aCampaignUrl);
+        
+        std::string getCampaignUrl();
+        
+        void setSessionTimeout(const double aSessionTimeout);
+        
+        double getSessionTimeout();
+
+    private:
+        typedef std::map<std::string, std::string> ParameterMap;
+    private:
+        void setTrackingId(const std::string& aTrackingId);
+        void setClientId(const std::string& aClientId);
+        bool internalSend(HitType aType, ParameterMap aParameters);
+        
+        bool mbSessionStart;
+        bool mbTrackerOpen;
+        bool mbSampled;
+        
+        Model* mModel;
+        Dispatcher* mDispatcher;
+        double mSampleRate;
+        std::string mHttpDispatchUrl;
+        std::string mHttpsDispatchUrl;
+        bool mbUseHttps;
+        
+        int64_t mTrackCount;
+        int64_t mHitCount;
+		double mSessionTimeout;
+        double mLastActiveTime;
+        double mLastTrackTime;
 	};
 }
 
