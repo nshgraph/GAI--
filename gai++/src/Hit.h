@@ -22,19 +22,17 @@ namespace GAI
     public:
 		void setParameters(std::map<std::string, std::string> aParameters);
 
-		std::map<std::string, std::string> getParameters();
+		std::map<std::string, std::string> getParameters() const;
 
-		void setDispatchURL(std::string aDispatchURL);
-
-		std::string getDispatchURL();
+		std::string getDispatchURL() const;
 
 		void setGaiVersion(std::string aGaiVersion);
 
-		std::string getGaiVersion();
+		std::string getGaiVersion() const;
 
 		void setTimestamp(double aTimestamp);
 
-		double getTimestamp();
+		double getTimestamp() const;
     private:
         std::map<std::string, std::string> _parameters;
         std::string _dispatchURL;

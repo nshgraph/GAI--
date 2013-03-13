@@ -8,6 +8,7 @@ namespace GAI
 {
 	class ClientID
 	{
+    public:
 		static std::string generateClientID();
 	};
 }

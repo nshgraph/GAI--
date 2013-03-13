@@ -6,13 +6,13 @@ namespace GAI
 {
 	enum HitType
 	{
-        kAppView,
-        kEvent,
-        kTransaction,
-        kTransactionItem,
-        kException,
-        kTiming,
-        kSocial
+        kAppViewHit,
+        kEventHit,
+        kTransactionHit,
+        kTransactionItemHit,
+        kExceptionHit,
+        kTimingHit,
+        kSocialHit
         
 	};
 }
