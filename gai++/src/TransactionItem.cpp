@@ -1,8 +1,6 @@
-#include <exception>
-#include <string>
 
+#include "TransactionItem.h"
 
-#include "Transaction_Item.h"
 namespace GAI
 {
     TransactionItem* TransactionItem::createItem(std::string aProductCode, std::string aProductName, std::string aProductCategory, double aPrice, int32_t aQuantity)
