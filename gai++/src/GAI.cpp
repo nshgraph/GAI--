@@ -1,7 +1,3 @@
-#include <exception>
-#include <string>
-#include <map>
-
 
 #include "GAI.h"
 #include "Tracker.h"
@@ -11,86 +7,105 @@
 namespace GAI
 {
     
-    GAI* GAI::sharedInstance() {
+    GAI* GAI::sharedInstance()
+	{
         static GAI* sharedInstance = NULL;
         if( sharedInstance == NULL )
+		{
             sharedInstance = new GAI();
+		}
+		
         return sharedInstance;
     }
-    
     
     GAI::GAI()
     {
         
     }
     
-    
-    Tracker* GAI::createTracker(const std::string& aTrackingId) {
+    Tracker* GAI::createTracker( const std::string& tracking_id )
+	{
         // first attempt to retrive the tracker with the same id
-        TrackerMap::const_iterator it = _trackers.find( aTrackingId );
-        if( it != _trackers.end() )
+        TrackerMap::const_iterator it = mTrackers.find( tracking_id );
+        if( it != mTrackers.end() )
+		{
             return it->second;
+		}
+		
         // create a new tracker
-        Tracker* new_tracker = new TrackerImpl(_dispatcher, aTrackingId, _productString, _version);
-        _trackers[aTrackingId] = new_tracker;
+        Tracker* new_tracker = new TrackerImpl( mDispatcher, tracking_id, mProductString, mVersion);
+        mTrackers[ tracking_id ] = new_tracker;
         
         return new_tracker;
     }
     
-    void GAI::dispatch() {
-        _dispatcher->queueDispatch();
+    void GAI::removeTracker( const std::string& tracker_id )
+	{
+        TrackerMap::iterator it = mTrackers.find( tracker_id );
+        if( it != mTrackers.end() )
+		{
+            mTrackers.erase( it );
+		}
     }
     
-    void GAI::removeTracker(const std::string& aTrackerId) {
-        TrackerMap::iterator it = _trackers.find( aTrackerId );
-        if( it != _trackers.end() )
-            _trackers.erase(it);
+    Tracker* GAI::getDefaultTracker() const
+	{
+        return mDefaultTracker;
     }
     
-    std::string GAI::getProductString() const{
-        return this->_productString;
+    std::string GAI::getProductString() const
+	{
+        return mProductString;
     }
     
-    std::string GAI::getVersion() const{
-        return this->_version;
-    }
-    
-    void GAI::setProductString(const std::string& productString)
+    void GAI::setProductString( const std::string& product_string )
     {
-        this->_productString = productString;
+		mProductString = product_string;
     }
     
-    void GAI::setVersion(const std::string& version)
+    std::string GAI::getVersion() const
+	{
+        return mVersion;
+    }
+    
+    void GAI::setVersion( const std::string& version )
     {
-        this->_version = version;
+        mVersion = version;
     }
     
-    Tracker* GAI::getDefaultTracker() const{
-        return this->_defaultTracker;
+    bool GAI::isDebug() const
+	{
+        return mDebug;
     }
     
-    void GAI::setDebug(bool aDebug) {
-        this->_debug = aDebug;
+    void GAI::setDebug( bool debug )
+	{
+		mDebug = debug;
     }
     
-    bool GAI::isDebug() const{
-        return this->_debug;
+    bool GAI::isOptOut() const
+	{
+        return mOptOut;
     }
     
-    void GAI::setOptOut(const bool aOptOut) {
-        this->_optOut = aOptOut;
+    void GAI::setOptOut( const bool opt_out )
+	{
+        mOptOut = opt_out;
     }
     
-    bool GAI::isOptOut() const{
-        return this->_optOut;
+    void GAI::setDispatchInterval( const int dispatch_interval )
+	{
+        mDispatchInterval = dispatch_interval;
     }
     
-    void GAI::setDispatchInterval(const double aDispatchInterval) {
-        this->_dispatchInterval = aDispatchInterval;
+    double GAI::getDispatchInterval() const
+	{
+        return mDispatchInterval;
     }
     
-    double GAI::getDispatchInterval() const{
-        return this->_dispatchInterval;
+    void GAI::dispatch()
+	{
+        mDispatcher->queueDispatch();
     }
     
 }
