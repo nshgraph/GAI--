@@ -31,34 +31,37 @@ namespace GAI
 	class Dispatcher: public ReachabilityDelegate
 	{
     public:
-		 std::string _clientID;
-		 bool _optOut;
-		 double _dispatchInterval;
-		 DataStore* _dataStore;
-		 RequestBuilder* _requestBuilder;
-		 URLConnection* _pendingDispatch;
-		 ReachabilityChecker* _reachabiltiy;
-		 uint64_t _cacheBuster;
-
-		Dispatcher(DataStore* aDataStore, std::string& aClientId, bool aOptOut, double aDispatchInterval);
-
-		void reachabilityStatusChanged(ReachabilityChecker aReachability, int aStatus);
+		Dispatcher( DataStore* aDataStore, std::string& aClientId, bool aOptOut, double aDispatchInterval );
+		
+		void reachabilityStatusChanged( ReachabilityChecker aReachability, int aStatus );
         
-        bool sendHit( Hit* hit);
-
+        bool sendHit( Hit* hit );
+		
 		void queueDispatch();
-
+		
 		void cancelDispatch();
-
+		
 		std::string getClientID();
-
-		void setOptOut(bool aOptOut);
-
-		bool isOptOut();
-
-		void setDispatchInterval(double aDispatchInterval);
-
-		double getDispatchInterval();
+		
+		bool isOptOut() const;
+		void setOptOut( const bool opt_out );
+		
+		int getDispatchInterval() const;
+		void setDispatchInterval( const int dispatch_interval );
+		
+	private:
+		std::string mClientID;
+		bool		mbOptOut;	///< disable Google Analytics tracking
+		int			mDispatchInterval;	///< dispatch interval in seconds
+		
+		
+		
+		DataStore* _dataStore;
+		RequestBuilder* _requestBuilder;
+		URLConnection* _pendingDispatch;
+		ReachabilityChecker* _reachabiltiy;
+		uint64_t _cacheBuster;
+		
 	};
 }
 

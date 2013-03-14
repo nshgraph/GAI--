@@ -50,10 +50,8 @@ namespace GAI
 		std::string mVersion;
 		
 		bool mbDebug;	///< print information about data being sent
-		bool mbOptOut;	///< disable Google Analytics tracking
 		
 		Dispatcher* mDispatcher;
-		int mDispatchInterval;		///< dispatch interval in seconds
 		
 	};
 }
