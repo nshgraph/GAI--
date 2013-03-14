@@ -11,6 +11,7 @@
 
 
 // model keys
+
 #define kAppNameModelKey "an"
 #define kAppIdModelKey "aid"
 #define kAppVersionModelKey "av"
@@ -59,8 +60,9 @@ namespace GAI
         typedef std::map<std::string,std::string> ParameterMap;
     public:
         Model();
-        std::string get(const std::string& key);
-        Model::ParameterMap getKeysAndValues();
+        bool hasParameter( const std::string& key) const;
+        std::string get(const std::string& key) const;
+        Model::ParameterMap getKeysAndValues() const;
         
         void set(const std::string& key, const std::string& value);
         void setForNextHit(const std::string& key, const std::string& value);

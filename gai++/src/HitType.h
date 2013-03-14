@@ -12,7 +12,8 @@ namespace GAI
         kTransactionItemHit,
         kExceptionHit,
         kTimingHit,
-        kSocialHit
+        kSocialHit,
+        kNumHitTypes
         
 	};
 }

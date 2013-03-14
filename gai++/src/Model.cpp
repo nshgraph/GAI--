@@ -8,7 +8,15 @@ namespace GAI
     {
         
     }
-    std::string Model::get(const std::string& key)
+    
+    bool Model::hasParameter( const std::string& key) const
+    {
+        ParameterMap::const_iterator it = values.find(key);
+        ParameterMap::const_iterator it_temp = temporaryValues.find(key);
+        return ( it != values.end() || it_temp != temporaryValues.end() );
+    }
+    
+    std::string Model::get(const std::string& key) const
     {
         // first look in temporary map
         ParameterMap::const_iterator it = temporaryValues.find(key);
@@ -21,7 +29,7 @@ namespace GAI
         // if fails return empty string
         return "";
     }
-    Model::ParameterMap Model::getKeysAndValues()
+    Model::ParameterMap Model::getKeysAndValues() const
     {
         Model::ParameterMap result = values;
         result.insert( temporaryValues.begin(), temporaryValues.end() );

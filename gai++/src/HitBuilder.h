@@ -17,8 +17,9 @@ namespace GAI
 	{
     public:
 		static Hit* createHit(HitType aType, Model* aModel);
-    public:
-		std::list<std::string> requiredParametersForType(std::string& aType);
+    protected:
+		static const std::list<std::string>& requiredParametersForType(const HitType aType);
+        
 	};
 }
 
