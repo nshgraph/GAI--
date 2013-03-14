@@ -48,8 +48,8 @@ namespace GAI
         std::string mProductString;
 		std::string mVersion;
 		
-		bool mbDebug;
-		bool mbOptOut;
+		bool mDebug;
+		bool mOptOut;
 		
 		Dispatcher* mDispatcher;
 		int mDispatchInterval;		///< dispatch interval in seconds
