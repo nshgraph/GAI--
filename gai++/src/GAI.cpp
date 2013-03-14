@@ -77,22 +77,22 @@ namespace GAI
     
     bool GAI::isDebug() const
 	{
-        return mDebug;
+        return mbDebug;
     }
     
     void GAI::setDebug( bool debug )
 	{
-		mDebug = debug;
+		mbDebug = debug;
     }
     
     bool GAI::isOptOut() const
 	{
-        return mOptOut;
+        return mbOptOut;
     }
     
     void GAI::setOptOut( const bool opt_out )
 	{
-        mOptOut = opt_out;
+        mbOptOut = opt_out;
     }
     
     void GAI::setDispatchInterval( const int dispatch_interval )
