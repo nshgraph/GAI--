@@ -19,6 +19,7 @@ namespace GAI
 		void removeTracker( const std::string& tracker_id );
 		
 		Tracker* getDefaultTracker() const;
+		void setDefaultTracker( Tracker* tracker );
 		
 		std::string getProductString() const;
 		void setProductString( const std::string& product_string );

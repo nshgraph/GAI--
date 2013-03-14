@@ -54,6 +54,11 @@ namespace GAI
 	{
         return mDefaultTracker;
     }
+	
+	void GAI::setDefaultTracker( Tracker* tracker )
+	{
+		mDefaultTracker = tracker;
+	}
     
     std::string GAI::getProductString() const
 	{
