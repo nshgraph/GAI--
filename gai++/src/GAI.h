@@ -28,13 +28,13 @@ namespace GAI
 		void setVersion( const std::string& version );
 		
 		bool isDebug() const;
-		void setDebug( const bool aDebug );
+		void setDebug( const bool debug );
 		
 		bool isOptOut() const;
-		void setOptOut( const bool aOptOut );
+		void setOptOut( const bool opt_out );
 		
 		double getDispatchInterval() const;
-		void setDispatchInterval( const int aDispatchInterval );
+		void setDispatchInterval( const int dispatch_interval );
 		
 		void dispatch();
 		
