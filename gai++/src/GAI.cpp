@@ -20,7 +20,9 @@ namespace GAI
     
     GAI::GAI()
     {
-        
+        mDebug = false;
+		mOptOut = false;
+		mDispatchInterval = 1800; // default dispatch interval is 1800 seconds (30 minutes)
     }
     
     Tracker* GAI::createTracker( const std::string& tracking_id )

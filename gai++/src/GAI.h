@@ -52,7 +52,7 @@ namespace GAI
 		bool mOptOut;
 		
 		Dispatcher* mDispatcher;
-		int mDispatchInterval;
+		int mDispatchInterval;		///< dispatch interval in seconds
 		
 	};
 }
