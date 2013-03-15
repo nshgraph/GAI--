@@ -70,10 +70,11 @@
           },
         }],
         ['OS=="mac"', {
-
-          'libraries' : [
-            'libsqlite3.dylib'
-          ],
+          'link_settings': {
+            'libraries' : [
+              'libsqlite3.dylib'
+            ],
+          },
           'configurations': {
             'Debug': {
               #todo symbol/optimisation settings
