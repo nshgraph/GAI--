@@ -10,10 +10,16 @@
 
       'USE_HEADERMAP': 'NO',
 
+      #todo warning settings
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES',
       'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
-      'FRAMEWORK_SEARCH_PATHS':'/Library/Frameworks/'
-      #todo warning settings
+
+      'FRAMEWORK_SEARCH_PATHS': [
+        '$(SDKROOT)/System/Library/Frameworks'
+      ],
+      'LIBRARY_SEARCH_PATHS': [
+        '/usr/local/lib'
+      ],
     },
     #todo win default settings
   },
@@ -70,11 +76,9 @@
           },
         }],
         ['OS=="mac"', {
-          'link_settings': {
-            'libraries' : [
-              'libsqlite3.dylib'
-            ],
-          },
+          'include_dirs': [
+            '/usr/local/include',
+          ],
           'configurations': {
             'Debug': {
               #todo symbol/optimisation settings
@@ -115,11 +119,12 @@
           },
         }],
         ['OS=="mac"', {
-
-          'libraries' : [
-            'gtest.framework',
-            'libsqlite3.dylib'
-          ],
+          'link_settings': {
+            'libraries' : [
+              'gtest.framework',
+              'libsqlite3.dylib'
+            ],
+          },
           'configurations': {
             'Debug': {
               #todo symbol/optimisation settings
