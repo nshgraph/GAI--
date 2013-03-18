@@ -90,11 +90,52 @@ namespace GAI
         }
         
         return true;
-        return true;
     }
     std::list<Hit> DataStoreSqlite::fetchHits(const unsigned int limit, bool removeFetchedFromDataStore)
     {
         std::list<Hit> hits;
+        
+        int rc;
+        sqlite3_stmt *statement = NULL;
+        char *zSQL = NULL;
+        sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
+        
+        zSQL = sqlite3_mprintf("SELECT * FROM hits order by id LIMIT %i",limit);
+        rc = sqlite3_prepare_v2(mDB, zSQL, -1, &statement, 0);
+        
+        // step through the returned hits
+        while( sqlite3_step( statement ) == SQLITE_ROW)
+        {
+            char* version = (char *)sqlite3_column_text( statement, 1 );
+            char* url = (char *)sqlite3_column_text( statement, 1 );
+            double timestamp = sqlite3_column_double( statement, 1 );
+            hits.push_back(createHit(version,url,timestamp));
+        }
+        
+        // if appropriate, delete the hits
+        if( removeFetchedFromDataStore && rc == SQLITE_OK )
+        {
+            sqlite3_stmt *delete_statement = NULL;
+            char* zSQL_delete = sqlite3_mprintf("DELETE FROM hits order by id limit %i",limit);
+            rc = sqlite3_prepare_v2(mDB, zSQL, -1, &delete_statement, 0);
+            sqlite3_free(zSQL_delete);
+            
+        }
+        sqlite3_free(zSQL);
+        sqlite3_finalize(statement);
+        
+        // either commit or rollback
+        if( rc != SQLITE_OK)
+        {
+            sqlite3_exec(mDB, "ROLLBACK", NULL, NULL, NULL);
+            hits.clear();
+        }
+        else
+        {
+            sqlite3_exec(mDB, "COMMIT", NULL, NULL, NULL);
+        }
+        
+        
         return hits;
     }
     int DataStoreSqlite::hitCount()
