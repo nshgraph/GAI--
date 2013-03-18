@@ -8,6 +8,7 @@
 namespace GAI
 {
 	class HitBuilder;
+    class DataStore;
 	class Hit
 	{
     public:
@@ -22,7 +23,9 @@ namespace GAI
 		double getTimestamp() const;
     private:
         friend HitBuilder;
+        friend DataStore;
         Hit();
+        Hit(const std::string& version, const std::string& url, const double timestamp);
         std::string mDispatchURL;
         std::string mGaiVersion;
         double mTimestamp;

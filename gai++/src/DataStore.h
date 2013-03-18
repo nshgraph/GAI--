@@ -9,7 +9,7 @@
 
 namespace GAI
 {
-    // A pure abstract class for dealing with permenant storage of data
+    // A abstract class for dealing with permenant storage of data
 	class DataStore
 	{
     public:
@@ -39,6 +39,11 @@ namespace GAI
         virtual std::string fetchProperty( const std::string& name ) = 0;
         virtual PropertyMap fetchProperties() = 0;
         virtual int propertyCount() = 0;
+    protected:
+        Hit createHit(const std::string& version, const std::string& url, const double timestamp)
+        {
+            return Hit( version, url, timestamp);
+        }
         
 	};
 }

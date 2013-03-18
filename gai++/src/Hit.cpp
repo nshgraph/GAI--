@@ -16,6 +16,11 @@ namespace GAI
         mTimestamp = 0;
     }
     
+    Hit::Hit(const std::string& version, const std::string& url, const double timestamp)
+    {
+        
+    }
+    
     void Hit::setParameters(std::map<std::string, std::string> aParameters) {
         // generate dispatch url from parameters
         std::string url = "";
