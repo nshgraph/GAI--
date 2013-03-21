@@ -21,7 +21,7 @@ namespace GAI
 		void setTimestamp(double aTimestamp);
 
 		double getTimestamp() const;
-    private:
+    protected:
         friend HitBuilder;
         friend DataStore;
         Hit();

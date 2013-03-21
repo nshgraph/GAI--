@@ -98,26 +98,27 @@ namespace GAI
         int rc;
         sqlite3_stmt *statement = NULL;
         char *zSQL = NULL;
+        char* zSQL_delete = NULL;
         sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
         
-        zSQL = sqlite3_mprintf("SELECT * FROM hits order by id LIMIT %i",limit);
+        zSQL = sqlite3_mprintf("SELECT * FROM hits ORDER BY id LIMIT %i",limit);
         rc = sqlite3_prepare_v2(mDB, zSQL, -1, &statement, 0);
         
         // step through the returned hits
         while( sqlite3_step( statement ) == SQLITE_ROW)
         {
             char* version = (char *)sqlite3_column_text( statement, 1 );
-            char* url = (char *)sqlite3_column_text( statement, 1 );
-            double timestamp = sqlite3_column_double( statement, 1 );
+            char* url = (char *)sqlite3_column_text( statement, 2 );
+            double timestamp = sqlite3_column_double( statement, 3 );
             hits.push_back(createHit(version,url,timestamp));
         }
         
         // if appropriate, delete the hits
         if( removeFetchedFromDataStore && rc == SQLITE_OK )
         {
-            sqlite3_stmt *delete_statement = NULL;
-            char* zSQL_delete = sqlite3_mprintf("DELETE FROM hits order by id limit %i",limit);
-            rc = sqlite3_prepare_v2(mDB, zSQL, -1, &delete_statement, 0);
+            zSQL_delete = sqlite3_mprintf("DELETE FROM hits WHERE id IN (SELECT id FROM hits ORDER BY id LIMIT %i)",limit);
+            rc = sqlite3_exec(mDB, zSQL_delete, 0, 0, 0);
+            printf("%i",rc);
             sqlite3_free(zSQL_delete);
             
         }

@@ -6,19 +6,23 @@
 #include "RequestBuilder.h"
 #include "HitBuilder.h"
 
+#define GAI_VERSION "1"
+
 namespace GAI
 {
     
-    Hit::Hit()
+    Hit::Hit() :
+    mGaiVersion(GAI_VERSION)
     {
-        mGaiVersion = "1";
         mDispatchURL = "";
         mTimestamp = 0;
     }
     
-    Hit::Hit(const std::string& version, const std::string& url, const double timestamp)
+    Hit::Hit(const std::string& version, const std::string& url, const double timestamp) :
+    mGaiVersion(version)
     {
-        
+        mDispatchURL = url;
+        mTimestamp = timestamp;
     }
     
     void Hit::setParameters(std::map<std::string, std::string> aParameters) {
@@ -34,16 +38,16 @@ namespace GAI
             url+= it->second;
             first_param = false;
         }
+        // append the version
+        if( url != "" )
+            url += "&";
+        url+="v="+mGaiVersion;
+        // TODO: URL ENCODING
         mDispatchURL = url;
     }
     
     std::string Hit::getDispatchURL() const{
         std::string full_dispatch_url = mDispatchURL;
-        // append the version
-        if( full_dispatch_url != "" )
-            full_dispatch_url += "&";
-        full_dispatch_url+="v="+mGaiVersion;
-        // TODO: URL ENCODING
         return full_dispatch_url;
     }
     

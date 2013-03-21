@@ -9,6 +9,26 @@
 #include "gtest/gtest.h"
 
 #include "DataStoreSqlite.h"
+#include "Hit.h"
+
+class HitTestClass : public GAI::Hit
+{
+public:
+    HitTestClass(){}
+    HitTestClass( const std::string url, const double timestamp ) : Hit("1",url,timestamp)
+    {
+    }
+    HitTestClass( const Hit& hit ) : Hit(hit.getGaiVersion(), hit.getDispatchURL(), hit.getTimestamp())
+    {
+    }
+    
+    bool operator == (const HitTestClass& o ) const
+    {
+        return o.getDispatchURL() == getDispatchURL() &&
+        o.getGaiVersion() == getGaiVersion() &&
+        o.getTimestamp() == getTimestamp();
+    }
+};
 
 // The fixture for testing class Foo.
 class DataStoreSqlLiteTest : public ::testing::Test {
@@ -146,6 +166,46 @@ TEST_F (DataStoreSqlLiteTest, properties_kv)
 
 TEST_F (DataStoreSqlLiteTest, hits)
 {
-        
+    // Create a test hit
+    const std::string test_url = "test_url_string";
+    const double test_timestamp = 15.0;
+    std::list<GAI::Hit> results;
+    HitTestClass result_hit;
+    HitTestClass test_hit = HitTestClass( test_url, test_timestamp );
+    
+    // create db
+    GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
+    EXPECT_TRUE(db.open());
+    
+    // Store the test hit
+    EXPECT_TRUE(db.addHit(test_hit));
+    
+    //should have one hit
+    EXPECT_EQ(db.hitCount(),1);
+    
+    // Fetch the hit (don't clear)
+    results = db.fetchHits(1, false);
+    
+    //should still have one hit
+    EXPECT_EQ(db.hitCount(),1);
+    
+    //check that the size is one
+    EXPECT_EQ(results.size(),1);
+    
+    // check that the hit that is there is fundamentally equivalent to that tested
+    result_hit = HitTestClass( results.front()) ;
+    EXPECT_EQ( test_hit, result_hit);
+    
+    // now fetch with clear
+    results = db.fetchHits(1, true);
+    
+    //should still have one hit
+    EXPECT_EQ(db.hitCount(),0);
+    
+    //check that the size is one
+    ASSERT_EQ(results.size(),1);
+    
+    // check that the hit that is there is fundamentally equivalent to that tested
+    EXPECT_EQ( test_hit, HitTestClass( results.front()) );
 }
 
