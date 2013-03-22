@@ -13,7 +13,7 @@ namespace GAI
 	class GAI
 	{
     public:
-		static GAI* sharedInstance();
+		static GAI* sharedInstance( const std::string& product_name, const std::string& data_store_path );
 		
 		Tracker* createTracker( const std::string& tracking_id );
 		void removeTracker( const std::string& tracker_id );
@@ -21,8 +21,8 @@ namespace GAI
 		Tracker* getDefaultTracker() const;
 		void setDefaultTracker( Tracker* tracker );
 		
-		std::string getProductString() const;
-		void setProductString( const std::string& product_string );
+		std::string getProductName() const;
+		void setProductName( const std::string& product_name );
 		
 		std::string getVersion() const;
 		void setVersion( const std::string& version );
@@ -39,14 +39,14 @@ namespace GAI
 		void dispatch();
 		
     private:
-        GAI();
+        GAI( const std::string& product_name, const std::string& data_store_path );
 		
 		typedef std::map<std::string, Tracker*> TrackerMap;
 		TrackerMap mTrackers;
 		
 		Tracker* mDefaultTracker;
 		
-        std::string mProductString;
+        std::string mProductName;
 		std::string mVersion;
 		
 		bool mbDebug;	///< print information about data being sent

@@ -42,6 +42,7 @@
         'src/Dispatcher.h',
         'src/GAI.cpp',
         'src/GAI.h',
+        'src/GAIDefines.h',
         'src/Hit.cpp',
         'src/Hit.h',
         'src/HitBuilder.cpp',

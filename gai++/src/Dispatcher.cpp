@@ -1,8 +1,8 @@
-#include <exception>
-#include <string>
-
 
 #include "Dispatcher.h"
+
+#include <exception>
+
 #include "DataStore.h"
 #include "RequestBuilder.h"
 #include "URLConnection.h"
@@ -14,13 +14,11 @@
 namespace GAI
 {
 	
-	Dispatcher::Dispatcher( DataStore* aDataStore, std::string& aClientId, bool aOptOut, double aDispatchInterval )
+	Dispatcher::Dispatcher( DataStore* data_store, bool opt_out, double dispatch_interval ) :
+	mbOptOut( opt_out ),
+	mDispatchInterval( dispatch_interval )
 	{
-	}
-	
-	void Dispatcher::reachabilityStatusChanged( ReachabilityChecker aReachability, int aStatus )
-	{
-		throw "Not yet implemented";
+		mDataStore = data_store;
 	}
     
     bool Dispatcher::sendHit( Hit* hit )

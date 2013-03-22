@@ -1,26 +1,31 @@
 
 #include "GAI.h"
+#include "GAIDefines.h"
 #include "Tracker.h"
 #include "TrackerImpl.h"
 #include "Dispatcher.h"
+#include "DataStoreSqlite.h"
 
 namespace GAI
 {
     
-    GAI* GAI::sharedInstance()
+    GAI* GAI::sharedInstance( const std::string& product_name, const std::string& data_store_path )
 	{
         static GAI* sharedInstance = NULL;
         if( sharedInstance == NULL )
 		{
-            sharedInstance = new GAI();
+            sharedInstance = new GAI( product_name, data_store_path );
 		}
 		
         return sharedInstance;
     }
     
-    GAI::GAI()
+    GAI::GAI( const std::string& product_name, const std::string& data_store_path ) :
+	mProductName( product_name ),
+	mbDebug( false )
     {
-        mbDebug = false;
+		DataStoreSqlite *data_store = new DataStoreSqlite( data_store_path + mProductName );
+		mDispatcher = new Dispatcher( data_store, kOptOut, kDispatchInterval );
 	}
     
     Tracker* GAI::createTracker( const std::string& tracking_id )
@@ -33,7 +38,7 @@ namespace GAI
 		}
 		
         // create a new tracker
-        Tracker* new_tracker = new TrackerImpl( mDispatcher, tracking_id, mProductString, mVersion );
+        Tracker* new_tracker = new TrackerImpl( mDispatcher, tracking_id, mProductName, mVersion );
         mTrackers[ tracking_id ] = new_tracker;
         
         return new_tracker;
@@ -58,14 +63,14 @@ namespace GAI
 		mDefaultTracker = tracker;
 	}
     
-    std::string GAI::getProductString() const
+    std::string GAI::getProductName() const
 	{
-        return mProductString;
+        return mProductName;
     }
     
-    void GAI::setProductString( const std::string& product_string )
+    void GAI::setProductName( const std::string& product_name )
     {
-		mProductString = product_string;
+		mProductName = product_name;
     }
     
     std::string GAI::getVersion() const

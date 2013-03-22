@@ -1,9 +1,8 @@
-#include <exception>
-#include <string>
-
 
 #ifndef __Dispatcher_h__
 #define __Dispatcher_h__
+
+#include <string>
 
 #include "DataStore.h"
 #include "RequestBuilder.h"
@@ -22,18 +21,15 @@ namespace GAI
 	class TrackerImpl;
 	class GAI;
     class Hit;
-	// class ReachabilityDelegate;
 	class Dispatcher;
 }
 
 namespace GAI
 {
-	class Dispatcher: public ReachabilityDelegate
+	class Dispatcher
 	{
     public:
-		Dispatcher( DataStore* aDataStore, std::string& aClientId, bool aOptOut, double aDispatchInterval );
-		
-		void reachabilityStatusChanged( ReachabilityChecker aReachability, int aStatus );
+		Dispatcher( DataStore* data_store, bool opt_out, double dispatch_interval );
         
         bool sendHit( Hit* hit );
 		
@@ -51,12 +47,12 @@ namespace GAI
 		
 	private:
 		std::string mClientID;
-		bool		mbOptOut;	///< disable Google Analytics tracking
-		int			mDispatchInterval;	///< dispatch interval in seconds
+		DataStore* mDataStore;
+		
+		bool mbOptOut;			///< disable Google Analytics tracking
+		int	mDispatchInterval;	///< dispatch interval in seconds
 		
 		
-		
-		DataStore* _dataStore;
 		RequestBuilder* _requestBuilder;
 		URLConnection* _pendingDispatch;
 		ReachabilityChecker* _reachabiltiy;
