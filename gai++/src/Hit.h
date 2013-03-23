@@ -1,9 +1,11 @@
-#include <string>
-#include <map>
-
 
 #ifndef __Hit_h__
 #define __Hit_h__
+
+#include <string>
+#include <map>
+
+#include "GAIDefines.h"
 
 namespace GAI
 {
@@ -12,23 +14,27 @@ namespace GAI
 	class Hit
 	{
     public:
-		void setParameters(std::map<std::string, std::string> aParameters);
+		void setParameters( const std::map<std::string, std::string> parameters );
 
 		std::string getDispatchURL() const;
 
 		std::string getGaiVersion() const;
 
-		void setTimestamp(double aTimestamp);
+		void setTimestamp( double timestamp );
 
 		double getTimestamp() const;
+		
     protected:
         friend HitBuilder;
         friend DataStore;
+		
         Hit();
-        Hit(const std::string& version, const std::string& url, const double timestamp);
+        Hit( const std::string& version, const std::string& url, const double timestamp );
+		
         std::string mDispatchURL;
         std::string mGaiVersion;
-        double mTimestamp;
+        double		mTimestamp;
+		
 	};
 }
 

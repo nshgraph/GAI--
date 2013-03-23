@@ -12,4 +12,6 @@
 #define kDispatchInterval	1800 // 1800 seconds (30 minutes)
 #define kOptOut				0 // On
 
+#define kGAIVersion			"1"
+
 #endif

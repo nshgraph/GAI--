@@ -6,7 +6,11 @@
       'SYMROOT': '<(DEPTH)/bin',
       'SDKROOT': 'macosx10.7',
       'MACOSX_DEPLOYMENT_TARGET': '10.6',
-      'ARCHS': '$(ARCHS_STANDARD_32_64_BIT)',
+      'ARCHS': '$(ARCHS_STANDARD_64_BIT)',
+      'VALID_ARCHS': [
+        'i386',
+        'x86_64',
+      ],
 
       'USE_HEADERMAP': 'NO',
 
@@ -14,12 +18,6 @@
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES',
       'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
 
-      'FRAMEWORK_SEARCH_PATHS': [
-        '$(SDKROOT)/System/Library/Frameworks'
-      ],
-      'LIBRARY_SEARCH_PATHS': [
-        '/usr/local/lib'
-      ],
     },
     #todo win default settings
   },
@@ -102,6 +100,8 @@
       'sources': [
         'unittests/main.cpp',
         'unittests/test_datastoresqlite.cpp',
+        'unittests/test_hit.cpp',
+
         'src/DataStoreSqlite.h',
         'src/DataStoreSqlite.cpp',
         'src/DataStore.h',
@@ -120,10 +120,23 @@
           },
         }],
         ['OS=="mac"', {
+          'mac_bundle': 1,
+          'include_dirs': [
+            '/usr/local/include',
+          ],
+          'xcode_settings': {
+            'LIBRARY_SEARCH_PATHS': [
+              '/usr/local/lib'
+            ],
+            'FRAMEWORK_SEARCH_PATHS': [
+              '/Library/Frameworks'
+            ],
+          },
           'link_settings': {
             'libraries' : [
               'gtest.framework',
-              'libsqlite3.dylib'
+              'libsqlite3.dylib',
+              'libevent.dylib'
             ],
           },
           'configurations': {
