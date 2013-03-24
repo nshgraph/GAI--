@@ -45,7 +45,16 @@ TEST( HitBuilderTest, create_valid_hits )
     
     hit = GAI::HitBuilder::createHit( GAI::kEventHit, model );
     EXPECT_FALSE(hit == NULL);
+    
+    // Validate the returned hit
+    EXPECT_NE( hit->getDispatchURL(),"");
+    EXPECT_NE(hit->getTimestamp(), 0);
+    
+    
+    
     delete( hit );
+    
+    
     
 }
 
