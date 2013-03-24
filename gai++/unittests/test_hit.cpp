@@ -29,18 +29,14 @@ class HitTest : public ::testing::Test {
 protected:
     
     virtual void SetUp() {
-        // delete existing test db
-        //int rc = unlink( test_db.c_str() ); // we don't test the return code becuase we aren't guaranteed the file exists before the test
-    }
+   }
     
     virtual void TearDown() {
-        // delete existing test db
-        //int rc = unlink( test_db.c_str() ); // we don't test the return code becuase we aren't guaranteed the file exists before the test
         
     }
     
     // Objects declared here can be used by all tests in the test case for Foo.
-    //const std::string test_db = "test.db";
+    
 };
 
 TEST_F( HitTest, create_empty_hit )
