@@ -101,12 +101,18 @@
         'unittests/main.cpp',
         'unittests/test_datastoresqlite.cpp',
         'unittests/test_hit.cpp',
+        'unittests/test_hitbuilder.cpp',
+        'unittests/test_model.cpp',
 
         'src/DataStoreSqlite.h',
         'src/DataStoreSqlite.cpp',
         'src/DataStore.h',
         'src/Hit.h',
         'src/Hit.cpp',
+        'src/HitBuilder.h',
+        'src/HitBuilder.cpp',
+        'src/Model.h',
+        'src/Model.cpp',
       ],
       'conditions': [
         ['OS=="win"', {
