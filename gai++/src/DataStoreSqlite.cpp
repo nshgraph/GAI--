@@ -16,15 +16,30 @@ namespace GAI
     DataStoreSqlite::DataStoreSqlite( const std::string& path ) :
     mPath(path),
     mDB(NULL)
+    ///
+    /// Construtor
+    ///
+    /// @param path
+    ///     Path to either existing datastore or where new datastore will be created
+    ///
     {
         
     }
     DataStoreSqlite::~DataStoreSqlite()
+    ///
+    /// Destructor
+    ///
     {
         close();
     }
-    // Functions for managing the datastore as a whole
+    
     bool DataStoreSqlite::open()
+    ///
+    /// Open a connection to the DataStore
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         int return_code = sqlite3_open(mPath.c_str(), &mDB);
         if( return_code != SQLITE_OK || !initializeDatabase())
@@ -35,28 +50,58 @@ namespace GAI
         return true;
     }
     bool DataStoreSqlite::save()
+    ///
+    /// Save the Datastore. After this operation the on disk datastore should represent any in-memory content
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         // nothing to do on save as we don't cache state: the db is always updated
         return true;
     }
     void DataStoreSqlite::close()
+    ///
+    /// Close a connection to the DataStore
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         if( mDB )
             sqlite3_close(mDB);
         mDB = NULL;
     }
     bool DataStoreSqlite::isOpen() const
+    ///
+    /// Query whether there is a connection open to the datastore
+    ///
+    /// @return
+    ///     Whether a connection is open to the datastore
+    ///
     {
         return (mDB != NULL);
     }
     
     // Functions for managing the datastore state
     bool DataStoreSqlite::hasChanges() const
+    ///
+    /// Query whether there is a difference in state between the on disk representation and the in memory
+    ///
+    /// @return
+    ///     Whether there are outstanding changes to the Datastore
+    ///
     {
         return false;
     }
     
     bool DataStoreSqlite::deleteAllEntities()
+    ///
+    /// Deletes all entities of any type in the datastore. After this operation the store should be empty
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         bool result = true;
         result &= deleteAllHits();
@@ -64,12 +109,23 @@ namespace GAI
         return result;
     }
     int DataStoreSqlite::entityCount()
+    ///
+    /// Query how many entities of any type are in the datastore
+    ///
+    /// @return
+    ///     Entity count
+    ///
     {
         return hitCount() + propertyCount();
     }
     
-    // Functions for managing hits in the datastore
     bool DataStoreSqlite::deleteAllHits()
+    ///
+    /// Delete all stored hits
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         int rc;
         rc = sqlite3_exec(mDB, "DELETE FROM hits", 0, 0, 0);
@@ -78,7 +134,17 @@ namespace GAI
         
         return true;
     }
+    
     bool DataStoreSqlite::addHit(const Hit& hit)
+    ///
+    /// Add a Hit to the datstore
+    ///
+    /// @param hit
+    ///     The Hit object to add
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         int rc;
         char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f) ", hit.getGaiVersion().c_str(), hit.getDispatchURL().c_str(),hit.getTimestamp());
@@ -91,7 +157,19 @@ namespace GAI
         
         return true;
     }
+    
     std::list<Hit> DataStoreSqlite::fetchHits(const unsigned int limit, bool removeFetchedFromDataStore)
+    ///
+    /// Retrieves hits from the datstore up to a limit, optionally removes them after retrieval (atomically)
+    ///
+    /// @param limit
+    ///     Maximum number of hits to return
+    /// @param removeFetchedFromDataStore
+    ///     Option to delete Hits from datastore before returning them
+    ///
+    /// @return
+    ///     A List of Hit objects corresponding to those retrieved from the datastore
+    ///
     {
         std::list<Hit> hits;
         
@@ -139,7 +217,14 @@ namespace GAI
         
         return hits;
     }
+    
     int DataStoreSqlite::hitCount()
+    ///
+    /// Returns a count of all Hits in the datastore
+    ///
+    /// @return
+    ///     Hit Count
+    ///
     {
         int rc;
         int rows = 0;
@@ -158,8 +243,13 @@ namespace GAI
         return rows;
     }
     
-    // Functions for managing properties in the datastore
     bool DataStoreSqlite::deleteAllProperties()
+    ///
+    /// Deletes all properties (key-value pairs) in the datastore
+    ///
+    /// @return
+    ///  Whether the operation was successful
+    ///
     {
         int rc;
         rc = sqlite3_exec(mDB, "DELETE FROM properties", 0, 0, 0);
@@ -168,7 +258,19 @@ namespace GAI
         
         return true;
     }
+    
     bool DataStoreSqlite::addProperty(const std::string& name, const std::string& value)
+    ///
+    /// Adds a property (key-value pair) to the datastore
+    ///
+    /// @param name
+    ///     Key name
+    /// @param value
+    ///     Value to store
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         int rc;
         sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
@@ -190,7 +292,17 @@ namespace GAI
         
         return true;
     }
+    
     std::string DataStoreSqlite::fetchProperty( const std::string& name )
+    ///
+    /// Retrieves the value of a property specified
+    ///
+    /// @param name
+    ///     Key Name
+    ///
+    /// @return
+    ///     Value of property as retrieved. Or empty string if failed
+    ///
     {
         int rc;
         sqlite3_stmt *statement = NULL;
@@ -209,7 +321,14 @@ namespace GAI
         sqlite3_finalize(statement);
         return result;
     }
+    
     DataStore::PropertyMap DataStoreSqlite::fetchProperties()
+    ///
+    /// Retrieves all properties in the data store
+    ///
+    /// @return
+    ///     Key Value map
+    ///
     {
         DataStore::PropertyMap  properties;
         int rc;
@@ -227,7 +346,15 @@ namespace GAI
         sqlite3_finalize(statement);
         return properties;
     }
+    
+    
     int DataStoreSqlite::propertyCount()
+    ///
+    /// Returns a count of all Key Value pairs in the datastore
+    ///
+    /// @return
+    ///  Property Count
+    ///
     {
         int rc;
         int rows = 0;
@@ -246,8 +373,13 @@ namespace GAI
         return rows;
     }
     
-    // ensure that the database has all strutures necessary
     bool DataStoreSqlite::initializeDatabase()
+    ///
+    /// Ensure that the database has all strutures necessary
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
     {
         int rc;
         rc = sqlite3_exec(mDB, "CREATE TABLE properties (key TEXT PRIMARY KEY, value TEXT);", NULL,NULL,NULL);

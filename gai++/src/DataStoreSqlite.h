@@ -20,6 +20,9 @@ class sqlite3;
 namespace GAI
 {
     class DataStoreSqlite : public DataStore
+    ///
+    /// This class is a specific implementation of the Datastore interface using SQLite
+    ///
     {
     public:
         DataStoreSqlite( const std::string& path );
@@ -51,8 +54,9 @@ namespace GAI
     private:
         // ensure that the database has all strutures necessary
         bool initializeDatabase();
-        sqlite3* mDB;
-        std::string mPath;
+        
+        sqlite3* mDB; // reference to
+        std::string mPath; // path to db on disk
     };
 }
 
