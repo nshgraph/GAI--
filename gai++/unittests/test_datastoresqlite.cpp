@@ -209,3 +209,49 @@ TEST_F (DataStoreSqlLiteTest, hits)
     EXPECT_EQ( test_hit, HitTestClass( results.front()) );
 }
 
+TEST_F (DataStoreSqlLiteTest, hits2)
+{
+    // Create a test hit
+    const std::string test_url = "test_url_string";
+    const double test_timestamp = 15.0;
+    std::list<GAI::Hit> results;
+    HitTestClass result_hit;
+    HitTestClass test_hit = HitTestClass( test_url, test_timestamp );
+    
+    // create db
+    GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
+    EXPECT_TRUE(db.open());
+    
+    // Store the test hit
+    EXPECT_TRUE(db.addHit(test_hit));
+    // Store a second hit
+    EXPECT_TRUE(db.addHit(test_hit));
+    
+    //should have one hit
+    EXPECT_EQ(db.hitCount(),2);
+    
+    // Fetch the hit (don't clear)
+    results = db.fetchHits(1, false);
+    
+    //should still have one hit
+    EXPECT_EQ(db.hitCount(),2);
+    
+    //check that the size is one
+    EXPECT_EQ(results.size(),1);
+    
+    // check that the hit that is there is fundamentally equivalent to that tested
+    result_hit = HitTestClass( results.front()) ;
+    EXPECT_EQ( test_hit, result_hit);
+    
+    // now fetch with clear
+    results = db.fetchHits(1, true);
+    
+    //should still have one hit
+    EXPECT_EQ(db.hitCount(),1);
+    
+    //check that the size is one
+    ASSERT_EQ(results.size(),1);
+    
+    // check that the hit that is there is fundamentally equivalent to that tested
+    EXPECT_EQ( test_hit, HitTestClass( results.front()) );
+}
