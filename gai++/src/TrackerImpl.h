@@ -18,7 +18,10 @@ namespace GAI
 	class TrackerImpl: public Tracker
 	{
     public:
-		TrackerImpl(Dispatcher* aDispatcher, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion);
+		TrackerImpl(Dispatcher& aDispatcher, const std::string& aClientID, const std::string& aTrackingID,
+                    const std::string& aAppName, const std::string& aAppVersion);
+        
+        ~TrackerImpl();
 
 		bool sendView(const std::string& aScreen);
 
@@ -86,7 +89,7 @@ namespace GAI
         bool mbSampled;
         
         Model* mModel;
-        Dispatcher* mDispatcher;
+        Dispatcher& mDispatcher;
         double mSampleRate;
         std::string mHttpDispatchUrl;
         std::string mHttpsDispatchUrl;

@@ -28,6 +28,7 @@ namespace GAI
     }
 	
 	void Dispatcher::queueDispatch()
+    /// really: send outstanding hits if possible
 	{
 		throw "Not yet implemented";
 	}
@@ -35,11 +36,6 @@ namespace GAI
 	void Dispatcher::cancelDispatch()
 	{
 		throw "Not yet implemented";
-	}
-	
-	std::string Dispatcher::getClientID()
-	{
-		return mClientID;
 	}
 	
 	bool Dispatcher::isOptOut() const

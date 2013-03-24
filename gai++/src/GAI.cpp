@@ -5,6 +5,7 @@
 #include "TrackerImpl.h"
 #include "Dispatcher.h"
 #include "DataStoreSqlite.h"
+#include "ClientID.h"
 
 namespace GAI
 {
@@ -38,7 +39,8 @@ namespace GAI
 		}
 		
         // create a new tracker
-        Tracker* new_tracker = new TrackerImpl( mDispatcher, tracking_id, mProductName, mVersion );
+        std::string client_id = ClientID::generateClientID();
+        Tracker* new_tracker = new TrackerImpl( mDispatcher, client_id, tracking_id, mProductName, mVersion );
         mTrackers[ tracking_id ] = new_tracker;
         
         return new_tracker;

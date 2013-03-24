@@ -1,27 +1,33 @@
 
 #include "TrackerImpl.h"
 
+#include "GAIDefines.h"
 #include "Model.h"
 #include "Dispatcher.h"
 #include "Transaction.h"
 #include "TransactionItem.h"
 #include "HitBuilder.h"
-#include "ClientID.h"
 
 namespace GAI {
     
-    TrackerImpl::TrackerImpl(Dispatcher* aDispatcher, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion) :
+    TrackerImpl::TrackerImpl(Dispatcher& aDispatcher, const std::string& aClientID, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion) :
     mDispatcher( aDispatcher ),
     mbTrackerOpen( true ),
+    mbSessionStart( false ),
     mSessionTimeout(30)
     {
         mModel = new Model();
-        setClientId( ClientID::generateClientID() );
+        setClientId( aClientID );
         setTrackingId( aTrackingID );
         setAppName( aAppName );
         setAppVersion( aAppVersion );
         // make sure the first hit sent indicates that this is the start of a new tracking session
         mModel->setForNextHit(kSessionControlModelKey, "start");
+    }
+    
+    TrackerImpl::~TrackerImpl()
+    {
+        delete mModel;
     }
     
     
@@ -244,14 +250,14 @@ namespace GAI {
         // add the parameters as temporaries to the model
         mModel->setAll(aParameters, true);
         //create a hit
-        Hit* hit = HitBuilder::createHit( aType, mModel );
+        Hit* hit = HitBuilder::createHit( aType, *mModel );
         //reset the temporary values
         mModel->clearTemporaryValues();
         // no hit means we failed
         if( !hit )
             return false;
         // send this hit
-        return mDispatcher->sendHit(hit);
+        return mDispatcher.sendHit(hit);
         
     }
     

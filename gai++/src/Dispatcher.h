@@ -31,13 +31,11 @@ namespace GAI
     public:
 		Dispatcher( DataStore* data_store, bool opt_out, double dispatch_interval );
         
-        bool sendHit( Hit* hit );
+        virtual bool sendHit( Hit* hit );
 		
 		void queueDispatch();
 		
 		void cancelDispatch();
-		
-		std::string getClientID();
 		
 		bool isOptOut() const;
 		void setOptOut( const bool opt_out );
@@ -46,7 +44,6 @@ namespace GAI
 		void setDispatchInterval( const int dispatch_interval );
 		
 	private:
-		std::string mClientID;
 		DataStore* mDataStore;
 		
 		bool mbOptOut;			///< disable Google Analytics tracking
