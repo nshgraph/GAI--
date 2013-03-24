@@ -2,6 +2,7 @@
 #include <string>
 #include <list>
 
+#include "GAIDefines.h"
 
 #include "HitBuilder.h"
 #include "Hit.h"

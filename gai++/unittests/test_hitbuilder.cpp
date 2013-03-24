@@ -8,6 +8,7 @@
 
 #include "gtest/gtest.h"
 
+#include "GAIDefines.h"
 #include "Hit.h"
 #include "HitBuilder.h"
 #include "Model.h"

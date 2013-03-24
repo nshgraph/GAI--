@@ -6,6 +6,8 @@
 
 #include <evhttp.h>
 
+#include "GAIDefines.h"
+
 #include "RequestBuilder.h"
 #include "HitBuilder.h"
 

@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 
-#include "GAIDefines.h"
 
 namespace GAI
 {
