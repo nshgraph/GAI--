@@ -55,8 +55,15 @@
 namespace GAI
 {
 	class Model
+    ///
+    /// This class holds parameters that will be used for a hit. There is no validation on the parameters but
+    /// this class can be passed to HitBuilder to create a real Hit
+    ///
 	{
     public:
+        ///
+        /// This typedef simplifies and instructs the kind of parameter map needed by functions of this class
+        ///
         typedef std::map<std::string,std::string> ParameterMap;
     public:
         Model();
@@ -70,8 +77,8 @@ namespace GAI
         
         void clearTemporaryValues();
     private:
-        ParameterMap values;
-        ParameterMap temporaryValues;
+        ParameterMap values; // set of values that will be stored until object destruction
+        ParameterMap temporaryValues; // set of values that can be cleared with clearTemporaryValues()
 	};
 }
 

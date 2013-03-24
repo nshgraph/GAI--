@@ -12,6 +12,10 @@ namespace GAI
 	class HitBuilder;
     class DataStore;
 	class Hit
+    ///
+    /// This class represents a fully formed and ready for transmission 'Hit' on recipt by Google Analytic's Measurement
+    /// Protocol the associated hit should be accepted and interpreted as an even on the user's account
+    ///
 	{
     public:
 		void setParameters( const std::map<std::string, std::string> parameters );
@@ -25,15 +29,15 @@ namespace GAI
 		double getTimestamp() const;
 		
     protected:
-        friend HitBuilder;
-        friend DataStore;
+        friend HitBuilder; // this is required as HitBuilder should be the only user-accessable method of creating a Hit
+        friend DataStore; // this is required to allow DataStore's to deserialize Hits
 		
         Hit();
         Hit( const std::string& version, const std::string& url, const double timestamp );
 		
-        std::string mDispatchURL;
-        std::string mGaiVersion;
-        double		mTimestamp;
+        std::string mDispatchURL; // stores the encoded url representing all the parameters associated with this hit
+        std::string mGaiVersion; // the Google analytics version this hit's parameters adhere to
+        double		mTimestamp; // the timestamp for this hit
 		
 	};
 }

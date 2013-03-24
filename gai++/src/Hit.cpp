@@ -16,6 +16,10 @@ namespace GAI
     mGaiVersion( kGAIVersion ),
 	mDispatchURL( "" ),
 	mTimestamp( 0 )
+    ///
+    /// Default Constructor
+    /// Uses the defined version of Google Analytics
+    ///
     {
     }
     
@@ -23,10 +27,27 @@ namespace GAI
     mGaiVersion( version ),
 	mDispatchURL( url ),
 	mTimestamp( timestamp )
+    ///
+    /// Constructor
+    /// This should be used when deserializing a pre-made hit
+    ///
+    /// @param version
+    ///     The Google Analytics protocol version
+    /// @param url
+    ///     The ready-encoded set of parameters
+    /// @param timestamp
+    ///     The timestamp of this hit
+    ///
     {
     }
     
     void Hit::setParameters( const std::map<std::string, std::string> parameters )
+    ///
+    /// Sets the parameters to be used with this Hit. Will clear any pre-existing parameters
+    ///
+    /// @param parameters
+    ///     The set of parameters to be used by this Hit. 
+    ///
 	{
         // generate dispatch url from parameters
         std::string url = "";
@@ -51,21 +72,45 @@ namespace GAI
     }
     
     std::string Hit::getDispatchURL() const
+    ///
+    /// Retrieves the url of encoded values for this hit
+    ///
+    /// @return
+    ///     The encoded dispatch url
+    ///
 	{
         return mDispatchURL;
     }
     
     std::string Hit::getGaiVersion() const
+    ///
+    /// Retrieves the Google Analytics version of this hit
+    ///
+    /// @return
+    ///     The GAI version
+    ///
 	{
         return mGaiVersion;
     }
     
     void Hit::setTimestamp( double timestamp )
+    ///
+    /// Sets the timestamp of this hi
+    ///
+    /// @param timestamp
+    ///     The timestamp of this hit
+    ///
 	{
         mTimestamp = timestamp;
     }
     
     double Hit::getTimestamp() const
+    ///
+    /// Retrieve the timestamp of this hit
+    ///
+    /// @return
+    ///     The timestamp of this hit
+    ///
 	{
         return mTimestamp;
     }
