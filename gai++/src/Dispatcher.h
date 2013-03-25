@@ -4,13 +4,8 @@
 
 #include <string>
 
-#include "DataStore.h"
-#include "RequestBuilder.h"
-#include "URLConnection.h"
-#include "ReachabilityChecker.h"
-// #include "TrackerImpl.h"
-// #include "GAI.h"
-#include "ReachabilityDelegate.h"
+#include "HitStore.h"
+
 
 namespace GAI
 {
@@ -26,12 +21,12 @@ namespace GAI
 
 namespace GAI
 {
-	class Dispatcher
+	class Dispatcher : public HitStore
 	{
     public:
-		Dispatcher( DataStore* data_store, bool opt_out, double dispatch_interval );
+		Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval );
         
-        virtual bool sendHit( Hit* hit );
+        virtual bool storeHit( const Hit& hit );
 		
 		void queueDispatch();
 		
@@ -44,15 +39,11 @@ namespace GAI
 		void setDispatchInterval( const int dispatch_interval );
 		
 	private:
-		DataStore* mDataStore;
+		DataStore& mDataStore;
 		
 		bool mbOptOut;			///< disable Google Analytics tracking
 		int	mDispatchInterval;	///< dispatch interval in seconds
 		
-		
-		RequestBuilder* _requestBuilder;
-		URLConnection* _pendingDispatch;
-		ReachabilityChecker* _reachabiltiy;
 		uint64_t _cacheBuster;
 		
 	};

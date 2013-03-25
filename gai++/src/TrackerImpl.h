@@ -12,13 +12,13 @@
 namespace GAI
 {
 	class Transaction;
-	class Dispatcher;
+	class HitStore;
     class Model;
     
 	class TrackerImpl: public Tracker
 	{
     public:
-		TrackerImpl(Dispatcher& aDispatcher, const std::string& aClientID, const std::string& aTrackingID,
+		TrackerImpl(HitStore& aHitStore, const std::string& aClientID, const std::string& aTrackingID,
                     const std::string& aAppName, const std::string& aAppVersion);
         
         ~TrackerImpl();
@@ -89,7 +89,7 @@ namespace GAI
         bool mbSampled;
         
         Model* mModel;
-        Dispatcher& mDispatcher;
+        HitStore& mHitStore;
         double mSampleRate;
         std::string mHttpDispatchUrl;
         std::string mHttpsDispatchUrl;

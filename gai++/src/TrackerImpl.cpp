@@ -10,8 +10,8 @@
 
 namespace GAI {
     
-    TrackerImpl::TrackerImpl(Dispatcher& aDispatcher, const std::string& aClientID, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion) :
-    mDispatcher( aDispatcher ),
+    TrackerImpl::TrackerImpl(HitStore& aHitStore, const std::string& aClientID, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion) :
+    mHitStore( aHitStore ),
     mbTrackerOpen( true ),
     mbSessionStart( false ),
     mSessionTimeout(30)
@@ -257,7 +257,7 @@ namespace GAI {
         if( !hit )
             return false;
         // send this hit
-        return mDispatcher.sendHit(hit);
+        return mHitStore.storeHit(*hit);
         
     }
     

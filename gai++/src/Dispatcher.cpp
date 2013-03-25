@@ -4,24 +4,19 @@
 #include <exception>
 
 #include "DataStore.h"
-#include "RequestBuilder.h"
-#include "URLConnection.h"
-#include "ReachabilityChecker.h"
-#include "TrackerImpl.h"
 #include "GAI.h"
-#include "ReachabilityDelegate.h"
 
 namespace GAI
 {
 	
-	Dispatcher::Dispatcher( DataStore* data_store, bool opt_out, double dispatch_interval ) :
+	Dispatcher::Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval ) :
 	mbOptOut( opt_out ),
-	mDispatchInterval( dispatch_interval )
+	mDispatchInterval( dispatch_interval ),
+    mDataStore( data_store )
 	{
-		mDataStore = data_store;
 	}
     
-    bool Dispatcher::sendHit( Hit* hit )
+    bool Dispatcher::storeHit( const Hit& hit )
     {
         // really: add this to the datastore
         throw "Not yet implemented";

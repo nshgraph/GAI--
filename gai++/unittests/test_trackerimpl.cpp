@@ -9,26 +9,22 @@
 #include "gtest/gtest.h"
 
 #include "TrackerImpl.h"
-#include "Dispatcher.h"
+#include "HitStore.h"
 #include "Transaction.h"
 
 
-class FakeDispatcher : public GAI::Dispatcher
+class FakeHitStore : public GAI::HitStore
 {
 public:
-    FakeDispatcher() : GAI::Dispatcher(NULL,false,0),
+    FakeHitStore() :
     mNumHits(0)
     {
         
     }
-    bool sendHit( GAI::Hit* hit )
+    bool storeHit( const GAI::Hit& hit )
     {
-        if( hit != NULL )
-        {
-            mNumHits++;
-            return true;
-        }
-        return false;
+        mNumHits++;
+        return true;
     }
     int getNumHits()
     {
@@ -41,7 +37,7 @@ private:
 
 TEST( TrackerImplTest, send_types )
 {
-    FakeDispatcher dispatch = FakeDispatcher();
+    FakeHitStore dispatch = FakeHitStore();
     GAI::TrackerImpl tracker = GAI::TrackerImpl(dispatch,"clientID","trackingID","appName","appVersion");
     
     EXPECT_EQ(dispatch.getNumHits(),0);
@@ -85,7 +81,7 @@ TEST( TrackerImplTest, send_types )
 
 TEST( TrackerImplTest, get_and_set)
 {
-    FakeDispatcher dispatch = FakeDispatcher();
+    FakeHitStore dispatch = FakeHitStore();
     std::string clientID = "clientID";
     std::string trackingID = "trackingID";
     std::string appName = "appName";
