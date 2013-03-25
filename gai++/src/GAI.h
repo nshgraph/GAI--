@@ -9,6 +9,7 @@ namespace GAI
 {
 	class Tracker;
 	class Dispatcher;
+    class DataStore;
     
 	class GAI
 	{
@@ -40,6 +41,7 @@ namespace GAI
 		
     private:
         GAI( const std::string& product_name, const std::string& data_store_path );
+        ~GAI();
 		
 		typedef std::map<std::string, Tracker*> TrackerMap;
 		TrackerMap mTrackers;
@@ -52,6 +54,7 @@ namespace GAI
 		bool mbDebug;	///< print information about data being sent
 		
 		Dispatcher* mDispatcher;
+        DataStore* mDataStore;
 		
 	};
 }

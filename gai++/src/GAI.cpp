@@ -25,9 +25,14 @@ namespace GAI
 	mProductName( product_name ),
 	mbDebug( false )
     {
-		DataStoreSqlite *data_store = new DataStoreSqlite( data_store_path + mProductName );
-		mDispatcher = new Dispatcher( data_store, kOptOut, kDispatchInterval );
+        mDataStore = new DataStoreSqlite( data_store_path + mProductName );
+		mDispatcher = new Dispatcher( mDataStore, kOptOut, kDispatchInterval );
 	}
+    
+    GAI::~GAI()
+    {
+        delete mDataStore;
+    }
     
     Tracker* GAI::createTracker( const std::string& tracking_id )
 	{
@@ -39,7 +44,7 @@ namespace GAI
 		}
 		
         // create a new tracker
-        std::string client_id = ClientID::generateClientID();
+        std::string client_id = ClientID::generateClientID(mDataStore);
         Tracker* new_tracker = new TrackerImpl( mDispatcher, client_id, tracking_id, mProductName, mVersion );
         mTrackers[ tracking_id ] = new_tracker;
         
