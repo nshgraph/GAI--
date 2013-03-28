@@ -106,6 +106,7 @@
         'unittests/test_hitbuilder.cpp',
         'unittests/test_model.cpp',
         'unittests/test_trackerimpl.cpp',
+        'unittests/test_dispatcher.cpp',
 
         'src/ClientID.h',
         'src/ClientID.cpp',
