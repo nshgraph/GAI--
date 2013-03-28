@@ -6,6 +6,8 @@
 
 #include "HitStore.h"
 
+#include <event.h>
+#include <evutil.h>
 
 namespace GAI
 {
@@ -25,10 +27,11 @@ namespace GAI
 	{
     public:
 		Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval );
+		~Dispatcher();
         
         virtual bool storeHit( const Hit& hit );
 		
-		void queueDispatch();
+		virtual void queueDispatch();
 		
 		void cancelDispatch();
 		
@@ -39,10 +42,19 @@ namespace GAI
 		void setDispatchInterval( const int dispatch_interval );
 		
 	private:
+		void createTimerThread();
+		static void* timerThread( void* context );
+		static void timerCallback( evutil_socket_t file_descriptor, short events, void* context );
+		
+		pthread_t	mTimerThread;
+		
+		event_base*	mDispatchEventBase;
+		event*		mDispatchEvent;
+		
 		DataStore& mDataStore;
 		
 		bool mbOptOut;			///< disable Google Analytics tracking
-		int	mDispatchInterval;	///< dispatch interval in seconds
+		int	 mDispatchInterval;	///< dispatch interval in seconds
 		
 		uint64_t _cacheBuster;
 		
