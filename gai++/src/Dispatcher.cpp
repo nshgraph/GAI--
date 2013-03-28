@@ -23,8 +23,16 @@ namespace GAI
 	
 	Dispatcher::~Dispatcher()
 	{
-		event_del( mDispatchEvent );
-		pthread_join( mTimerThread, NULL );
+		if( mDispatchEvent )
+		{
+			event_del( mDispatchEvent );
+			event_free( mDispatchEvent );
+		}
+		
+		if( mDispatchEventBase )
+		{
+			event_base_free( mDispatchEventBase );
+		}
 	}
     
     bool Dispatcher::storeHit( const Hit& hit )
@@ -63,7 +71,7 @@ namespace GAI
 	{
 		mDispatchInterval = dispatch_interval;
 		
-		if( mDispatchEvent && event_initialized( mDispatchEvent ) )
+		if( mDispatchEvent )
 		{
 			const double seconds = floor( mDispatchInterval );
 			const double micro_seconds = ( mDispatchInterval - seconds ) * 1000000;
@@ -81,7 +89,7 @@ namespace GAI
 	{
 		Dispatcher *dispatcher = static_cast<Dispatcher*>( context );
 		
-        dispatcher->mDispatchEventBase =  event_base_new();
+        dispatcher->mDispatchEventBase = event_base_new();
         dispatcher->mDispatchEvent = event_new( dispatcher->mDispatchEventBase, -1, EV_TIMEOUT|EV_PERSIST, Dispatcher::timerCallback, context );
 		
 		const double seconds = floor( dispatcher->mDispatchInterval );
@@ -90,9 +98,6 @@ namespace GAI
         event_add( dispatcher->mDispatchEvent, &timeout );
 		
         event_base_dispatch( dispatcher->mDispatchEventBase );
-		
-		event_free( dispatcher->mDispatchEvent );
-		event_base_free( dispatcher->mDispatchEventBase );
 	}
 	
 	void Dispatcher::timerCallback( evutil_socket_t file_descriptor, short events, void* context )
