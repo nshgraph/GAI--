@@ -39,7 +39,7 @@ namespace GAI
 		void setOptOut( const bool opt_out );
 		
 		int getDispatchInterval() const;
-		void setDispatchInterval( const int dispatch_interval );
+		void setDispatchInterval( const double dispatch_interval );
 		
 	private:
 		void createTimerThread();
@@ -53,8 +53,8 @@ namespace GAI
 		
 		DataStore& mDataStore;
 		
-		bool mbOptOut;			///< disable Google Analytics tracking
-		int	 mDispatchInterval;	///< dispatch interval in seconds
+		bool	mbOptOut;			///< disable Google Analytics tracking
+		double	mDispatchInterval;	///< dispatch interval in seconds
 		
 		uint64_t _cacheBuster;
 		

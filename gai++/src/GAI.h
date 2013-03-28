@@ -35,7 +35,7 @@ namespace GAI
 		void setOptOut( const bool opt_out );
 		
 		double getDispatchInterval() const;
-		void setDispatchInterval( const int dispatch_interval );
+		void setDispatchInterval( const double dispatch_interval );
 		
 		void dispatch();
 		

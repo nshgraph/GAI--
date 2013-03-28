@@ -115,7 +115,7 @@ namespace GAI
         return mDispatcher->getDispatchInterval();
     }
     
-    void GAI::setDispatchInterval( const int dispatch_interval )
+    void GAI::setDispatchInterval( const double dispatch_interval )
 	{
         mDispatcher->setDispatchInterval( dispatch_interval );
     }

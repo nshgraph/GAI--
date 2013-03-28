@@ -56,26 +56,26 @@ protected:
 
 TEST_F( DispatcherTest, dispatch_interval_callback )
 {
-	const int dispatch_interval = 1;
+	const double dispatch_interval = 0.1;
 	
     GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
 	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval );
 	
-	sleep( dispatch_interval + 1 );
+	usleep( dispatch_interval * 1000000 * 1.5 );
 	
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
 }
 
 TEST_F( DispatcherTest, set_dispatch_interval )
 {
-	const int dispatch_interval_1 = 1000;
-	const int dispatch_interval_2 = 1;
+	const double dispatch_interval_1 = 1000;
+	const double dispatch_interval_2 = 0.05;
 	
     GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
 	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval_1 );
 	dispatcher.setDispatchInterval( dispatch_interval_2 );
 	
-	sleep( dispatch_interval_2 + 1 );
+	usleep( dispatch_interval_2 * 1000000 * 1.5 );
 	
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
 }

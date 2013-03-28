@@ -3,10 +3,10 @@
 
 #include <exception>
 #include <pthread.h>
+#include <math.h>
 
 #include "DataStore.h"
 #include "GAI.h"
-
 
 namespace GAI
 {
@@ -59,13 +59,15 @@ namespace GAI
 		return mDispatchInterval;
 	}
 	
-	void Dispatcher::setDispatchInterval( const int dispatch_interval )
+	void Dispatcher::setDispatchInterval( const double dispatch_interval )
 	{
 		mDispatchInterval = dispatch_interval;
 		
 		if( mDispatchEvent && event_initialized( mDispatchEvent ) )
 		{
-			const struct timeval timeout = {mDispatchInterval, 0};
+			const double seconds = floor( mDispatchInterval );
+			const double micro_seconds = ( mDispatchInterval - seconds ) * 1000000;
+			const struct timeval timeout = {seconds, micro_seconds};
 			event_add( mDispatchEvent, &timeout );
 		}
 	}
@@ -75,14 +77,16 @@ namespace GAI
 		pthread_create( &mTimerThread, NULL, &Dispatcher::timerThread, this );
 	}
 	
-	void* Dispatcher::timerThread( void *context )
+	void* Dispatcher::timerThread( void* context )
 	{
 		Dispatcher *dispatcher = static_cast<Dispatcher*>( context );
 		
         dispatcher->mDispatchEventBase =  event_base_new();
         dispatcher->mDispatchEvent = event_new( dispatcher->mDispatchEventBase, -1, EV_TIMEOUT|EV_PERSIST, Dispatcher::timerCallback, context );
 		
-		const struct timeval timeout = {dispatcher->mDispatchInterval, 0};
+		const double seconds = floor( dispatcher->mDispatchInterval );
+		const double micro_seconds = ( dispatcher->mDispatchInterval - seconds ) * 1000000;
+		const struct timeval timeout = {seconds, micro_seconds};
         event_add( dispatcher->mDispatchEvent, &timeout );
 		
         event_base_dispatch( dispatcher->mDispatchEventBase );
