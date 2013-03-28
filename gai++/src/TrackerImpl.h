@@ -84,22 +84,17 @@ namespace GAI
         void setClientId(const std::string& aClientId);
         bool internalSend(const HitType aType, const ParameterMap& aParameters);
         
-        bool mbSessionStart;
-        bool mbTrackerOpen;
-        bool mbSampled;
+        bool mbSessionStart; // Whether the first hit has been sent
+        bool mbTrackerOpen; // Whether this tracker is 'open'. If not Hit's can't be sent
         
-        Model* mModel;
-        HitStore& mHitStore;
-        double mSampleRate;
-        std::string mHttpDispatchUrl;
-        std::string mHttpsDispatchUrl;
-        bool mbUseHttps;
+        Model* mModel; // The model used to store parameters for use with the hit
+        HitStore& mHitStore; // Reference to the Hit Store to use for sending hits
+        double mSampleRate; // sample rate of hits
+        std::string mHttpDispatchUrl; // URL to use for unsecured connections
+        std::string mHttpsDispatchUrl; // URL to use for secured connections
+        bool mbUseHttps; // Whether to use a secure connection
         
-        int64_t mTrackCount;
-        int64_t mHitCount;
-		double mSessionTimeout;
-        double mLastActiveTime;
-        double mLastTrackTime;
+		double mSessionTimeout; // session timeout
 	};
 }
 
