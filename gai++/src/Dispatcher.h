@@ -41,6 +41,9 @@ namespace GAI
 		int getDispatchInterval() const;
 		void setDispatchInterval( const double dispatch_interval );
 		
+	protected:
+		DataStore& mDataStore;
+	
 	private:
 		void createTimerThread();
 		static void* timerThread( void* context );
@@ -51,7 +54,6 @@ namespace GAI
 		event_base*	mDispatchEventBase;
 		event*		mDispatchEvent;
 		
-		DataStore& mDataStore;
 		
 		bool	mbOptOut;			///< disable Google Analytics tracking
 		double	mDispatchInterval;	///< dispatch interval in seconds

@@ -29,9 +29,24 @@ public:
 	{
 		mbCallbackComplete = true;
 	}
-
-
+	
+	int getHitCount() const
+	{
+        mDataStore.open();
+		const int count = mDataStore.entityCount();
+		mDataStore.close();
+		
+		return count;
+	}
+	
 	bool mbCallbackComplete;
+};
+
+class HitTestClass : public GAI::Hit
+{
+public:
+    HitTestClass() : Hit(){}
+	
 };
 
 class DispatcherTest : public ::testing::Test
@@ -78,4 +93,28 @@ TEST_F( DispatcherTest, set_dispatch_interval )
 	usleep( dispatch_interval_2 * 1000000 * 1.5 );
 	
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
+}
+
+TEST_F( DispatcherTest, opt_out )
+{
+	const bool opt_out = true;
+	
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, opt_out, kDispatchInterval );
+	
+	HitTestClass hit;
+	dispatcher.storeHit( hit );
+	
+	EXPECT_EQ( dispatcher.getHitCount(), 0 );
+}
+
+TEST_F( DispatcherTest, store_hit )
+{
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, kDispatchInterval );
+	
+	HitTestClass hit;
+	dispatcher.storeHit( hit );
+	
+	EXPECT_EQ( dispatcher.getHitCount(), 1 );
 }

@@ -37,8 +37,14 @@ namespace GAI
     
     bool Dispatcher::storeHit( const Hit& hit )
     {
-        // really: add this to the datastore
-        throw "Not yet implemented";
+		if( mbOptOut )
+			return true;
+		
+		mDataStore.open();
+		const bool ret_val = mDataStore.addHit( hit );
+		mDataStore.close();
+		
+		return ret_val;
     }
 	
 	void Dispatcher::queueDispatch()
