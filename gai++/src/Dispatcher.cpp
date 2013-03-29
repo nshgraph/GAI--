@@ -33,6 +33,8 @@ namespace GAI
 		{
 			event_base_free( mDispatchEventBase );
 		}
+		
+		mDataStore.close();
 	}
     
     bool Dispatcher::storeHit( const Hit& hit )
@@ -40,11 +42,10 @@ namespace GAI
 		if( mbOptOut )
 			return true;
 		
-		mDataStore.open();
-		const bool ret_val = mDataStore.addHit( hit );
-		mDataStore.close();
+		if( !mDataStore.isOpen() )
+			mDataStore.open();
 		
-		return ret_val;
+		return mDataStore.addHit( hit );
     }
 	
 	void Dispatcher::queueDispatch()
