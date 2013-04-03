@@ -29,8 +29,10 @@
       ],
       'include_dirs': [
         'src',
+        'src/threading'
       ],
       'sources': [
+        'src/threading/evthread.h',
         'src/ClientID.cpp',
         'src/ClientID.h',
         'src/DataStoreSqlite.h',
@@ -97,6 +99,7 @@
       ],
       'include_dirs': [
         'src',
+        'src/threading'
       ],
       'sources': [
         'unittests/main.cpp',
