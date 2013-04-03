@@ -1,6 +1,6 @@
-#include <exception>
 #include <string>
 
+#include "evthread.h"
 
 #include "ClientID.h"
 #include "DataStore.h"
@@ -44,6 +44,7 @@ std::string newUUID()
 
 namespace GAI
 {
+    void* ClientID::lock = NULL;
     
     std::string ClientID::generateClientID( DataStore& store )
     ///
@@ -56,15 +57,25 @@ namespace GAI
     ///     The UUID generated for this client
     ///
     {
-        // attempt to get clientID from data store
-        std::string id = store.fetchProperty( "clientID");
-        
-        // if this is an empty string then this isn't valid so create
-        if( id.empty())
+        std::string id = "";
+        // This has a potential race condition on the first access to the clientID as the lock could be allocated twice
+        if( lock == NULL )
         {
-            id = newUUID();
-            // store the newly created id
-            store.addProperty("clientID", id);
+            EVTHREAD_ALLOC_LOCK(lock,0);
+        }
+        {
+            EVLOCK_LOCK(lock,0);
+            // attempt to get clientID from data store
+            id = store.fetchProperty( "clientID");
+            
+            // if this is an empty string then this isn't valid so create
+            if( id.empty() )
+            {
+                id = newUUID();
+                // store the newly created id
+                store.addProperty("clientID", id);
+            }
+            EVLOCK_UNLOCK(lock,0);
         }
         
         return id;

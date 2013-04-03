@@ -15,6 +15,8 @@ namespace GAI
 	{
     public:
 		static std::string generateClientID(DataStore& datastore);
+    private:
+        static void* lock;
 	};
 }
 
