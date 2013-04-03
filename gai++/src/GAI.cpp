@@ -1,4 +1,6 @@
 
+#include <event2/thread.h>
+
 #include "GAI.h"
 #include "GAIDefines.h"
 #include "Tracker.h"
@@ -15,6 +17,12 @@ namespace GAI
         static GAI* sharedInstance = NULL;
         if( sharedInstance == NULL )
 		{
+            // initialize libevent
+#ifdef WIN32
+            evthread_use_windows_threads();
+#else
+            evthread_use_pthreads();
+#endif
             sharedInstance = new GAI( product_name, data_store_path );
 		}
 		
@@ -26,7 +34,7 @@ namespace GAI
 	mbDebug( false )
     {
         mDataStore = new DataStoreSqlite( data_store_path + mProductName );
-		mDispatcher = new Dispatcher( mDataStore, kOptOut, kDispatchInterval );
+		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
 	}
     
     GAI::~GAI()
@@ -44,8 +52,8 @@ namespace GAI
 		}
 		
         // create a new tracker
-        std::string client_id = ClientID::generateClientID(mDataStore);
-        Tracker* new_tracker = new TrackerImpl( mDispatcher, client_id, tracking_id, mProductName, mVersion );
+        std::string client_id = ClientID::generateClientID(*mDataStore);
+        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracking_id, mProductName, mVersion );
         mTrackers[ tracking_id ] = new_tracker;
         
         return new_tracker;

@@ -17,6 +17,7 @@ namespace GAI
         /// Type definition for a key value map
         typedef std::map<std::string,std::string> PropertyMap;
     public:
+        virtual ~DataStore(){}
         // Functions for managing the datastore as a whole
         
         ///
