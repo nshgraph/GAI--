@@ -18,6 +18,7 @@ TEST( HitBuilderTest, create_valid_hits )
 {
     GAI::Model model;
     GAI::Hit* hit;
+    double timestamp;
     
     model.set(kAppNameModelKey, "appname");
     model.set(kTrackingIdModelKey, "tracking_id");
@@ -50,11 +51,17 @@ TEST( HitBuilderTest, create_valid_hits )
     EXPECT_NE( hit->getDispatchURL(),"");
     EXPECT_NE(hit->getTimestamp(), 0);
     
-    
+    timestamp = hit->getTimestamp();
     
     delete( hit );
     
+    // now create a new hit
     
+    hit = GAI::HitBuilder::createHit( GAI::kEventHit, model );
+    EXPECT_FALSE(hit == NULL);
+    
+    // check that the hit has a timestamp later than the first hit
+    EXPECT_GT( hit->getTimestamp(), timestamp);
     
 }
 

@@ -1,6 +1,7 @@
 #include <exception>
 #include <string>
 #include <list>
+#include <event2/util.h>
 
 #include "GAIDefines.h"
 
@@ -41,7 +42,11 @@ namespace GAI {
             result = new Hit();
             result->setParameters(aModel.getKeysAndValues());
             //TODO: Use some part of libevent to retrieve the current time
-            //result->setTimestamp(System.currentTimeMillis(););
+            struct timeval tv;
+            if( evutil_gettimeofday(&tv, NULL) == 0)
+            {
+                result->setTimestamp( tv.tv_sec * 1000.0 + tv.tv_usec * 0.001);
+            }
         }
         return result;
     }
