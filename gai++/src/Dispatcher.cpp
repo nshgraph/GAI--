@@ -1,8 +1,6 @@
 
 #include "Dispatcher.h"
 
-#include <exception>
-#include <pthread.h>
 #include <math.h>
 
 #include "DataStore.h"
@@ -15,8 +13,10 @@ namespace GAI
 	mbOptOut( opt_out ),
 	mDispatchInterval( dispatch_interval ),
     mDataStore( data_store ),
-	mDispatchEvent( NULL ),
-	mDispatchEventBase( NULL )
+    mDispatchEventBase(event_base_new()),
+    mDispatchEvent(NULL),
+    mbThreadRunning(true),
+    mTimerThread( Dispatcher::TimerThreadFunction, (void*)this )
     ///
     /// Constructor
     ///
@@ -30,7 +30,8 @@ namespace GAI
     ///     Time (in seconds) that each dispatch will occur
     ///
 	{
-		createTimerThread();
+        // begin the initial dispatch
+        setDispatchInterval(mDispatchInterval);
 	}
 	
 	Dispatcher::~Dispatcher()
@@ -38,14 +39,15 @@ namespace GAI
     /// Destructor
     ///
 	{
-		if( mDispatchEvent )
-		{
-			event_del( mDispatchEvent );
-			event_free( mDispatchEvent );
-		}
-		
+		mbThreadRunning = false;
+        
+        // instruct the event loop to stop
+        event_base_loopbreak( mDispatchEventBase );
+        // ensure the thread has ended
+        mTimerThread.join();
 		if( mDispatchEventBase )
 		{
+            // destroy event loop
 			event_base_free( mDispatchEventBase );
 		}
 		
@@ -80,7 +82,7 @@ namespace GAI
     ///     Nothing
     ///
 	{
-		throw "Not yet implemented";
+        printf("Dispatching\n");
 	}
 	
 	void Dispatcher::cancelDispatch()
@@ -91,7 +93,7 @@ namespace GAI
     ///     Nothing
     ///
 	{
-		throw "Not yet implemented";
+        printf("Cancel Dispatch\n");
 	}
 	
 	bool Dispatcher::isOptOut() const
@@ -145,27 +147,18 @@ namespace GAI
 	{
 		mDispatchInterval = dispatch_interval;
 		
-		if( mDispatchEvent )
+		if( !mDispatchEvent )
 		{
-			const double seconds = floor( mDispatchInterval );
-			const double micro_seconds = ( mDispatchInterval - seconds ) * 1000000;
-			const struct timeval timeout = {seconds, micro_seconds};
-			event_add( mDispatchEvent, &timeout );
-		}
+            mDispatchEvent = event_new( mDispatchEventBase, -1, EV_TIMEOUT|EV_PERSIST, Dispatcher::TimerCallback, this );
+        }
+        
+        const double seconds = floor( mDispatchInterval );
+        const double micro_seconds = ( mDispatchInterval - seconds ) * 1000000;
+        const struct timeval timeout = {seconds, micro_seconds};
+        event_add( mDispatchEvent, &timeout );
 	}
 	
-	void Dispatcher::createTimerThread()
-	///
-	/// Creates a thread and passed this object to it.
-	///
-    /// @return
-    ///     Nothing
-    ///
-	{
-		pthread_create( &mTimerThread, NULL, &Dispatcher::timerThread, this );
-	}
-	
-	void* Dispatcher::timerThread( void* context )
+    void Dispatcher::TimerThreadFunction( void* context )
 	///
 	/// Thread which enters an event loop that will trigger a callback after
 	/// each dispatch interval.
@@ -179,18 +172,15 @@ namespace GAI
 	{
 		Dispatcher *dispatcher = static_cast<Dispatcher*>( context );
 		
-        dispatcher->mDispatchEventBase = event_base_new();
-        dispatcher->mDispatchEvent = event_new( dispatcher->mDispatchEventBase, -1, EV_TIMEOUT|EV_PERSIST, Dispatcher::timerCallback, context );
 		
-		const double seconds = floor( dispatcher->mDispatchInterval );
-		const double micro_seconds = ( dispatcher->mDispatchInterval - seconds ) * 1000000;
-		const struct timeval timeout = {seconds, micro_seconds};
-        event_add( dispatcher->mDispatchEvent, &timeout );
 		
-        event_base_dispatch( dispatcher->mDispatchEventBase );
+        while(dispatcher->mbThreadRunning)
+        {
+            event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);
+        }
 	}
 	
-	void Dispatcher::timerCallback( evutil_socket_t file_descriptor, short events, void* context )
+	void Dispatcher::TimerCallback( evutil_socket_t file_descriptor, short events, void* context )
 	///
 	/// The callback after each dispatch interval has passed. The context will trigger
 	/// a queueDispatch on the context (the Dispatcher).

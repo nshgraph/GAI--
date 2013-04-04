@@ -90,7 +90,7 @@ TEST_F( DispatcherTest, set_dispatch_interval )
 	
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
 }
-/*
+
 TEST_F( DispatcherTest, opt_out )
 {
 	const bool opt_out = true;
@@ -114,4 +114,4 @@ TEST_F( DispatcherTest, store_hit )
 	
 	EXPECT_EQ( dispatcher.getHitCount(), 1 );
 }
-*/
+

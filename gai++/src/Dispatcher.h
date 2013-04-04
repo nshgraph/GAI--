@@ -3,11 +3,11 @@
 #define __Dispatcher_h__
 
 #include <string>
-
-#include "HitStore.h"
-
 #include <event.h>
 #include <evutil.h>
+#include "tinythread.h"
+
+#include "HitStore.h"
 
 namespace GAI
 {
@@ -45,14 +45,13 @@ namespace GAI
 		DataStore& mDataStore;
 	
 	private:
-		void createTimerThread();
-		static void* timerThread( void* context );
-		static void timerCallback( evutil_socket_t file_descriptor, short events, void* context );
+		static void TimerThreadFunction( void* context );
+		static void TimerCallback( evutil_socket_t file_descriptor, short events, void* context );
 		
-		pthread_t	mTimerThread;
-		
+		bool mbThreadRunning;
 		event_base*	mDispatchEventBase;
 		event*		mDispatchEvent;
+        tthread::thread	mTimerThread;
 		
 		
 		bool	mbOptOut;			///< disable Google Analytics tracking
