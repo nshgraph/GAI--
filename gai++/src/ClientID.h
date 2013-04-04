@@ -1,5 +1,5 @@
 #include <string>
-
+#include "tinythread.h"
 
 #ifndef __ClientID_h__
 #define __ClientID_h__
@@ -16,7 +16,7 @@ namespace GAI
     public:
 		static std::string generateClientID(DataStore& datastore);
     private:
-        static void* lock;
+        static tthread::mutex clientIDMutex;
 	};
 }
 

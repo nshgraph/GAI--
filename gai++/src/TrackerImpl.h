@@ -5,6 +5,7 @@
 
 #include <string>
 #include <map>
+#include "tinythread.h"
 
 #include "HitType.h"
 #include "Tracker.h"
@@ -88,7 +89,7 @@ namespace GAI
         bool mbTrackerOpen; // Whether this tracker is 'open'. If not Hit's can't be sent
         
         Model* mModel; // The model used to store parameters for use with the hit
-        void* mModelLock; // Lock for ensuring single access to the mModel variable
+        tthread::mutex mModelLock; // Lock for ensuring single access to the mModel variable
         HitStore& mHitStore; // Reference to the Hit Store to use for sending hits
         double mSampleRate; // sample rate of hits
         std::string mHttpDispatchUrl; // URL to use for unsecured connections

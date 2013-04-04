@@ -1,8 +1,6 @@
 
 #include "TrackerImpl.h"
 
-#include "evthread.h"
-
 #include "GAIDefines.h"
 #include "Model.h"
 #include "Dispatcher.h"
@@ -40,7 +38,6 @@ namespace GAI {
         setAppVersion( aAppVersion );
         // make sure the first hit sent indicates that this is the start of a new tracking session
         mModel->setForNextHit(kSessionControlModelKey, "start");
-        EVTHREAD_ALLOC_LOCK(mModelLock,0);
     }
     
     TrackerImpl::~TrackerImpl()
@@ -492,7 +489,7 @@ namespace GAI {
     ///
     {
         
-        EVLOCK_LOCK(mModelLock,0);
+        tthread::lock_guard<tthread::mutex> lock(mModelLock);
         
         // if we are sending then the session has started
         mbSessionStart = true;
@@ -504,7 +501,6 @@ namespace GAI {
         //reset the temporary values
         mModel->clearTemporaryValues();
         
-        EVLOCK_UNLOCK(mModelLock,0);
         // no hit means we failed
         if( !hit )
             return false;

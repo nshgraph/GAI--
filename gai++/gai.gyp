@@ -29,10 +29,13 @@
       ],
       'include_dirs': [
         'src',
-        'src/threading'
+        'thirdparty/TinyThread++-1.1/source'
       ],
       'sources': [
-        'src/threading/evthread.h',
+        'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
+        'thirdparty/TinyThread++-1.1/source/tinythread.h',
+        'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
+
         'src/ClientID.cpp',
         'src/ClientID.h',
         'src/DataStoreSqlite.h',
@@ -99,7 +102,7 @@
       ],
       'include_dirs': [
         'src',
-        'src/threading'
+        'thirdparty/TinyThread++-1.1/source'
       ],
       'sources': [
         'unittests/main.cpp',
@@ -110,6 +113,10 @@
         'unittests/test_model.cpp',
         'unittests/test_trackerimpl.cpp',
         'unittests/test_dispatcher.cpp',
+        
+        'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
+        'thirdparty/TinyThread++-1.1/source/tinythread.h',
+        'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
 
         'src/ClientID.h',
         'src/ClientID.cpp',

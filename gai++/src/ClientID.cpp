@@ -1,7 +1,5 @@
 #include <string>
 
-#include "evthread.h"
-
 #include "ClientID.h"
 #include "DataStore.h"
 
@@ -44,7 +42,7 @@ std::string newUUID()
 
 namespace GAI
 {
-    void* ClientID::lock = NULL;
+    tthread::mutex ClientID::clientIDMutex;
     
     std::string ClientID::generateClientID( DataStore& store )
     ///
@@ -59,12 +57,8 @@ namespace GAI
     {
         std::string id = "";
         // This has a potential race condition on the first access to the clientID as the lock could be allocated twice
-        if( lock == NULL )
         {
-            EVTHREAD_ALLOC_LOCK(lock,0);
-        }
-        {
-            EVLOCK_LOCK(lock,0);
+            tthread::lock_guard<tthread::mutex> lock(clientIDMutex);
             // attempt to get clientID from data store
             id = store.fetchProperty( "clientID");
             
@@ -75,7 +69,6 @@ namespace GAI
                 // store the newly created id
                 store.addProperty("clientID", id);
             }
-            EVLOCK_UNLOCK(lock,0);
         }
         
         return id;
