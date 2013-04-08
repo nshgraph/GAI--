@@ -490,6 +490,7 @@ namespace GAI {
     {
         
         tthread::lock_guard<tthread::mutex> lock(mModelLock);
+        Hit* hit;
         
         // if we are sending then the session has started
         mbSessionStart = true;
@@ -497,7 +498,7 @@ namespace GAI {
         // add the parameters as temporaries to the model
         mModel->setAll(aParameters, true);
         //create a hit
-        Hit* hit = HitBuilder::createHit( aType, *mModel );
+        HitBuilder::createHit( aType, *mModel, hit );
         //reset the temporary values
         mModel->clearTemporaryValues();
         

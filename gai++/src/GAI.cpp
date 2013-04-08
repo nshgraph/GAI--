@@ -17,12 +17,6 @@ namespace GAI
         static GAI* sharedInstance = NULL;
         if( sharedInstance == NULL )
 		{
-            // initialize libevent
-#ifdef WIN32
-            evthread_use_windows_threads();
-#else
-            evthread_use_pthreads();
-#endif
             sharedInstance = new GAI( product_name, data_store_path );
 		}
 		

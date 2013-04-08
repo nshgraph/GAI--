@@ -1,7 +1,6 @@
 #include <exception>
 #include <string>
 #include <list>
-#include <event2/util.h>
 
 #include "GAIDefines.h"
 
@@ -9,11 +8,12 @@
 #include "Hit.h"
 #include "Model.h"
 #include "HitType.h"
+#include "Timestamp.h"
 
 namespace GAI {
     
     
-    Hit* HitBuilder::createHit(const HitType aType, const Model& aModel)
+    bool HitBuilder::createHit(const HitType aType, const Model& aModel, Hit*& hit)
     ///
     /// This function attempts to create a Hit by validating that the paramenters in the proided Model meet the requirements
     /// of the hit type. Returns either an allocated hit or NULL if fails.
@@ -36,19 +36,14 @@ namespace GAI {
                 hasRequired = false;
         }
         
-        Hit* result = NULL;
+        hit = NULL;
         if( hasRequired )
         {
-            result = new Hit();
-            result->setParameters(aModel.getKeysAndValues());
-            //TODO: Use some part of libevent to retrieve the current time
-            struct timeval tv;
-            if( evutil_gettimeofday(&tv, NULL) == 0)
-            {
-                result->setTimestamp( tv.tv_sec * 1000.0 + tv.tv_usec * 0.001);
-            }
+            hit = new Hit();
+            hit->setParameters(aModel.getKeysAndValues());
+            hit->setTimestamp( Timestamp::generateTimestamp());
         }
-        return result;
+        return (hit!=NULL);
     }
     
     const std::list<std::string>& HitBuilder::requiredParametersForType(const HitType aType)

@@ -16,7 +16,7 @@ namespace GAI
 	class HitBuilder
 	{
     public:
-		static Hit* createHit(const HitType aType, const Model& aModel);
+		static bool createHit(const HitType aType, const Model& aModel, Hit*& hit);
     protected:
 		static const std::list<std::string>& requiredParametersForType(const HitType aType);
         

@@ -27,12 +27,12 @@ TEST( HitBuilderTest, create_valid_hits )
     
     model.setForNextHit(kScreenParamModelKey, "screen");
     
-    hit = GAI::HitBuilder::createHit( GAI::kAppViewHit, model );
+    GAI::HitBuilder::createHit( GAI::kAppViewHit, model, hit );
     EXPECT_FALSE(hit == NULL);
     delete( hit );
     
     // but this should fail for a different type
-    hit = GAI::HitBuilder::createHit( GAI::kEventHit, model );
+    GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
     EXPECT_TRUE(hit == NULL);
 
     
@@ -44,7 +44,7 @@ TEST( HitBuilderTest, create_valid_hits )
     model.setForNextHit(kEventLabelParamModelKey, "screen");
     model.setForNextHit(kEventValueParamModelKey, "screen");
     
-    hit = GAI::HitBuilder::createHit( GAI::kEventHit, model );
+    GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
     EXPECT_FALSE(hit == NULL);
     
     // Validate the returned hit
@@ -57,7 +57,7 @@ TEST( HitBuilderTest, create_valid_hits )
     
     // now create a new hit
     
-    hit = GAI::HitBuilder::createHit( GAI::kEventHit, model );
+    GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
     EXPECT_FALSE(hit == NULL);
     
     // check that the hit has a timestamp later than the first hit
@@ -72,12 +72,12 @@ TEST( HitBuilderTest, create_invalid_hits )
     GAI::Hit* hit;
     
     // an empty model fails
-    hit = GAI::HitBuilder::createHit( GAI::kAppViewHit, model );
+    GAI::HitBuilder::createHit( GAI::kAppViewHit, model, hit );
     EXPECT_TRUE(hit == NULL);
     
     // a model with the wrong parameters fails
     model.set(kSocialNetworkModelKey,"test");
-    hit = GAI::HitBuilder::createHit( GAI::kAppViewHit, model );
+    GAI::HitBuilder::createHit( GAI::kAppViewHit, model, hit );
     EXPECT_TRUE(hit == NULL);
     
 }
