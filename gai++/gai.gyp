@@ -115,6 +115,7 @@
         'unittests/test_model.cpp',
         'unittests/test_trackerimpl.cpp',
         'unittests/test_utils.cpp',
+        'unittests/test_gai.cpp',
         
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.h',
@@ -127,6 +128,7 @@
         'src/DataStore.h',
         'src/Dispatcher.h',
         'src/Dispatcher.cpp',
+        'src/GAI.cpp',
         'src/Hit.h',
         'src/Hit.cpp',
         'src/HitBuilder.h',

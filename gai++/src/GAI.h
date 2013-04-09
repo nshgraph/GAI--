@@ -11,16 +11,16 @@ namespace GAI
 	class Dispatcher;
     class DataStore;
     
-	class GAI
+	class Analytics
 	{
     public:
-		static GAI* sharedInstance( const std::string& product_name, const std::string& data_store_path );
+		static Analytics* sharedInstance( const std::string& product_name, const std::string& data_store_path );
 		
 		Tracker* createTracker( const std::string& tracking_id );
 		void removeTracker( const std::string& tracker_id );
 		
 		Tracker* getDefaultTracker() const;
-		void setDefaultTracker( Tracker* tracker );
+		bool setDefaultTracker( Tracker* tracker );
 		
 		std::string getProductName() const;
 		void setProductName( const std::string& product_name );
@@ -40,8 +40,8 @@ namespace GAI
 		void dispatch();
 		
     private:
-        GAI( const std::string& product_name, const std::string& data_store_path );
-        ~GAI();
+        Analytics( const std::string& product_name, const std::string& data_store_path );
+        ~Analytics();
 		
 		typedef std::map<std::string, Tracker*> TrackerMap;
 		TrackerMap mTrackers;

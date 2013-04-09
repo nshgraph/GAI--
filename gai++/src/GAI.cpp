@@ -13,33 +13,35 @@
 namespace GAI
 {
     
-    GAI* GAI::sharedInstance( const std::string& product_name, const std::string& data_store_path )
+    Analytics* Analytics::sharedInstance( const std::string& product_name, const std::string& data_store_path )
 	{
-        static GAI* sharedInstance = NULL;
+        static Analytics* sharedInstance = NULL;
         if( sharedInstance == NULL )
 		{
-            sharedInstance = new GAI( product_name, data_store_path );
+            sharedInstance = new Analytics( product_name, data_store_path );
 		}
 		
         return sharedInstance;
     }
     
-    GAI::GAI( const std::string& product_name, const std::string& data_store_path ) :
+    Analytics::Analytics( const std::string& product_name, const std::string& data_store_path ) :
 	mProductName( product_name ),
+    mVersion(""),
+    mDefaultTracker(NULL),
 	mbDebug( false )
     {
         mDataStore = new DataStoreSqlite( data_store_path + mProductName );
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
         
-        Timestamp::initializeTimestamp( mDataStore );
+        Timestamp::initializeTimestamp( *mDataStore );
 	}
     
-    GAI::~GAI()
+    Analytics::~Analytics()
     {
         delete mDataStore;
     }
     
-    Tracker* GAI::createTracker( const std::string& tracking_id )
+    Tracker* Analytics::createTracker( const std::string& tracking_id )
 	{
         // first attempt to retrive the tracker with the same id
         TrackerMap::const_iterator it = mTrackers.find( tracking_id );
@@ -56,7 +58,7 @@ namespace GAI
         return new_tracker;
     }
     
-    void GAI::removeTracker( const std::string& tracker_id )
+    void Analytics::removeTracker( const std::string& tracker_id )
 	{
         TrackerMap::iterator it = mTrackers.find( tracker_id );
         if( it != mTrackers.end() )
@@ -65,67 +67,78 @@ namespace GAI
 		}
     }
     
-    Tracker* GAI::getDefaultTracker() const
+    Tracker* Analytics::getDefaultTracker() const
 	{
         return mDefaultTracker;
     }
 	
-	void GAI::setDefaultTracker( Tracker* tracker )
+	bool Analytics::setDefaultTracker( Tracker* tracker )
 	{
-		mDefaultTracker = tracker;
+        // we should check that this really is a tracker
+        bool found_tracker = false;
+        for( TrackerMap::const_iterator it = mTrackers.begin(), it_end = mTrackers.end();it != it_end && !found_tracker ; it++)
+        {
+            if( tracker == it->second )
+                found_tracker = true;
+        }
+        
+        if( found_tracker )
+            mDefaultTracker = tracker;
+        
+        return found_tracker;
 	}
     
-    std::string GAI::getProductName() const
+    std::string Analytics::getProductName() const
 	{
         return mProductName;
     }
     
-    void GAI::setProductName( const std::string& product_name )
+    void Analytics::setProductName( const std::string& product_name )
     {
 		mProductName = product_name;
     }
     
-    std::string GAI::getVersion() const
+    std::string Analytics::getVersion() const
 	{
         return mVersion;
     }
     
-    void GAI::setVersion( const std::string& version )
+    void Analytics::setVersion( const std::string& version )
     {
         mVersion = version;
     }
     
-    bool GAI::isDebug() const
+    bool Analytics::isDebug() const
 	{
         return mbDebug;
     }
     
-    void GAI::setDebug( bool debug )
+    void Analytics::setDebug( bool debug )
 	{
 		mbDebug = debug;
     }
     
-    bool GAI::isOptOut() const
+    bool Analytics::isOptOut() const
 	{
         return mDispatcher->isOptOut();
     }
     
-    void GAI::setOptOut( const bool opt_out )
+    void Analytics::setOptOut( const bool opt_out )
 	{
         mDispatcher->setOptOut( opt_out );
     }
     
-    double GAI::getDispatchInterval() const
+    double Analytics::getDispatchInterval() const
 	{
         return mDispatcher->getDispatchInterval();
     }
     
-    void GAI::setDispatchInterval( const double dispatch_interval )
+    void Analytics::setDispatchInterval( const double dispatch_interval )
 	{
         mDispatcher->setDispatchInterval( dispatch_interval );
     }
     
-    void GAI::dispatch()
+    void Analytics::dispatch()
 	{
         mDispatcher->queueDispatch();
     }
