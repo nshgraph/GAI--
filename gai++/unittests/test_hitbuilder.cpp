@@ -55,8 +55,8 @@ TEST( HitBuilderTest, create_valid_hits )
     
     delete( hit );
     
-    // now create a new hit
-    
+    // now create a new hit after a small timeout
+    usleep(1000);
     GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
     EXPECT_FALSE(hit == NULL);
     

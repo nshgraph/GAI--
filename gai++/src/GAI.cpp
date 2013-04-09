@@ -8,6 +8,7 @@
 #include "Dispatcher.h"
 #include "DataStoreSqlite.h"
 #include "ClientID.h"
+#include "Timestamp.h"
 
 namespace GAI
 {
@@ -29,6 +30,8 @@ namespace GAI
     {
         mDataStore = new DataStoreSqlite( data_store_path + mProductName );
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
+        
+        Timestamp::initializeTimestamp( mDataStore );
 	}
     
     GAI::~GAI()

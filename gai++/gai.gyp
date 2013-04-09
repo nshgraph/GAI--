@@ -108,13 +108,13 @@
       ],
       'sources': [
         'unittests/main.cpp',
-        'unittests/test_clientid.cpp',
         'unittests/test_datastoresqlite.cpp',
+        'unittests/test_dispatcher.cpp',
         'unittests/test_hit.cpp',
         'unittests/test_hitbuilder.cpp',
         'unittests/test_model.cpp',
         'unittests/test_trackerimpl.cpp',
-        'unittests/test_dispatcher.cpp',
+        'unittests/test_utils.cpp',
         
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.h',
