@@ -2,9 +2,11 @@
 #include "Dispatcher.h"
 
 #include <math.h>
+#include <event2/thread.h>
 
 #include "DataStore.h"
-#include "GAI.h"
+#include "Hit.h"
+#include "URLConnection.h"
 
 namespace GAI
 {
@@ -16,7 +18,9 @@ namespace GAI
     mDispatchEventBase(event_base_new()),
     mDispatchEvent(NULL),
     mbThreadRunning(true),
-    mTimerThread( Dispatcher::TimerThreadFunction, (void*)this )
+    mbCancelDispatch(false),
+    mTimerThread( Dispatcher::TimerThreadFunction, (void*)this ),
+    mURLConnection( NULL )
     ///
     /// Constructor
     ///
@@ -30,6 +34,7 @@ namespace GAI
     ///     Time (in seconds) that each dispatch will occur
     ///
 	{
+        mURLConnection = new URLConnection( mDispatchEventBase );
         // begin the initial dispatch
         setDispatchInterval(mDispatchInterval);
 	}
@@ -39,6 +44,7 @@ namespace GAI
     /// Destructor
     ///
 	{
+        delete mURLConnection;
 		mbThreadRunning = false;
         
         // instruct the event loop to stop
@@ -82,7 +88,9 @@ namespace GAI
     ///     Nothing
     ///
 	{
-        printf("Dispatching\n");
+        mbCancelDispatch = false;
+        event* immediate_dispatch = event_new( mDispatchEventBase, -1, EV_TIMEOUT|EV_PERSIST, Dispatcher::TimerCallback, this );
+        event_add( immediate_dispatch, NULL );
 	}
 	
 	void Dispatcher::cancelDispatch()
@@ -93,7 +101,7 @@ namespace GAI
     ///     Nothing
     ///
 	{
-        printf("Cancel Dispatch\n");
+        mbCancelDispatch = true;
 	}
 	
 	bool Dispatcher::isOptOut() const
@@ -157,6 +165,41 @@ namespace GAI
         const struct timeval timeout = {seconds, micro_seconds};
         event_add( mDispatchEvent, &timeout );
 	}
+    
+    
+    void Dispatcher::setDispatchTarget( const std::string& address, const int port)
+    {
+        mURLConnection->setAddress(address,port);
+    }
+    
+    void Dispatcher::dispatch()
+	///
+	/// Perform the actual dispatch of any records in the datastore
+    ///
+    /// @return
+    ///     Nothing
+    ///
+    {
+        
+        std::list<Hit> hits;
+        hits = mDataStore.fetchHits(50, true);
+        while( hits.size() > 0 && !mbCancelDispatch )
+        {
+            // for each hit
+            for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
+            {
+                mURLConnection->request( (*it).getDispatchURL() );
+            }
+            // fetch the next group of hits
+            hits = mDataStore.fetchHits(50, true);
+        }
+        // put back any left over hits
+        if( hits.size() > 0 )
+        {
+            mDataStore.addHits( hits );
+        }
+        
+    }
 	
     void Dispatcher::TimerThreadFunction( void* context )
 	///
@@ -197,8 +240,8 @@ namespace GAI
     ///
 	{
 		Dispatcher *dispatcher = static_cast<Dispatcher*>( context );
-		
-		dispatcher->queueDispatch();
+        dispatcher->mbCancelDispatch = false;
+		dispatcher->dispatch();
 	}
 	
 }

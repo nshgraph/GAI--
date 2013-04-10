@@ -1,6 +1,4 @@
 
-#include <event2/thread.h>
-
 #include "GAI.h"
 #include "GAIDefines.h"
 #include "Tracker.h"
@@ -34,6 +32,8 @@ namespace GAI
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
         
         Timestamp::initializeTimestamp( *mDataStore );
+        
+        mDispatcher->setDispatchTarget(kGAIURLHTTP, kGAIPort );
 	}
     
     Analytics::~Analytics()

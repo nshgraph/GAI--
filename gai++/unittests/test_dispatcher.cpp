@@ -25,7 +25,7 @@ public:
 	{
 	}
 	
-	virtual void queueDispatch()
+	virtual void dispatch()
 	{
 		mbCallbackComplete = true;
 	}
@@ -114,4 +114,18 @@ TEST_F( DispatcherTest, store_hit )
 	
 	EXPECT_EQ( dispatcher.getHitCount(), 1 );
 }
+
+TEST_F( DispatcherTest, dispatch )
+{
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+    GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 2 );
+    dispatcher.setDispatchTarget(kGAIURLHTTP, kGAIPort );
+	
+	HitTestClass hit;
+	dispatcher.storeHit( hit );
+	usleep( 5 * 1000000 * 1.5 );
+    
+    // should have printed
+}
+
 

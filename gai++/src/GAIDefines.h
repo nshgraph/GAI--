@@ -9,10 +9,14 @@
 #ifndef gai_GAIDefines_h
 #define gai_GAIDefines_h
 
-#define kDispatchInterval	1800 // 1800 seconds (30 minutes)
+#define kDispatchInterval	120 // 120 seconds (2 minutes)
 #define kOptOut				0 // On
 
 #define kGAIVersion			"1"
+#define kGAIURLHTTP         "www.google-analytics.com"
+#define kGAIURLHTTPS        "ssl.google-analytics.com"
+#define kGAIURLPage         "collect"
+#define kGAIPort            80
 
 ///
 /// The following keys are used when adding information to a model

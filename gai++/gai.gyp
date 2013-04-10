@@ -138,6 +138,8 @@
         'src/Transaction.cpp',
         'src/TransactionItem.h',
         'src/TransactionItem.cpp',
+        'src/URLConnection.h',
+        'src/URLConnection.cpp',
       ],
       'conditions': [
         ['OS=="win"', {

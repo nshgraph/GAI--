@@ -12,13 +12,11 @@
 namespace GAI
 {
 	class DataStore;
-	class RequestBuilder;
 	class URLConnection;
-	class ReachabilityChecker;
 	class TrackerImpl;
 	class GAI;
     class Hit;
-	class Dispatcher;
+    
 }
 
 namespace GAI
@@ -29,9 +27,9 @@ namespace GAI
 		Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval );
 		~Dispatcher();
         
-        virtual bool storeHit( const Hit& hit );
+        bool storeHit( const Hit& hit );
 		
-		virtual void queueDispatch();
+        void queueDispatch();
 		
 		void cancelDispatch();
 		
@@ -40,15 +38,17 @@ namespace GAI
 		
 		int getDispatchInterval() const;
 		void setDispatchInterval( const double dispatch_interval );
+        
+        void setDispatchTarget( const std::string& address, const int port);
 		
-	protected:
-		DataStore& mDataStore;
-	
-	private:
+	protected:	
 		static void TimerThreadFunction( void* context );
 		static void TimerCallback( evutil_socket_t file_descriptor, short events, void* context );
+        
+        virtual void dispatch();
 		
 		bool mbThreadRunning;
+        bool mbCancelDispatch;
 		event_base*	mDispatchEventBase;
 		event*		mDispatchEvent;
         tthread::thread	mTimerThread;
@@ -56,8 +56,10 @@ namespace GAI
 		
 		bool	mbOptOut;			///< disable Google Analytics tracking
 		double	mDispatchInterval;	///< dispatch interval in seconds
-		
-		uint64_t _cacheBuster;
+        
+		DataStore& mDataStore;
+        URLConnection* mURLConnection;
+
 		
 	};
 }
