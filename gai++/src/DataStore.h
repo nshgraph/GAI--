@@ -102,6 +102,17 @@ namespace GAI
         virtual bool addHit(const Hit& hit) = 0;
         
         ///
+        /// Add a list of Hits to the datstore
+        ///
+        /// @param hits
+        ///     The  list of Hit objects to add
+        ///
+        /// @return
+        ///     Whether the operation was successful
+        ///
+        virtual bool addHits(const std::list<Hit>& hits) = 0;
+        
+        ///
         /// Returns a count of all Hits in the datastore
         ///
         /// @return

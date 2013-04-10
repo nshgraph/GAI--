@@ -170,6 +170,7 @@ TEST_F (DataStoreSqlLiteTest, hits)
     const std::string test_url = "test_url_string";
     const double test_timestamp = 15.0;
     std::list<GAI::Hit> results;
+    std::list<GAI::Hit> hits_to_add;
     HitTestClass result_hit;
     HitTestClass test_hit = HitTestClass( test_url, test_timestamp );
     
@@ -199,7 +200,7 @@ TEST_F (DataStoreSqlLiteTest, hits)
     // now fetch with clear
     results = db.fetchHits(1, true);
     
-    //should still have one hit
+    //should no longer have any hits
     EXPECT_EQ(db.hitCount(),0);
     
     //check that the size is one
@@ -207,6 +208,14 @@ TEST_F (DataStoreSqlLiteTest, hits)
     
     // check that the hit that is there is fundamentally equivalent to that tested
     EXPECT_EQ( test_hit, HitTestClass( results.front()) );
+    
+    // check that we can add multiple hits
+    hits_to_add.push_back(test_hit);
+    hits_to_add.push_back(test_hit);
+    EXPECT_TRUE(db.addHits(hits_to_add));
+    
+    EXPECT_EQ(db.hitCount(),2);
+    
 }
 
 TEST_F (DataStoreSqlLiteTest, hits2)

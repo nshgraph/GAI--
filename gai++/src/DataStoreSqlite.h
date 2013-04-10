@@ -42,6 +42,7 @@ namespace GAI
         // Functions for managing hits in the datastore
         bool deleteAllHits();
         bool addHit(const Hit& hit);
+        bool addHits(const std::list<Hit>& hits);
         int hitCount();
         std::list<Hit> fetchHits(const unsigned int limit, bool removeFetchedFromDataStore);
         

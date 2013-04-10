@@ -158,6 +158,24 @@ namespace GAI
         return true;
     }
     
+    
+    bool DataStoreSqlite::addHits(const std::list<Hit>& hits)
+    ///
+    /// Add a list of Hits to the datstore
+    ///
+    /// @param hits
+    ///     The  list of Hit objects to add
+    ///
+    /// @return
+    ///     Whether the operation was successful
+    ///
+    {
+        bool success = true;
+        for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
+            success &= addHit( *it );
+        return success;
+    }
+    
     std::list<Hit> DataStoreSqlite::fetchHits(const unsigned int limit, bool removeFetchedFromDataStore)
     ///
     /// Retrieves hits from the datstore up to a limit, optionally removes them after retrieval (atomically)
