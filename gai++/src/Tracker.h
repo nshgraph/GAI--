@@ -174,22 +174,6 @@ namespace GAI
 		 virtual bool isAnonymize() = 0;
         
         ///
-        /// Set whether HTTPS will be used
-        ///
-        /// @param aUseHttps
-        ///     Whether to use Https
-        ///
-		 virtual void setUseHttps(const bool aUseHttps) = 0;
-        
-        ///
-        /// Retreive whether the tracker will use secure connection
-        ///
-        /// @return
-        ///     Whether HTTPS will be used
-        ///
-		 virtual bool isUseHttps() = 0;
-        
-        ///
         /// Set the sample rate to instruct the analytics service to use
         ///
         /// @param aSampleRate

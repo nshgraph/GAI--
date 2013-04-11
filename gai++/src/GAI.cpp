@@ -32,8 +32,6 @@ namespace GAI
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
         
         Timestamp::initializeTimestamp( *mDataStore );
-        
-        mDispatcher->setDispatchTarget(kGAIURLHTTP, kGAIPort );
 	}
     
     Analytics::~Analytics()
@@ -126,6 +124,27 @@ namespace GAI
     void Analytics::setOptOut( const bool opt_out )
 	{
         mDispatcher->setOptOut( opt_out );
+    }
+    void Analytics::setUseHttps(const bool aUseHttps)
+    ///
+    /// Set whether HTTPS will be used
+    ///
+    /// @param aUseHttps
+    ///     Whether to use Https
+    ///
+    {
+        mDispatcher->setUseHttps( aUseHttps );
+    }
+    
+    bool Analytics::isUseHttps()
+    ///
+    /// Retreive whether the dispatcher will use secure connection
+    ///
+    /// @return
+    ///     Whether HTTPS will be used
+    ///
+    {
+        return mDispatcher->isUseHttps();
     }
     
     double Analytics::getDispatchInterval() const

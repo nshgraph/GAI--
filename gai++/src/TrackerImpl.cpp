@@ -363,28 +363,6 @@ namespace GAI {
         return mModel->get(kAnonymizeIpModelKey) == "1";
     }
     
-    void TrackerImpl::setUseHttps(const bool aUseHttps)
-    ///
-    /// Set whether HTTPS will be used
-    ///
-    /// @param aUseHttps
-    ///     Whether to use Https
-    ///
-    {
-        this->mbUseHttps = aUseHttps;
-    }
-    
-    bool TrackerImpl::isUseHttps()
-    ///
-    /// Retreive whether the tracker will use secure connection
-    ///
-    /// @return
-    ///     Whether HTTPS will be used
-    ///
-    {
-        return this->mbUseHttps;
-    }
-    
     void TrackerImpl::setSampleRate(const double aSampleRate)
     ///
     /// Set the sample rate to instruct the analytics service to use

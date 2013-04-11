@@ -6,6 +6,7 @@
 
 #include "DataStore.h"
 #include "Hit.h"
+#include "GAIDefines.h"
 #include "URLConnection.h"
 
 namespace GAI
@@ -37,6 +38,7 @@ namespace GAI
         mURLConnection = new URLConnection( mDispatchEventBase );
         // begin the initial dispatch
         setDispatchInterval(mDispatchInterval);
+        setUseHttps(false);
 	}
 	
 	Dispatcher::~Dispatcher()
@@ -129,6 +131,31 @@ namespace GAI
 	{
 		mbOptOut = opt_out;
 	}
+    void Dispatcher::setUseHttps(const bool aUseHttps)
+    ///
+    /// Set whether HTTPS will be used
+    ///
+    /// @param aUseHttps
+    ///     Whether to use Https
+    ///
+    {
+        this->mbUseHttps = aUseHttps;
+        if( aUseHttps )
+            mURLConnection->setAddress(kGAIURLHTTPS,kGAIPort);
+        else
+            mURLConnection->setAddress(kGAIURLHTTP,kGAIPort);
+    }
+    
+    bool Dispatcher::isUseHttps()
+    ///
+    /// Retreive whether the tracker will use secure connection
+    ///
+    /// @return
+    ///     Whether HTTPS will be used
+    ///
+    {
+        return this->mbUseHttps;
+    }
 	
 	int Dispatcher::getDispatchInterval() const
     ///
@@ -165,12 +192,6 @@ namespace GAI
         const struct timeval timeout = {seconds, micro_seconds};
         event_add( mDispatchEvent, &timeout );
 	}
-    
-    
-    void Dispatcher::setDispatchTarget( const std::string& address, const int port)
-    {
-        mURLConnection->setAddress(address,port);
-    }
     
     void Dispatcher::dispatch()
 	///

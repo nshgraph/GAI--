@@ -119,7 +119,6 @@ TEST_F( DispatcherTest, dispatch )
 {
 	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
     GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 2 );
-    dispatcher.setDispatchTarget(kGAIURLHTTP, kGAIPort );
 	
 	HitTestClass hit;
 	dispatcher.storeHit( hit );
@@ -128,4 +127,16 @@ TEST_F( DispatcherTest, dispatch )
     // should have printed
 }
 
+
+
+TEST_F( DispatcherTest, options )
+{
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+    GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 2 );
+    // can get and set https
+    dispatcher.setUseHttps(false);
+    EXPECT_EQ( dispatcher.isUseHttps(), false );
+    dispatcher.setUseHttps(true);
+    EXPECT_EQ( dispatcher.isUseHttps(), true );
+}
 

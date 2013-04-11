@@ -120,12 +120,6 @@ TEST( TrackerImplTest, get_and_set)
     tracker.setAnonymize(true);
     EXPECT_EQ( tracker.isAnonymize(), true );
     
-    // can get and set https
-    tracker.setUseHttps(false);
-    EXPECT_EQ( tracker.isUseHttps(), false );
-    tracker.setUseHttps(true);
-    EXPECT_EQ( tracker.isUseHttps(), true );
-    
     // can get and set sample rate
     tracker.setSampleRate(1.0);
     EXPECT_EQ( tracker.getSampleRate(), 1.0 );

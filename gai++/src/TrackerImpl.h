@@ -56,10 +56,6 @@ namespace GAI
         
         bool isAnonymize();
         
-        void setUseHttps(const bool aUseHttps);
-        
-        bool isUseHttps();
-        
         void setSampleRate(const double aSampleRate);
         
         double getSampleRate();

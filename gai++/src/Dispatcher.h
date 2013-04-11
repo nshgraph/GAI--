@@ -35,11 +35,12 @@ namespace GAI
 		
 		bool isOptOut() const;
 		void setOptOut( const bool opt_out );
+        
+        void setUseHttps(const bool aUseHttps);
+        bool isUseHttps();
 		
 		int getDispatchInterval() const;
 		void setDispatchInterval( const double dispatch_interval );
-        
-        void setDispatchTarget( const std::string& address, const int port);
 		
 	protected:	
 		static void TimerThreadFunction( void* context );
@@ -54,6 +55,7 @@ namespace GAI
         tthread::thread	mTimerThread;
 		
 		
+        bool    mbUseHttps;         ///< whether to use a secure connection
 		bool	mbOptOut;			///< disable Google Analytics tracking
 		double	mDispatchInterval;	///< dispatch interval in seconds
         

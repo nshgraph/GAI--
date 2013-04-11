@@ -33,6 +33,9 @@ namespace GAI
 		
 		bool isOptOut() const;
 		void setOptOut( const bool opt_out );
+        
+        void setUseHttps(const bool aUseHttps);
+        bool isUseHttps();
 		
 		double getDispatchInterval() const;
 		void setDispatchInterval( const double dispatch_interval );
