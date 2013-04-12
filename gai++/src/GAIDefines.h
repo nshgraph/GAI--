@@ -15,7 +15,7 @@
 #define kGAIVersion			"1"
 #define kGAIURLHTTP         "www.google-analytics.com"
 #define kGAIURLHTTPS        "ssl.google-analytics.com"
-#define kGAIURLPage         "collect"
+#define kGAIURLPage         "/collect"
 #define kGAIPort            80
 
 ///

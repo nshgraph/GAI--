@@ -7,16 +7,13 @@
 #include <evutil.h>
 #include "tinythread.h"
 
+#include "Hit.h"
 #include "HitStore.h"
 
 namespace GAI
 {
 	class DataStore;
 	class URLConnection;
-	class TrackerImpl;
-	class GAI;
-    class Hit;
-    
 }
 
 namespace GAI
@@ -42,9 +39,10 @@ namespace GAI
 		int getDispatchInterval() const;
 		void setDispatchInterval( const double dispatch_interval );
 		
-	protected:	
+    protected:
 		static void TimerThreadFunction( void* context );
 		static void TimerCallback( evutil_socket_t file_descriptor, short events, void* context );
+		static void RequestCallback( bool success, void* param );
         
         virtual void dispatch();
 		

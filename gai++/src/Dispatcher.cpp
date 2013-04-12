@@ -5,12 +5,27 @@
 #include <event2/thread.h>
 
 #include "DataStore.h"
-#include "Hit.h"
 #include "GAIDefines.h"
 #include "URLConnection.h"
 
 namespace GAI
 {
+    
+    struct RequestCallbackStruct
+    ///
+    /// Struct used when making a request to manage failed dispatches
+    ///
+    {
+        RequestCallbackStruct( Dispatcher* dispatcher, const Hit& hit);
+        Dispatcher* dispatcher;
+        Hit hit;
+    };
+    
+    RequestCallbackStruct::RequestCallbackStruct( Dispatcher* dispatcher, const Hit& hit) :
+    dispatcher( dispatcher ),
+    hit( hit )
+    {
+    }
 	
 	Dispatcher::Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval ) :
 	mbOptOut( opt_out ),
@@ -204,12 +219,14 @@ namespace GAI
         
         std::list<Hit> hits;
         hits = mDataStore.fetchHits(50, true);
+        std::string base_url = std::string(kGAIURLPage) + "?";
         while( hits.size() > 0 && !mbCancelDispatch )
         {
             // for each hit
             for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
             {
-                mURLConnection->request( (*it).getDispatchURL() );
+                RequestCallbackStruct* cb_struct = new RequestCallbackStruct(this,(*it));
+                mURLConnection->request( base_url + (*it).getDispatchURL(), Dispatcher::RequestCallback, cb_struct );
             }
             // fetch the next group of hits
             hits = mDataStore.fetchHits(50, true);
@@ -264,5 +281,30 @@ namespace GAI
         dispatcher->mbCancelDispatch = false;
 		dispatcher->dispatch();
 	}
+    
+    void Dispatcher::RequestCallback( bool success, void* param )
+	///
+	/// The callback after each dispatch interval has passed. The context will trigger
+	/// a queueDispatch on the context (the Dispatcher).
+	///
+    /// @param success
+    ///     Whether the dispatch was successful
+	///
+    /// @param param
+    ///     Param passed with dispatch. Should be of type RequestCallbackStruct*
+	///
+    /// @return
+    ///     Nothing
+    ///
+    {
+        RequestCallbackStruct* cb_struct = (RequestCallbackStruct*)param;
+        // if the callback wasn't successful then we need to put the hit back into the datastore
+        if( !success )
+        {
+            cb_struct->dispatcher->mDataStore.addHit(cb_struct->hit);
+        }
+     
+        delete cb_struct;
+    }
 	
 }

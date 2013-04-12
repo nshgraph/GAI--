@@ -12,8 +12,10 @@ namespace GAI
 	class URLConnection
 	{
     public:
+        typedef void (*URLConnectionCompleteCB)(bool success, void* callback_data);
+    public:
         URLConnection( event_base *base );
-        void request(const std::string& url );
+        void request(const std::string& url, URLConnectionCompleteCB callback, void* callback_data );
         void setAddress( const std::string& address, int port );
     private:
         evhttp_connection *mConnection;
