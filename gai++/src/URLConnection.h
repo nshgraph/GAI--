@@ -18,8 +18,8 @@ namespace GAI
         void request(const std::string& url, URLConnectionCompleteCB callback, void* callback_data );
         void setAddress( const std::string& address, int port );
     private:
-        evhttp_connection *mConnection;
-        event_base *mEventBase;
+        evhttp_connection *mConnection; //< Connection object to send all requests from
+        event_base *mEventBase; //<Event Base for async requests
 	};
 }
 

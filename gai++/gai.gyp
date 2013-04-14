@@ -111,6 +111,7 @@
         'unittests/test_trackerimpl.cpp',
         'unittests/test_utils.cpp',
         'unittests/test_gai.cpp',
+        'unittests/test_urlconnection.cpp',
         
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.h',
