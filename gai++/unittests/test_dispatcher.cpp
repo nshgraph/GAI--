@@ -125,7 +125,7 @@ TEST_F( DispatcherTest, dispatch )
 	HitTestClass hit;
     hit.setParameters( parameters );
 	dispatcher.storeHit( hit );
-	usleep( 5 * 1000000 * 1.5 );
+	usleep( 2 * 1000000 * 1.5 );
     
     // should have printed
 }

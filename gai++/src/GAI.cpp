@@ -30,8 +30,6 @@ namespace GAI
     {
         mDataStore = new DataStoreSqlite( data_store_path + mProductName );
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
-        
-        Timestamp::initializeTimestamp( *mDataStore );
 	}
     
     Analytics::~Analytics()
