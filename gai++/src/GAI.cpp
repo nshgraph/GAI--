@@ -11,7 +11,7 @@
 namespace GAI
 {
     
-    Analytics* Analytics::sharedInstance( const std::string& product_name, const std::string& data_store_path )
+    Analytics* Analytics::sharedInstance( const char* product_name, const char* data_store_path )
 	{
         static Analytics* sharedInstance = NULL;
         if( sharedInstance == NULL )
@@ -22,7 +22,7 @@ namespace GAI
         return sharedInstance;
     }
     
-    Analytics::Analytics( const std::string& product_name, const std::string& data_store_path ) :
+    Analytics::Analytics( const char* product_name, const char* data_store_path ) :
 	mProductName( product_name ),
     mVersion(""),
     mDefaultTracker(NULL),
@@ -39,7 +39,7 @@ namespace GAI
         delete mDataStore;
     }
     
-    Tracker* Analytics::createTracker( const std::string& tracking_id )
+    Tracker* Analytics::createTracker( const char* tracking_id )
 	{
         // first attempt to retrive the tracker with the same id
         TrackerMap::const_iterator it = mTrackers.find( tracking_id );
@@ -56,7 +56,7 @@ namespace GAI
         return new_tracker;
     }
     
-    void Analytics::removeTracker( const std::string& tracker_id )
+    void Analytics::removeTracker( const char* tracker_id )
 	{
         TrackerMap::iterator it = mTrackers.find( tracker_id );
         if( it != mTrackers.end() )
@@ -91,7 +91,7 @@ namespace GAI
         return mProductName;
     }
     
-    void Analytics::setProductName( const std::string& product_name )
+    void Analytics::setProductName( const char* product_name )
     {
 		mProductName = product_name;
     }
@@ -101,7 +101,7 @@ namespace GAI
         return mVersion;
     }
     
-    void Analytics::setVersion( const std::string& version )
+    void Analytics::setVersion( const char* version )
     {
         mVersion = version;
     }

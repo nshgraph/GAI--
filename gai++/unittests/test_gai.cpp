@@ -14,10 +14,10 @@
 
 TEST( GAITest, create_interface )
 {
-    const std::string product_name = "test_product";
-    const std::string product_name2 = "test_product2";
-    const std::string version = "1.0.0";
-    const std::string data_store_path = "test.db";
+    const char* product_name = "test_product";
+    const char* product_name2 = "test_product2";
+    const char* version = "1.0.0";
+    const char* data_store_path = "test.db";
     
     // create instance 1
     GAI::Analytics* gai = GAI::Analytics::sharedInstance( product_name, data_store_path );
@@ -61,10 +61,10 @@ TEST( GAITest, create_interface )
 
 TEST( GAITest, create_trackers )
 {
-    const std::string product_name = "test_product";
-    const std::string data_store_path = "test.db";
-    const std::string tracker_id1 = "test_tracker1";
-    const std::string tracker_id2 = "test_tracker2";
+    const char* product_name = "test_product";
+    const char* data_store_path = "test.db";
+    const char* tracker_id1 = "test_tracker1";
+    const char* tracker_id2 = "test_tracker2";
     
     // create instance 1
     GAI::Analytics* gai = GAI::Analytics::sharedInstance( product_name, data_store_path );
