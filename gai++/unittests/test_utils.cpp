@@ -57,18 +57,8 @@ TEST( TimestampTest, create_timestamp )
     
     long timestamp1, timestamp2;
     
-    // initalize the timestamp
-    GAI::Timestamp::initializeTimestamp(db);
-    
-    // wait
-    usleep(1000);
-    
     // now create a timestamp
     timestamp1 = GAI::Timestamp::generateTimestamp();
-    
-    // timestamp should be in realm 1ms to 5s
-    EXPECT_GT( timestamp1, 0 );
-    EXPECT_LT( timestamp1, 5000 );
     
     // now create a new one
     usleep(1000);
@@ -76,5 +66,4 @@ TEST( TimestampTest, create_timestamp )
     
     // timestamp should be in realm timestamp1 to 5s
     EXPECT_GT( timestamp2, timestamp1 );
-    EXPECT_LT( timestamp2, 5000 );
 }

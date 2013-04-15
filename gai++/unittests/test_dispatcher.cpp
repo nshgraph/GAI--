@@ -119,10 +119,13 @@ TEST_F( DispatcherTest, dispatch )
 {
 	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
     GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 2 );
+    std::map<std::string, std::string> parameters;
+    parameters[kAppNameModelKey] = "app";
 	
 	HitTestClass hit;
+    hit.setParameters( parameters );
 	dispatcher.storeHit( hit );
-	usleep( 5 * 1000000 * 1.5 );
+	usleep( 2 * 1000000 * 1.5 );
     
     // should have printed
 }

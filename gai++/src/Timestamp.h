@@ -12,10 +12,7 @@ namespace GAI
     ///
 	{
     public:
-        static void initializeTimestamp(DataStore& datastore);
-		static unsigned long generateTimestamp();
-    private:
-        static long BaseTime;
+        static unsigned long generateTimestamp();
 	};
 }
 
