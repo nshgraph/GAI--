@@ -12,6 +12,17 @@ namespace GAI
 {
     
     Analytics* Analytics::sharedInstance( const char* product_name, const char* data_store_path )
+    ///
+    /// Retrieve the singleton analytics instance
+    ///
+    /// @param product_name
+    ///     Product name this analytics instance is intended to track
+    /// @param data_store_path
+    ///     Location to store cached hits
+    ///
+    /// @return
+    ///     The singleton instance of Analytics
+    ///
 	{
         static Analytics* sharedInstance = NULL;
         if( sharedInstance == NULL )
@@ -23,6 +34,14 @@ namespace GAI
     }
     
     Analytics::Analytics( const char* product_name, const char* data_store_path ) :
+    ///
+    /// Create a new analytics instance
+    ///
+    /// @param product_name
+    ///     Product name this analytics instance is intended to track
+    /// @param data_store_path
+    ///     Location to store cached hits
+    ///
 	mProductName( product_name ),
     mVersion(""),
     mDefaultTracker(NULL),
@@ -33,14 +52,26 @@ namespace GAI
 	}
     
     Analytics::~Analytics()
+    ///
+    /// Destructor
+    ///
     {
         delete mDataStore;
     }
     
-    Tracker* Analytics::createTracker( const char* tracking_id )
+    Tracker* Analytics::createTracker( const char* tracker_id )
+    ///
+    /// Create or retrieve a tracker by name. If the tracker already exists it is returned, if not it is created and added to the list
+    ///
+    /// @param tracker_id
+    ///     Name to associate with tracker
+    ///
+    /// @return
+    ///     New or retrieved Tracker
+    ///
 	{
         // first attempt to retrive the tracker with the same id
-        TrackerMap::const_iterator it = mTrackers.find( tracking_id );
+        TrackerMap::const_iterator it = mTrackers.find( tracker_id );
         if( it != mTrackers.end() )
 		{
             return it->second;
@@ -48,27 +79,52 @@ namespace GAI
 		
         // create a new tracker
         std::string client_id = ClientID::generateClientID(*mDataStore);
-        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracking_id, mProductName, mVersion );
-        mTrackers[ tracking_id ] = new_tracker;
+        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracker_id, mProductName, mVersion );
+        mTrackers[ tracker_id ] = new_tracker;
         
         return new_tracker;
     }
     
     void Analytics::removeTracker( const char* tracker_id )
+    ///
+    /// Remove a tracker by name
+    ///
+    /// @param tracker_id
+    ///     Tracker to delete
+    ///
 	{
         TrackerMap::iterator it = mTrackers.find( tracker_id );
         if( it != mTrackers.end() )
 		{
             mTrackers.erase( it );
+            delete it->second;
+            if( it->second == mDefaultTracker)
+                mDefaultTracker = NULL;
 		}
     }
     
     Tracker* Analytics::getDefaultTracker() const
+    ///
+    /// Retrieve the default, unnamed tracker. Will be that set by setDefaultTracker
+    ///
+    /// @return
+    ///     Default Tracker
+    ///
 	{
         return mDefaultTracker;
     }
 	
 	bool Analytics::setDefaultTracker( Tracker* tracker )
+    ///
+    /// Set the tracker to be returned by getDefaultTracker. Allows for quick, unnamed access of a single tracker
+    /// NB: If tracker is not found in the list of trackers maintained by this instance the call will fail
+    ///
+    /// @param tracker
+    ///     Tracker to make default
+    ///
+    /// @return
+    ///     Whether the tracker was successfully set as default
+    ///
 	{
         // we should check that this really is a tracker
         bool found_tracker = false;
@@ -84,42 +140,90 @@ namespace GAI
         return found_tracker;
 	}
     
-    std::string Analytics::getProductName() const
+    const char* Analytics::getProductName() const
+    ///
+    /// Retrieve the 'name' of the app sending data
+    ///
+    /// @return
+    ///     Application name
+    ///
 	{
-        return mProductName;
+        return mProductName.c_str();
     }
     
     void Analytics::setProductName( const char* product_name )
+    ///
+    /// Set the 'name' of the app sending data. Will be used with any tracker created after this call
+    ///
+    /// @param product_name
+    ///     Application name
+    ///
     {
 		mProductName = product_name;
     }
     
-    std::string Analytics::getVersion() const
+    const char* Analytics::getVersion() const
+    ///
+    /// Retrieve the 'version' of the app sending data
+    ///
+    /// @return
+    ///     Application version
+    ///
 	{
-        return mVersion;
+        return mVersion.c_str();
     }
     
     void Analytics::setVersion( const char* version )
+    ///
+    /// Set the 'version' of the app sending data. Will be used with any tracker created after this call
+    ///
+    /// @param version
+    ///     Application version
+    ///
     {
         mVersion = version;
     }
     
     bool Analytics::isDebug() const
+    ///
+    /// Retrieve whether debug data will be printed to the console
+    ///
+    /// @return
+    ///     Whether debug data eill be printed to the console
+    ///
 	{
         return mbDebug;
     }
     
     void Analytics::setDebug( bool debug )
+    ///
+    /// Set whether debug data should be printed to the console
+    ///
+    /// @param debug
+    ///     Whether debug data should be printed to the console
+    ///
 	{
 		mbDebug = debug;
     }
     
     bool Analytics::isOptOut() const
+    ///
+    /// Retrieves whether the user has 'opted out' of data collection
+    ///
+    /// @return
+    ///     Whether the user has decided to opt-out of data collection
+    ///
 	{
         return mDispatcher->isOptOut();
     }
     
     void Analytics::setOptOut( const bool opt_out )
+    ///
+    /// Set whether data should be collected at all
+    ///
+    /// @param opt_out
+    ///     Whether the user has decided to opt-out of data collection
+    ///
 	{
         mDispatcher->setOptOut( opt_out );
     }
@@ -146,16 +250,31 @@ namespace GAI
     }
     
     double Analytics::getDispatchInterval() const
+    ///
+    /// Retreive the interval between scheduled dispatches (in seconds)
+    ///
+    /// @return
+    ///     Interval between dispatches
+    ///
 	{
         return mDispatcher->getDispatchInterval();
     }
     
     void Analytics::setDispatchInterval( const double dispatch_interval )
+    ///
+    /// Set the interval between scheduled dispatches (in seconds)
+    ///
+    /// @param dispatch_interval
+    ///     Interval between dispatches
+    ///
 	{
         mDispatcher->setDispatchInterval( dispatch_interval );
     }
     
     void Analytics::dispatch()
+    ///
+    /// Queue an immediate dispatch (is asynchronous)
+    ///
 	{
         mDispatcher->queueDispatch();
     }

@@ -22,10 +22,10 @@ namespace GAI
 		Tracker* getDefaultTracker() const;
 		bool setDefaultTracker( Tracker* tracker );
 		
-		std::string getProductName() const;
+		const char* getProductName() const;
 		void setProductName( const char* product_name );
 		
-		std::string getVersion() const;
+		const char* getVersion() const;
 		void setVersion( const char* version );
 		
 		bool isDebug() const;
