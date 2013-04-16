@@ -15,8 +15,11 @@
 # Binary Directory
 /bin
 
-# xCode Projects
-*.xcodeproj
+# Xcode Projects
+#*.xcodeproj
+xcuserdata
 Build/
 lib/
 
+# GAI lib project is generated with GYP
+gai++/gai.xcodeproj
