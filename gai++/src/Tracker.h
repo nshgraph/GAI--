@@ -11,6 +11,11 @@ namespace GAI
 	class Tracker
 	{
     public:
+        virtual ~Tracker()
+        ///
+        /// Default Destructor
+        ///
+        {}
         
         ///
         /// Send a 'hit' representing the user viewing a screen
