@@ -20,6 +20,29 @@
 
     },
     #todo win default settings
+
+    'configurations': {
+      'Debug': {
+        'xcode_settings': {
+          'GCC_OPTIMIZATION_LEVEL': '0'
+        },
+        'msbuild_settings': {
+          'ClCompile': { 
+            'Optimization': 'Disabled'
+          }
+        }
+      },
+      'Release': {
+        'xcode_settings': {
+          'GCC_OPTIMIZATION_LEVEL': 's'
+        },
+        'msbuild_settings': {
+          'ClCompile': { 
+            'Optimization': 'MaxSpeed'
+          }
+        }
+      }
+    }
   },
   'targets': [
     {
@@ -72,14 +95,6 @@
             'sources': [
          'src/win/Platform.cpp'
          ],
-          'configurations': {
-            'Debug': {
-              #todo symbol/optimisation settings
-            },
-            'Release': {
-              #todo symbol/optimisation settings
-            },
-          },
         }],
         ['OS=="mac"', {
           'include_dirs': [
@@ -88,14 +103,6 @@
           'sources': [
             'src/mac/Platform.cpp'
           ],
-          'configurations': {
-            'Debug': {
-              #todo symbol/optimisation settings
-            },
-            'Release': {
-              #todo symbol/optimisation settings
-            },
-          },
         }],
       ],
     },
@@ -154,14 +161,6 @@
           'sources': [
             'src/mac/Platform.cpp'
           ],
-          'configurations': {
-            'Debug': {
-              #todo symbol/optimisation settings
-            },
-            'Release': {
-              #todo symbol/optimisation settings
-            },
-          },
         }],
         ['OS=="mac"', {
           'mac_bundle': 1,
@@ -186,14 +185,6 @@
               'libevent.dylib',
               'ApplicationServices.framework'
             ],
-          },
-          'configurations': {
-            'Debug': {
-              #todo symbol/optimisation settings
-            },
-            'Release': {
-              #todo symbol/optimisation settings
-            },
           },
         }],
       ],
