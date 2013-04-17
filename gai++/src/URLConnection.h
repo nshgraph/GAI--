@@ -17,9 +17,12 @@ namespace GAI
         URLConnection( event_base *base );
         void request(const std::string& url, URLConnectionCompleteCB callback, void* callback_data );
         void setAddress( const std::string& address, int port );
+        void createUserAgentString( const std::string& product, const std::string& version );
     private:
         evhttp_connection *mConnection; //< Connection object to send all requests from
         event_base *mEventBase; //<Event Base for async requests
+        
+        std::string mUserAgent;
 	};
 }
 

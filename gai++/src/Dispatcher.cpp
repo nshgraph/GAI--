@@ -51,6 +51,7 @@ namespace GAI
     ///
 	{
         mURLConnection = new URLConnection( mDispatchEventBase );
+        mURLConnection->createUserAgentString("GAI++","1.0");
         // begin the initial dispatch
         setDispatchInterval(mDispatchInterval);
         setUseHttps(false);

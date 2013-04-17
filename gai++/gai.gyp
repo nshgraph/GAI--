@@ -65,9 +65,13 @@
         'src/TransactionItem.h',
         'src/URLConnection.cpp',
         'src/URLConnection.h',
+        'src/Platform.h'
       ],
       'conditions': [
-        ['OS=="win"', {
+         ['OS=="win"', {
+            'sources': [
+         'src/win/Platform.cpp'
+         ],
           'configurations': {
             'Debug': {
               #todo symbol/optimisation settings
@@ -80,6 +84,9 @@
         ['OS=="mac"', {
           'include_dirs': [
             '/usr/local/include',
+          ],
+          'sources': [
+            'src/mac/Platform.cpp'
           ],
           'configurations': {
             'Debug': {
@@ -144,6 +151,9 @@
       ],
       'conditions': [
         ['OS=="win"', {
+          'sources': [
+            'src/mac/Platform.cpp'
+          ],
           'configurations': {
             'Debug': {
               #todo symbol/optimisation settings
@@ -158,6 +168,9 @@
           'include_dirs': [
             '/usr/local/include',
           ],
+          'sources': [
+            'src/mac/Platform.cpp'
+          ],
           'xcode_settings': {
             'LIBRARY_SEARCH_PATHS': [
               '/usr/local/lib'
@@ -170,7 +183,8 @@
             'libraries' : [
               'gtest.framework',
               'libsqlite3.dylib',
-              'libevent.dylib'
+              'libevent.dylib',
+              'ApplicationServices.framework'
             ],
           },
           'configurations': {

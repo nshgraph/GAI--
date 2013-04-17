@@ -1,9 +1,13 @@
 
 #include "URLConnection.h"
 
+#include <sstream>
+
 #include <event2/buffer.h>
 #include <event2/http.h>
 #include <event2/http_struct.h>
+
+#include "Platform.h"
 
 
 namespace GAI
@@ -75,7 +79,7 @@ namespace GAI
         ev_uint16_t port;
         evhttp_connection_get_peer(mConnection, &host_address, &port);
         evhttp_add_header( request->output_headers, "Host", host_address );
-        evhttp_add_header( request->output_headers, "User-Agent", "GAI++ Mac OSX 10.8" );
+        evhttp_add_header( request->output_headers, "User-Agent", mUserAgent.c_str() );
 
         evhttp_make_request(mConnection, request, EVHTTP_REQ_GET, url.c_str());
         
@@ -93,5 +97,22 @@ namespace GAI
     ///
     {
         mConnection = evhttp_connection_base_new(mEventBase,NULL,address.c_str(), port);
+    }
+    
+    void URLConnection::createUserAgentString( const std::string& product, const std::string& version )
+    ///
+    /// Generate the user agent string to be sen with every request
+    ///
+    /// @param product
+    ///     Host Address
+    ///
+    /// @param version
+    ///     Host Port
+    ///
+    {
+        std::ostringstream stringStream;
+        stringStream << "" << product << "/" << version << " ( " << Platform::GetPlatformVersionString() << "; " << Platform::GetLocale() << "; )";
+        mUserAgent = stringStream.str();
+     //   return String.format("%s/%s (Linux; U; Android %s; %s; %s Build/%s)", new Object[] { product, version, release, language, model, id });
     }
 }
