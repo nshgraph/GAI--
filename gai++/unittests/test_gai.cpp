@@ -10,8 +10,6 @@
 
 #include "GAI.h"
 
-
-
 TEST( GAITest, create_interface )
 {
     const char* product_name = "test_product";
@@ -20,10 +18,12 @@ TEST( GAITest, create_interface )
     const char* data_store_path = "test.db";
     
     // create instance 1
-    GAI::Analytics* gai = GAI::Analytics::sharedInstance( product_name, data_store_path );
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+	gai->init( product_name, data_store_path );
     
     // create instance 2
-    GAI::Analytics* gai2 = GAI::Analytics::sharedInstance( product_name, data_store_path );
+    GAI::Analytics* gai2 = GAI::Analytics::getInstance();
+	gai2->init( product_name, data_store_path );
     
     // should be the same
     EXPECT_EQ( gai, gai2 );
@@ -58,7 +58,6 @@ TEST( GAITest, create_interface )
     EXPECT_EQ(120.0,gai->getDispatchInterval());
 }
 
-
 TEST( GAITest, create_trackers )
 {
     const char* product_name = "test_product";
@@ -67,7 +66,8 @@ TEST( GAITest, create_trackers )
     const char* tracker_id2 = "test_tracker2";
     
     // create instance 1
-    GAI::Analytics* gai = GAI::Analytics::sharedInstance( product_name, data_store_path );
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+	gai->init( product_name, data_store_path );
     
     // should start without a default tracker
     EXPECT_TRUE( gai->getDefaultTracker() == NULL);
@@ -99,7 +99,4 @@ TEST( GAITest, create_trackers )
     // should be able to set the default tracker with one of these
     EXPECT_TRUE( gai->setDefaultTracker(tracker3) );
     EXPECT_TRUE( gai->getDefaultTracker() == tracker3);
-
-    
 }
-

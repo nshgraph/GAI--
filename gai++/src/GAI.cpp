@@ -11,44 +11,51 @@
 namespace GAI
 {
     
-    Analytics* Analytics::sharedInstance( const char* product_name, const char* data_store_path )
+	Analytics* Analytics::getInstance()
     ///
     /// Retrieve the singleton analytics instance
     ///
-    /// @param product_name
-    ///     Product name this analytics instance is intended to track
-    /// @param data_store_path
-    ///     Location to store cached hits
-    ///
-    /// @return
-    ///     The singleton instance of Analytics
-    ///
 	{
-        static Analytics* sharedInstance = NULL;
+		static Analytics* sharedInstance = NULL;
         if( sharedInstance == NULL )
 		{
-            sharedInstance = new Analytics( product_name, data_store_path );
+            sharedInstance = new Analytics();
 		}
 		
         return sharedInstance;
-    }
-    
-    Analytics::Analytics( const char* product_name, const char* data_store_path ) :
+	}
+	
+	bool Analytics::init( const char* product_name, const char* data_store_path )
     ///
-    /// Create a new analytics instance
+    /// Init analytics instance
     ///
     /// @param product_name
     ///     Product name this analytics instance is intended to track
+	///		
     /// @param data_store_path
     ///     Location to store cached hits
     ///
-	mProductName( product_name ),
-    mVersion(""),
-    mDefaultTracker(NULL),
-	mbDebug( false )
     {
+		mProductName = product_name;
+		
         mDataStore = new DataStoreSqlite( data_store_path + mProductName );
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
+		
+		mDefaultTracker = NULL;
+		mbDebug = false;
+	}
+	
+	Analytics::Analytics() :
+	mProductName(),
+    mVersion(),
+	mDataStore( NULL ),
+	mDispatcher( NULL ),
+    mDefaultTracker( NULL ),
+	mbDebug( false )
+	///
+	/// Constructor
+	///
+	{
 	}
     
     Analytics::~Analytics()
