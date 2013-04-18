@@ -25,7 +25,7 @@ namespace GAI
         return sharedInstance;
 	}
 	
-	bool Analytics::init( const char* product_name, const char* data_store_path )
+	bool Analytics::init( const char* product_name, const char* product_version, const char* data_store_path )
     ///
     /// Init analytics instance
     ///
@@ -37,6 +37,7 @@ namespace GAI
     ///
     {
 		mProductName = product_name;
+		mProductVersion = product_version;
 		
         mDataStore = new DataStoreSqlite( data_store_path + mProductName );
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
@@ -47,7 +48,7 @@ namespace GAI
 	
 	Analytics::Analytics() :
 	mProductName(),
-    mVersion(),
+    mProductVersion(),
 	mDataStore( NULL ),
 	mDispatcher( NULL ),
     mDefaultTracker( NULL ),
@@ -86,7 +87,7 @@ namespace GAI
 		
         // create a new tracker
         std::string client_id = ClientID::generateClientID(*mDataStore);
-        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracker_id, mProductName, mVersion );
+        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracker_id, mProductName, mProductVersion );
         mTrackers[ tracker_id ] = new_tracker;
         
         return new_tracker;
@@ -177,18 +178,7 @@ namespace GAI
     ///     Application version
     ///
 	{
-        return mVersion.c_str();
-    }
-    
-    void Analytics::setVersion( const char* version )
-    ///
-    /// Set the 'version' of the app sending data. Will be used with any tracker created after this call
-    ///
-    /// @param version
-    ///     Application version
-    ///
-    {
-        mVersion = version;
+        return mProductVersion.c_str();
     }
     
     bool Analytics::isDebug() const

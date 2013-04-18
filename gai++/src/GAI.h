@@ -16,7 +16,7 @@ namespace GAI
     public:
 		static Analytics* getInstance();
 		
-		bool init( const char* product_name, const char* data_store_path );
+		bool init( const char* product_name, const char* product_version, const char* data_store_path );
 		
 		Tracker* createTracker( const char* tracking_id );
 		void removeTracker( const char* tracker_id );
@@ -28,7 +28,6 @@ namespace GAI
 		void setProductName( const char* product_name );
 		
 		const char* getVersion() const;
-		void setVersion( const char* version );
 		
 		bool isDebug() const;
 		void setDebug( const bool debug );
@@ -54,7 +53,7 @@ namespace GAI
 		Tracker* mDefaultTracker;
 		
         std::string mProductName;
-		std::string mVersion;
+		std::string mProductVersion;
 		
 		bool mbDebug;	///< print information about data being sent
 		

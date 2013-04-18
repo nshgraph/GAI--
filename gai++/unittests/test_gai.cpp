@@ -14,16 +14,16 @@ TEST( GAITest, create_interface )
 {
     const char* product_name = "test_product";
     const char* product_name2 = "test_product2";
-    const char* version = "1.0.0";
+    const char* product_version = "1.0.0";
     const char* data_store_path = "test.db";
     
     // create instance 1
     GAI::Analytics* gai = GAI::Analytics::getInstance();
-	gai->init( product_name, data_store_path );
+	gai->init( product_name, product_version, data_store_path );
     
     // create instance 2
     GAI::Analytics* gai2 = GAI::Analytics::getInstance();
-	gai2->init( product_name, data_store_path );
+	gai2->init( product_name, product_version, data_store_path );
     
     // should be the same
     EXPECT_EQ( gai, gai2 );
@@ -35,9 +35,8 @@ TEST( GAITest, create_interface )
     gai->setProductName( product_name2 );
     EXPECT_EQ(std::string(product_name2),std::string(gai->getProductName()));
     
-    // should be able to set the version
-    gai->setVersion( version );
-    EXPECT_EQ(std::string(version),std::string(gai->getVersion()));
+    // should have the correct product version
+    EXPECT_EQ(std::string(product_version),std::string(gai->getVersion()));
     
     // should be able to set the debug state
     gai->setDebug( true );
@@ -61,13 +60,14 @@ TEST( GAITest, create_interface )
 TEST( GAITest, create_trackers )
 {
     const char* product_name = "test_product";
+    const char* product_version = "1.0.0";
     const char* data_store_path = "test.db";
     const char* tracker_id1 = "test_tracker1";
     const char* tracker_id2 = "test_tracker2";
     
     // create instance 1
     GAI::Analytics* gai = GAI::Analytics::getInstance();
-	gai->init( product_name, data_store_path );
+	gai->init( product_name, product_version, data_store_path );
     
     // should start without a default tracker
     EXPECT_TRUE( gai->getDefaultTracker() == NULL);
