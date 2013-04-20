@@ -11,7 +11,7 @@
 namespace GAI
 {
     
-	Analytics* Analytics::getInstance()
+	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_path )
     ///
     /// Retrieve the singleton analytics instance
     ///
@@ -19,36 +19,16 @@ namespace GAI
 		static Analytics* sharedInstance = NULL;
         if( sharedInstance == NULL )
 		{
-            sharedInstance = new Analytics();
+            if( product_name && product_version && data_store_path )
+                sharedInstance = new Analytics( product_name, product_version, data_store_path );
 		}
 		
         return sharedInstance;
 	}
 	
-	bool Analytics::init( const char* product_name, const char* product_version, const char* data_store_path )
-    ///
-    /// Init analytics instance
-    ///
-    /// @param product_name
-    ///     Product name this analytics instance is intended to track
-	///		
-    /// @param data_store_path
-    ///     Location to store cached hits
-    ///
-    {
-		mProductName = product_name;
-		mProductVersion = product_version;
-		
-        mDataStore = new DataStoreSqlite( data_store_path + mProductName );
-		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
-		
-		mDefaultTracker = NULL;
-		mbDebug = false;
-	}
-	
-	Analytics::Analytics() :
-	mProductName(),
-    mProductVersion(),
+	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_path ) :
+	mProductName(product_name),
+    mProductVersion(product_version),
 	mDataStore( NULL ),
 	mDispatcher( NULL ),
     mDefaultTracker( NULL ),
@@ -57,6 +37,8 @@ namespace GAI
 	/// Constructor
 	///
 	{
+        mDataStore = new DataStoreSqlite( data_store_path + mProductName );
+		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
 	}
     
     Analytics::~Analytics()

@@ -17,13 +17,15 @@ TEST( GAITest, create_interface )
     const char* product_version = "1.0.0";
     const char* data_store_path = "test.db";
     
+    // fail to create instance
+    GAI::Analytics* gai_fail = GAI::Analytics::getInstance();
+    EXPECT_TRUE( gai_fail == NULL );
+    
     // create instance 1
-    GAI::Analytics* gai = GAI::Analytics::getInstance();
-	gai->init( product_name, product_version, data_store_path );
+    GAI::Analytics* gai = GAI::Analytics::getInstance(product_name, product_version, data_store_path);
     
     // create instance 2
-    GAI::Analytics* gai2 = GAI::Analytics::getInstance();
-	gai2->init( product_name, product_version, data_store_path );
+    GAI::Analytics* gai2 = GAI::Analytics::getInstance(product_name, product_version, data_store_path);
     
     // should be the same
     EXPECT_EQ( gai, gai2 );
@@ -66,8 +68,7 @@ TEST( GAITest, create_trackers )
     const char* tracker_id2 = "test_tracker2";
     
     // create instance 1
-    GAI::Analytics* gai = GAI::Analytics::getInstance();
-	gai->init( product_name, product_version, data_store_path );
+    GAI::Analytics* gai = GAI::Analytics::getInstance( product_name, product_version, data_store_path );
     
     // should start without a default tracker
     EXPECT_TRUE( gai->getDefaultTracker() == NULL);
