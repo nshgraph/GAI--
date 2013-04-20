@@ -10,6 +10,7 @@
 #define gai_GAIDefines_h
 
 #define kDispatchInterval	120 // 120 seconds (2 minutes)
+#define kDispatchBlockSize  10
 #define kOptOut				0 // On
 
 #define kGAIVersion			"1"

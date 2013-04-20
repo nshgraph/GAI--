@@ -220,7 +220,7 @@ namespace GAI
     {
         mbCancelDispatch = false;
         std::list<Hit> hits;
-        hits = mDataStore.fetchHits(50, true);
+        hits = mDataStore.fetchHits(kDispatchBlockSize, true);
         std::string base_url = std::string(kGAIURLPage) + "?";
         while( hits.size() > 0 && !mbCancelDispatch )
         {
@@ -231,7 +231,7 @@ namespace GAI
                 mURLConnection->request( base_url + (*it).getDispatchURL(), Dispatcher::RequestCallback, cb_struct );
             }
             // fetch the next group of hits
-            hits = mDataStore.fetchHits(50, true);
+            hits = mDataStore.fetchHits(kDispatchBlockSize, true);
         }
         // put back any left over hits
         if( hits.size() > 0 )
