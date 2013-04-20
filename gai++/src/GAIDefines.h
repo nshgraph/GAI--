@@ -26,6 +26,7 @@
 #define kAppIdModelKey "aid"
 #define kAppVersionModelKey "av"
 #define kTrackingIdModelKey "tid"
+#define kHitTypeModelKey "t"
 #define kSessionControlModelKey "sc"
 #define kAnonymizeIpModelKey "aip"
 #define kClientIdModelKey "cid"
@@ -61,5 +62,15 @@
 #define kSocialNetworkModelKey "sn"
 #define kSocialActionModelKey "sa"
 #define kSocialTargetModelKey "st"
+
+
+#define kHitTypeAppViewValue "appview"
+#define kHitTypeEventValue "event"
+#define kHitTypeTransactionValue "transaction"
+#define kHitTypeTransactionItemValue "item"
+#define kHitTypeExceptionValue "exception"
+#define kHitTypeTimingValue "timing"
+#define kHitTypeSocialValue "social"
+
 
 #endif
