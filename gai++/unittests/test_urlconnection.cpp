@@ -115,6 +115,8 @@ TEST( URLConnection, test_connections )
         event_base_loop(eb, EVLOOP_NONBLOCK);
     }
     
+    usleep(5000); // allow server time to start running
+    
     EXPECT_TRUE( server.haveReceivedRequest() );
     EXPECT_TRUE( success );
     
