@@ -93,10 +93,10 @@
         'src/Platform.h'
       ],
       'conditions': [
-         ['OS=="win"', {
-            'sources': [
-         'src/win/Platform.cpp'
-         ],
+        ['OS=="win"', {
+          'sources': [
+            'src/win/Platform.cpp'
+          ],
         }],
         ['OS=="mac"', {
           'include_dirs': [
