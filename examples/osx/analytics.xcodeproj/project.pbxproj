@@ -13,9 +13,9 @@
 		8B8AC83A171C1707009B3E2E /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 8B8AC838171C1707009B3E2E /* Credits.rtf */; };
 		8B8AC840171C1708009B3E2E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8AC83E171C1708009B3E2E /* MainMenu.xib */; };
 		8BB7F06D171C207B00E6C0F1 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F06C171C207B00E6C0F1 /* MainViewController.m */; };
-		8BB7F070171C211600E6C0F1 /* TabOneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F06F171C211600E6C0F1 /* TabOneViewController.m */; };
-		8BB7F077171C230C00E6C0F1 /* TabTwoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F076171C230C00E6C0F1 /* TabTwoViewController.m */; };
-		8BB7F07A171C235700E6C0F1 /* TabThreeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F079171C235700E6C0F1 /* TabThreeViewController.m */; };
+		8BB7F070171C211600E6C0F1 /* TabOneViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F06F171C211600E6C0F1 /* TabOneViewController.mm */; };
+		8BB7F077171C230C00E6C0F1 /* TabTwoViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F076171C230C00E6C0F1 /* TabTwoViewController.mm */; };
+		8BB7F07A171C235700E6C0F1 /* TabThreeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F079171C235700E6C0F1 /* TabThreeViewController.mm */; };
 		8BE99C61171D4723005D1538 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BE99C60171D4723005D1538 /* AppDelegate.mm */; };
 		8BE99C63171D4BA9005D1538 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BE99C62171D4BA9005D1538 /* libsqlite3.0.dylib */; };
 		8BE99C66171D4D70005D1538 /* libevent.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BE99C64171D4D63005D1538 /* libevent.a */; };
@@ -38,11 +38,11 @@
 		8BB7F06B171C207B00E6C0F1 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = classes/MainViewController.h; sourceTree = "<group>"; };
 		8BB7F06C171C207B00E6C0F1 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = classes/MainViewController.m; sourceTree = "<group>"; };
 		8BB7F06E171C211600E6C0F1 /* TabOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabOneViewController.h; path = classes/TabOneViewController.h; sourceTree = "<group>"; };
-		8BB7F06F171C211600E6C0F1 /* TabOneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabOneViewController.m; path = classes/TabOneViewController.m; sourceTree = "<group>"; };
+		8BB7F06F171C211600E6C0F1 /* TabOneViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TabOneViewController.mm; path = classes/TabOneViewController.mm; sourceTree = "<group>"; };
 		8BB7F075171C230C00E6C0F1 /* TabTwoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabTwoViewController.h; path = classes/TabTwoViewController.h; sourceTree = "<group>"; };
-		8BB7F076171C230C00E6C0F1 /* TabTwoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabTwoViewController.m; path = classes/TabTwoViewController.m; sourceTree = "<group>"; };
+		8BB7F076171C230C00E6C0F1 /* TabTwoViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TabTwoViewController.mm; path = classes/TabTwoViewController.mm; sourceTree = "<group>"; };
 		8BB7F078171C235700E6C0F1 /* TabThreeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabThreeViewController.h; path = classes/TabThreeViewController.h; sourceTree = "<group>"; };
-		8BB7F079171C235700E6C0F1 /* TabThreeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TabThreeViewController.m; path = classes/TabThreeViewController.m; sourceTree = "<group>"; };
+		8BB7F079171C235700E6C0F1 /* TabThreeViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TabThreeViewController.mm; path = classes/TabThreeViewController.mm; sourceTree = "<group>"; };
 		8BE99C60171D4723005D1538 /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		8BE99C62171D4BA9005D1538 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		8BE99C64171D4D63005D1538 /* libevent.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libevent.a; path = /usr/local/lib/libevent.a; sourceTree = "<absolute>"; };
@@ -112,11 +112,11 @@
 				8BB7F06B171C207B00E6C0F1 /* MainViewController.h */,
 				8BB7F06C171C207B00E6C0F1 /* MainViewController.m */,
 				8BB7F06E171C211600E6C0F1 /* TabOneViewController.h */,
-				8BB7F06F171C211600E6C0F1 /* TabOneViewController.m */,
+				8BB7F06F171C211600E6C0F1 /* TabOneViewController.mm */,
 				8BB7F075171C230C00E6C0F1 /* TabTwoViewController.h */,
-				8BB7F076171C230C00E6C0F1 /* TabTwoViewController.m */,
+				8BB7F076171C230C00E6C0F1 /* TabTwoViewController.mm */,
 				8BB7F078171C235700E6C0F1 /* TabThreeViewController.h */,
-				8BB7F079171C235700E6C0F1 /* TabThreeViewController.m */,
+				8BB7F079171C235700E6C0F1 /* TabThreeViewController.mm */,
 				8B8AC830171C1707009B3E2E /* Supporting Files */,
 			);
 			path = analytics;
@@ -199,9 +199,9 @@
 			files = (
 				8B8AC836171C1707009B3E2E /* main.m in Sources */,
 				8BB7F06D171C207B00E6C0F1 /* MainViewController.m in Sources */,
-				8BB7F070171C211600E6C0F1 /* TabOneViewController.m in Sources */,
-				8BB7F077171C230C00E6C0F1 /* TabTwoViewController.m in Sources */,
-				8BB7F07A171C235700E6C0F1 /* TabThreeViewController.m in Sources */,
+				8BB7F070171C211600E6C0F1 /* TabOneViewController.mm in Sources */,
+				8BB7F077171C230C00E6C0F1 /* TabTwoViewController.mm in Sources */,
+				8BB7F07A171C235700E6C0F1 /* TabThreeViewController.mm in Sources */,
 				8BE99C61171D4723005D1538 /* AppDelegate.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

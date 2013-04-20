@@ -4,6 +4,7 @@
 //
 
 #import "TabThreeViewController.h"
+#include "GAI.h"
 
 @interface TabThreeViewController ()
 
@@ -19,6 +20,24 @@
     }
     
     return self;
+}
+
+-(IBAction)sendEvent:(id)sender
+{
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+    gai->getDefaultTracker()->sendEvent("Button","Pressed","","Down");
+}
+
+-(IBAction)dispatchQueue:(id)sender
+{
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+    gai->dispatch();
+}
+
+
+- (void)loadView
+{
+    [super loadView];
 }
 
 @end

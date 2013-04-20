@@ -13,7 +13,9 @@
 {
 	// Insert code here to initialize your application
 	
-	GAI::Analytics::sharedInstance( "Analytics Example App", "./" );
+	GAI::Analytics* gai = GAI::Analytics::getInstance( "Analytics Example App", "1.0", "./" );
+    gai->createTracker("My Tracker");
+    
 }
 
 @end
