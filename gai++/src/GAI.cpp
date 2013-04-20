@@ -90,6 +90,9 @@ namespace GAI
         Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracker_id, mProductName, mProductVersion );
         mTrackers[ tracker_id ] = new_tracker;
         
+        if( mDefaultTracker == NULL )
+            mDefaultTracker = new_tracker;
+        
         return new_tracker;
     }
     
