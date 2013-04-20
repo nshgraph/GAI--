@@ -131,6 +131,20 @@ TEST_F( DispatcherTest, dispatch )
 }
 
 
+TEST_F( DispatcherTest, immediate_dispatch )
+{
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+    DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, 200 );
+    std::map<std::string, std::string> parameters;
+    parameters[kAppNameModelKey] = "app";
+	
+    dispatcher.queueDispatch();
+	usleep( 2 * 1000000 * 1.5 );
+	EXPECT_TRUE( dispatcher.mbCallbackComplete );
+}
+
+
+
 
 TEST_F( DispatcherTest, options )
 {

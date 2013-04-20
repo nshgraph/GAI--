@@ -35,6 +35,7 @@ namespace GAI
     mDispatchEvent(NULL),
     mbThreadRunning(true),
     mbCancelDispatch(false),
+    mbImmediateDispatch(false),
     mTimerThread( Dispatcher::TimerThreadFunction, (void*)this ),
     mURLConnection( NULL )
     ///
@@ -64,11 +65,12 @@ namespace GAI
 	{
         delete mURLConnection;
 		mbThreadRunning = false;
+        mbCancelDispatch = true;
+        // ensure the thread has ended
+        mTimerThread.join();
         
         // instruct the event loop to stop
         event_base_loopbreak( mDispatchEventBase );
-        // ensure the thread has ended
-        mTimerThread.join();
 		if( mDispatchEventBase )
 		{
             // destroy event loop
@@ -107,8 +109,7 @@ namespace GAI
     ///
 	{
         mbCancelDispatch = false;
-        event* immediate_dispatch = event_new( mDispatchEventBase, -1, EV_TIMEOUT|EV_PERSIST, Dispatcher::TimerCallback, this );
-        event_add( immediate_dispatch, NULL );
+        mbImmediateDispatch = true;
 	}
 	
 	void Dispatcher::cancelDispatch()
@@ -217,7 +218,7 @@ namespace GAI
     ///     Nothing
     ///
     {
-        
+        mbCancelDispatch = false;
         std::list<Hit> hits;
         hits = mDataStore.fetchHits(50, true);
         std::string base_url = std::string(kGAIURLPage) + "?";
@@ -258,6 +259,10 @@ namespace GAI
 		
         while(dispatcher->mbThreadRunning)
         {
+            if( dispatcher->mbImmediateDispatch )
+            {
+                dispatcher->dispatch();
+            }
             event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);
         }
 	}
@@ -279,7 +284,6 @@ namespace GAI
     ///
 	{
 		Dispatcher *dispatcher = static_cast<Dispatcher*>( context );
-        dispatcher->mbCancelDispatch = false;
 		dispatcher->dispatch();
 	}
     
