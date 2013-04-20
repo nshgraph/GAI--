@@ -23,19 +23,19 @@
     return self;
 }
 
--(void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabView
+-(void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
     
     GAI::Analytics* gai = GAI::Analytics::getInstance();
-    if( tabView == tabOneView )
+    if( tabViewItem == tabOneView )
     {
         gai->getDefaultTracker()->sendView("Tab One");
     }
-    else if( tabView == tabTwoView )
+    else if( tabViewItem == tabTwoView )
     {
         gai->getDefaultTracker()->sendView("Tab Two");
     }
-    else if( tabView == tabThreeView )
+    else if( tabViewItem == tabThreeView )
     {
         gai->getDefaultTracker()->sendView("Tab Three");
     }
