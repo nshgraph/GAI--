@@ -25,7 +25,7 @@
 -(IBAction)sendEvent:(id)sender
 {
     GAI::Analytics* gai = GAI::Analytics::getInstance();
-    gai->getDefaultTracker()->sendEvent("Button","Pressed","","Down");
+    gai->getDefaultTracker()->sendEvent("Button","Pressed","Label?","Down");
 }
 
 -(IBAction)dispatchQueue:(id)sender

@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		8B8AC82A171C1707009B3E2E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8B8AC829171C1707009B3E2E /* Cocoa.framework */; };
 		8B8AC834171C1707009B3E2E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8B8AC832171C1707009B3E2E /* InfoPlist.strings */; };
-		8B8AC836171C1707009B3E2E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B8AC835171C1707009B3E2E /* main.m */; };
+		8B8AC836171C1707009B3E2E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8B8AC835171C1707009B3E2E /* main.mm */; };
 		8B8AC83A171C1707009B3E2E /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 8B8AC838171C1707009B3E2E /* Credits.rtf */; };
 		8B8AC840171C1708009B3E2E /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B8AC83E171C1708009B3E2E /* MainMenu.xib */; };
-		8BB7F06D171C207B00E6C0F1 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F06C171C207B00E6C0F1 /* MainViewController.m */; };
+		8BB7F06D171C207B00E6C0F1 /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F06C171C207B00E6C0F1 /* MainViewController.mm */; };
 		8BB7F070171C211600E6C0F1 /* TabOneViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F06F171C211600E6C0F1 /* TabOneViewController.mm */; };
 		8BB7F077171C230C00E6C0F1 /* TabTwoViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F076171C230C00E6C0F1 /* TabTwoViewController.mm */; };
 		8BB7F07A171C235700E6C0F1 /* TabThreeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8BB7F079171C235700E6C0F1 /* TabThreeViewController.mm */; };
@@ -30,13 +30,13 @@
 		8B8AC82E171C1707009B3E2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8B8AC831171C1707009B3E2E /* analytics-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "analytics-Info.plist"; sourceTree = "<group>"; };
 		8B8AC833171C1707009B3E2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		8B8AC835171C1707009B3E2E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8B8AC835171C1707009B3E2E /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		8B8AC837171C1707009B3E2E /* analytics-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "analytics-Prefix.pch"; sourceTree = "<group>"; };
 		8B8AC839171C1707009B3E2E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		8B8AC83B171C1707009B3E2E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8B8AC83F171C1708009B3E2E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		8BB7F06B171C207B00E6C0F1 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainViewController.h; path = classes/MainViewController.h; sourceTree = "<group>"; };
-		8BB7F06C171C207B00E6C0F1 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainViewController.m; path = classes/MainViewController.m; sourceTree = "<group>"; };
+		8BB7F06C171C207B00E6C0F1 /* MainViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MainViewController.mm; path = classes/MainViewController.mm; sourceTree = "<group>"; };
 		8BB7F06E171C211600E6C0F1 /* TabOneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabOneViewController.h; path = classes/TabOneViewController.h; sourceTree = "<group>"; };
 		8BB7F06F171C211600E6C0F1 /* TabOneViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = TabOneViewController.mm; path = classes/TabOneViewController.mm; sourceTree = "<group>"; };
 		8BB7F075171C230C00E6C0F1 /* TabTwoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TabTwoViewController.h; path = classes/TabTwoViewController.h; sourceTree = "<group>"; };
@@ -110,7 +110,7 @@
 				8BE99C60171D4723005D1538 /* AppDelegate.mm */,
 				8B8AC83E171C1708009B3E2E /* MainMenu.xib */,
 				8BB7F06B171C207B00E6C0F1 /* MainViewController.h */,
-				8BB7F06C171C207B00E6C0F1 /* MainViewController.m */,
+				8BB7F06C171C207B00E6C0F1 /* MainViewController.mm */,
 				8BB7F06E171C211600E6C0F1 /* TabOneViewController.h */,
 				8BB7F06F171C211600E6C0F1 /* TabOneViewController.mm */,
 				8BB7F075171C230C00E6C0F1 /* TabTwoViewController.h */,
@@ -127,7 +127,7 @@
 			children = (
 				8B8AC831171C1707009B3E2E /* analytics-Info.plist */,
 				8B8AC832171C1707009B3E2E /* InfoPlist.strings */,
-				8B8AC835171C1707009B3E2E /* main.m */,
+				8B8AC835171C1707009B3E2E /* main.mm */,
 				8B8AC837171C1707009B3E2E /* analytics-Prefix.pch */,
 				8B8AC838171C1707009B3E2E /* Credits.rtf */,
 			);
@@ -197,8 +197,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B8AC836171C1707009B3E2E /* main.m in Sources */,
-				8BB7F06D171C207B00E6C0F1 /* MainViewController.m in Sources */,
+				8B8AC836171C1707009B3E2E /* main.mm in Sources */,
+				8BB7F06D171C207B00E6C0F1 /* MainViewController.mm in Sources */,
 				8BB7F070171C211600E6C0F1 /* TabOneViewController.mm in Sources */,
 				8BB7F077171C230C00E6C0F1 /* TabTwoViewController.mm in Sources */,
 				8BB7F07A171C235700E6C0F1 /* TabThreeViewController.mm in Sources */,

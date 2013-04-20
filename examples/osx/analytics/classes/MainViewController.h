@@ -5,6 +5,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface MainViewController : NSViewController
+@interface MainViewController : NSViewController<NSTabViewDelegate>
+{
+    IBOutlet NSTabViewItem* tabOneView;
+    IBOutlet NSTabViewItem* tabTwoView;
+    IBOutlet NSTabViewItem* tabThreeView;
+}
+
+-(void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabView;
 
 @end
