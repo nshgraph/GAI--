@@ -6,6 +6,7 @@
 
 #include "DataStore.h"
 #include "GAIDefines.h"
+#include "URLBuilder.h"
 #include "URLConnection.h"
 
 namespace GAI
@@ -221,14 +222,13 @@ namespace GAI
         mbCancelDispatch = false;
         std::list<Hit> hits;
         hits = mDataStore.fetchHits(kDispatchBlockSize, true);
-        std::string base_url = std::string(kGAIURLPage) + "?";
         while( hits.size() > 0 && !mbCancelDispatch )
         {
             // for each hit
             for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
             {
                 RequestCallbackStruct* cb_struct = new RequestCallbackStruct(this,(*it));
-                mURLConnection->request( base_url + (*it).getDispatchURL(), Dispatcher::RequestCallback, cb_struct );
+                mURLConnection->request( UrlBuilder::createURL(*it), Dispatcher::RequestCallback, cb_struct );
             }
             // fetch the next group of hits
             hits = mDataStore.fetchHits(kDispatchBlockSize, true);

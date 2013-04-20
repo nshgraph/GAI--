@@ -34,9 +34,15 @@ namespace GAI
     {
         ConnectionCallbackData* cb_data = (ConnectionCallbackData*)arg;
         if( req && req->response_code == 200 )
+        {
+            printf("200 OK\n");
             cb_data->callback(true, cb_data->data);
+        }
         else
+        {
+            printf("%i Error \n", req ? req->response_code : 0);
             cb_data->callback(false, cb_data->data);
+        }
         
         delete cb_data;
     }
@@ -81,6 +87,7 @@ namespace GAI
         evhttp_add_header( request->output_headers, "Host", host_address );
         evhttp_add_header( request->output_headers, "User-Agent", mUserAgent.c_str() );
 
+        printf("Requesting URL: %s\n", url.c_str());
         evhttp_make_request(mConnection, request, EVHTTP_REQ_GET, url.c_str());
         
     }

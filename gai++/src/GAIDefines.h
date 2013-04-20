@@ -33,6 +33,7 @@
 #define kReferrerModelKey "dr"
 #define kCampaignModelKey "cn"
 #define kSampleRateModelKey "sf"
+#define kQueueTimeModelKey "qt"
 
 
 #define kScreenParamModelKey "cd"
@@ -71,6 +72,7 @@
 #define kHitTypeExceptionValue "exception"
 #define kHitTypeTimingValue "timing"
 #define kHitTypeSocialValue "social"
+
 
 
 #endif

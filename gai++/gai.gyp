@@ -86,6 +86,8 @@
         'src/Transaction.h',
         'src/TransactionItem.cpp',
         'src/TransactionItem.h',
+        'src/URLBuilder.cpp',
+        'src/URLBuilder.h',
         'src/URLConnection.cpp',
         'src/URLConnection.h',
         'src/Platform.h'
