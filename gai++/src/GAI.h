@@ -4,10 +4,10 @@
 
 #include <string>
 #include <map>
+#include "Tracker.h"
 
 namespace GAI
 {
-	class Tracker;
 	class Dispatcher;
     class DataStore;
     
