@@ -94,7 +94,8 @@ TEST( GAITest, create_trackers )
     gai->removeTracker(tracker_id1 );
     tracker3 = gai->createTracker( tracker_id1 );
     
-    EXPECT_NE( tracker1, tracker3 );
+    // this test cant be guaranteed as the address is likely to be reused
+    // EXPECT_NE( tracker1, tracker3 );
     
     // should be able to set the default tracker with one of these
     EXPECT_TRUE( gai->setDefaultTracker(tracker3) );
