@@ -155,6 +155,8 @@
         'src/Transaction.cpp',
         'src/TransactionItem.h',
         'src/TransactionItem.cpp',
+        'src/URLBuilder.cpp',
+        'src/URLBuilder.h',
         'src/URLConnection.h',
         'src/URLConnection.cpp',
       ],
