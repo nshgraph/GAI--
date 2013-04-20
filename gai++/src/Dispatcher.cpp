@@ -261,6 +261,7 @@ namespace GAI
         {
             if( dispatcher->mbImmediateDispatch )
             {
+                dispatcher->mbImmediateDispatch = false;
                 dispatcher->dispatch();
             }
             event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);

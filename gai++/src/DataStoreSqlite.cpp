@@ -234,7 +234,6 @@ namespace GAI
         {
             zSQL_delete = sqlite3_mprintf("DELETE FROM hits WHERE id IN (SELECT id FROM hits ORDER BY id LIMIT %i)",limit);
             rc = sqlite3_exec(mDB, zSQL_delete, 0, 0, 0);
-            printf("%i",rc);
             sqlite3_free(zSQL_delete);
             
         }
