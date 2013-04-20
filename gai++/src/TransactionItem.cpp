@@ -3,7 +3,7 @@
 
 namespace GAI
 {
-    TransactionItem* TransactionItem::createItem(const std::string& aProductCode, const std::string& aProductName, const std::string& aProductCategory, const double aPrice, const int32_t aQuantity)
+    TransactionItem* TransactionItem::createItem(const char* aProductCode, const char* aProductName, const char* aProductCategory, const double aPrice, const int32_t aQuantity)
     ///
     /// Create a Transaction Item while sanity checking to ensure the required product code and name are provided
     ///
@@ -23,10 +23,10 @@ namespace GAI
     ///
     {
         // sanity check input values
-        if( aProductCode == "" )
+        if( std::string(aProductCode) == "" )
             return NULL;
 		
-        if( aProductName == "" )
+        if( std::string(aProductName) == "" )
             return NULL;
 		
         // create and return item
@@ -49,34 +49,34 @@ namespace GAI
         
     }
     
-    std::string TransactionItem::getProductCode() const{
+    const char* TransactionItem::getProductCode() const{
         ///
         /// Return the product code of this item
         ///
         /// @return
         ///     droduct code of item
         ///
-        return this->mProductCode;
+        return this->mProductCode.c_str();
     }
     
-    std::string TransactionItem::getProductName() const{
+    const char* TransactionItem::getProductName() const{
         ///
         /// Return the product name of this item
         ///
         /// @return
         ///     product name of item
         ///
-        return this->mProductName;
+        return this->mProductName.c_str();
     }
     
-    std::string TransactionItem::getProductCategory() const{
+    const char* TransactionItem::getProductCategory() const{
         ///
         /// Return the product category of this item
         ///
         /// @return
         ///     product category of item
         ///
-        return this->mProductCategory;
+        return this->mProductCategory.c_str();
     }
     
     double TransactionItem::getPrice() const{

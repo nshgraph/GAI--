@@ -69,7 +69,7 @@ namespace GAI
 		
         // create a new tracker
         std::string client_id = ClientID::generateClientID(*mDataStore);
-        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracker_id, mProductName, mProductVersion );
+        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id.c_str(), tracker_id, mProductName.c_str(), mProductVersion.c_str() );
         mTrackers[ tracker_id ] = new_tracker;
         
         if( mDefaultTracker == NULL )

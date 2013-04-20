@@ -5,7 +5,7 @@
 namespace GAI
 {
     
-    Transaction* Transaction::createTransaction( std::string transaction_id, std::string affiliation )
+    Transaction* Transaction::createTransaction( const char* transaction_id, const char* affiliation )
 	///
 	/// Static function to create a Transaction. Transactions must have an ID, this function checks
 	/// the transaction_id string is not empty.
@@ -20,7 +20,7 @@ namespace GAI
 	///  Transaction object
 	///
 	{
-        if( transaction_id.empty() )
+        if( std::string(transaction_id).empty() )
 		{
             return NULL;
 		}
@@ -78,7 +78,7 @@ namespace GAI
 		}
     }
     
-    std::string Transaction::getTransactionId() const
+    const char* Transaction::getTransactionId() const
 	///
 	/// Get the Transaction ID
 	///
@@ -86,10 +86,10 @@ namespace GAI
 	///  The transaction ID string
 	///
 	{
-        return mTransactionId;
+        return mTransactionId.c_str();
     }
     
-    std::string Transaction::getAffiliation() const
+    const char* Transaction::getAffiliation() const
 	///
 	/// Get the Transaction affiliation
 	///
@@ -97,7 +97,7 @@ namespace GAI
 	///  The affiliation string
 	///
 	{
-        return mAffiliation;
+        return mAffiliation.c_str();
     }
     
     Transaction::TransactionItemList Transaction::getTransactionItems() const

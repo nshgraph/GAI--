@@ -90,7 +90,9 @@ TEST( TrackerImplTest, get_and_set)
     std::string appVersion2 = "appVersion2";
     std::string appID = "appID";
     std::string appID2 = "appID2";
-    GAI::TrackerImpl tracker = GAI::TrackerImpl(dispatch,clientID,trackingID,appName,appVersion);
+    std::string referrer = "referrer";
+    std::string campaign = "campaign";
+    GAI::TrackerImpl tracker = GAI::TrackerImpl(dispatch,clientID.c_str(),trackingID.c_str(),appName.c_str(),appVersion.c_str());
     
     // can get tracker id
     EXPECT_EQ( tracker.getTrackingId(), trackingID );
@@ -101,17 +103,17 @@ TEST( TrackerImplTest, get_and_set)
     // can get and set app name
     EXPECT_EQ( tracker.getAppName(), appName );
     
-    tracker.setAppName(appName2);
+    tracker.setAppName(appName2.c_str());
     EXPECT_EQ( tracker.getAppName(), appName2 );
     
     // can get and set app version
     EXPECT_EQ( tracker.getAppVersion(), appVersion );
     
-    tracker.setAppVersion(appVersion2);
+    tracker.setAppVersion(appVersion2.c_str());
     EXPECT_EQ( tracker.getAppVersion(), appVersion2 );
     
     // can get and set app ID
-    tracker.setAppId(appID);
+    tracker.setAppId(appID.c_str());
     EXPECT_EQ( tracker.getAppId(), appID );
     
     // can get and set anonymize
@@ -133,24 +135,24 @@ TEST( TrackerImplTest, get_and_set)
     EXPECT_EQ( tracker.getSessionTimeout(), 2.0 );
     
     // can get and set refferer
-    tracker.setReferrerUrl("referrer");
-    EXPECT_EQ( tracker.getReferrerUrl(), "referrer" );
+    tracker.setReferrerUrl(referrer.c_str());
+    EXPECT_EQ( tracker.getReferrerUrl(), std::string(referrer) );
     
     // can get and set campaignid
-    tracker.setCampaignUrl("campaign");
-    EXPECT_EQ( tracker.getCampaignUrl(), "campaign" );
+    tracker.setCampaignUrl(campaign.c_str());
+    EXPECT_EQ( tracker.getCampaignUrl(), campaign );
     
     // if we create a hit and start a session we can't change the app info anymore
     EXPECT_TRUE( tracker.sendView("screen") );
     
     
-    tracker.setAppVersion(appVersion);
+    tracker.setAppVersion(appVersion.c_str());
     EXPECT_EQ( tracker.getAppVersion(), appVersion2 ); // no change!
     
-    tracker.setAppName(appName);
+    tracker.setAppName(appName.c_str());
     EXPECT_EQ( tracker.getAppName(), appName2 ); // no change!
     
-    tracker.setAppId(appID2);
+    tracker.setAppId(appID2.c_str());
     EXPECT_EQ( tracker.getAppId(), appID ); // no change!
     
 

@@ -2,9 +2,10 @@
 #ifndef __GAI_h__
 #define __GAI_h__
 
-#include <string>
 #include <map>
 #include "Tracker.h"
+#include "Transaction.h"
+#include "TransactionItem.h"
 
 namespace GAI
 {
