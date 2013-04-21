@@ -23,7 +23,7 @@ namespace GAI {
     {
         double timestamp = Timestamp::generateTimestamp();
         std::stringstream str;
-        str << kGAIURLPage << "?" << hit.getDispatchURL() << "&" << kQueueTimeModelKey << "=" << (int)(timestamp - hit.getTimestamp()) << "&" << kCacheBusterModelKey << rand();
+        str << kGAIURLPage << "?" << hit.getDispatchURL() << "&" << kQueueTimeModelKey << "=" << (int)(timestamp - hit.getTimestamp()) << "&" << kCacheBusterModelKey << "=" << rand();
         return str.str();
     }
     
@@ -36,7 +36,7 @@ namespace GAI {
     {
         double timestamp = Timestamp::generateTimestamp();
         std::stringstream str;
-        str << hit.getDispatchURL() << "&" << kQueueTimeModelKey << "=" << (int)(timestamp - hit.getTimestamp()) << "&" << kCacheBusterModelKey << rand();
+        str << hit.getDispatchURL() << "&" << kQueueTimeModelKey << "=" << (int)(timestamp - hit.getTimestamp()) << "&" << kCacheBusterModelKey << "=" << rand();
         return str.str();
     }
 }
