@@ -34,6 +34,7 @@
 #define kCampaignModelKey "cn"
 #define kSampleRateModelKey "sf"
 #define kQueueTimeModelKey "qt"
+#define kCacheBusterModelKey "z"
 
 
 #define kScreenParamModelKey "cd"

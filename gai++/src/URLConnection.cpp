@@ -92,6 +92,44 @@ namespace GAI
         
     }
     
+    void URLConnection::requestPOST(const std::string& url, const std::string& payload, URLConnectionCompleteCB callback, void* callback_data )    ///
+    /// Function to request a page via the GET protocol
+    ///
+    /// @param url
+    ///     The url to request (note, this does NOT include the host)
+    ///
+    /// @param payload
+    ///     POST payload to send
+    ///
+    /// @param callback
+    ///     Callback to call on success / failure of the request
+    ///
+    /// @param callback_data
+    ///     Data to send back with callback
+    ///
+    {
+        // create a struct for handling the real callback for the user of URLConnection
+        // should be deallocated in the url_connection_callback function
+        ConnectionCallbackData* cb_data = new ConnectionCallbackData();
+        cb_data->callback = callback;
+        cb_data->data = callback_data;
+        
+        evhttp_request* request = evhttp_request_new(url_connection_callback, cb_data);
+        
+        // set up appropriate headers for a GET request
+        char* host_address;
+        ev_uint16_t port;
+        evhttp_connection_get_peer(mConnection, &host_address, &port);
+        evhttp_add_header( request->output_headers, "Host", host_address );
+        const char* test_user_agent = "GoogleAnalytics/2.0b4 (iPad Simulator; U; CPU iPhone OS 5.1 like Mac OS X; en-us)";
+        evhttp_add_header( request->output_headers, "User-Agent", test_user_agent );
+        evhttp_add_header( request->output_headers, "Connection", "keep-alive" );
+        evhttp_add_header( request->output_headers, "Content-Type", "application/x-www-form-urlencoded; charset=UTF-8" );
+        evbuffer_add(request->output_buffer, payload.c_str(), payload.size());
+        printf("Requesting URL: %s\n", url.c_str());
+        evhttp_make_request(mConnection, request, EVHTTP_REQ_POST, url.c_str());
+    }
+    
     void URLConnection::setAddress( const std::string& address, int port )
     ///
     /// Set the host address to be used for this request

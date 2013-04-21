@@ -157,6 +157,8 @@
         'src/TransactionItem.cpp',
         'src/URLConnection.h',
         'src/URLConnection.cpp',
+        'src/URLBuilder.cpp',
+        'src/URLBuilder.h',
       ],
       'conditions': [
         ['OS=="win"', {

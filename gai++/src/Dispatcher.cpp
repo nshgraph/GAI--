@@ -228,7 +228,7 @@ namespace GAI
             for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
             {
                 RequestCallbackStruct* cb_struct = new RequestCallbackStruct(this,(*it));
-                mURLConnection->request( UrlBuilder::createURL(*it), Dispatcher::RequestCallback, cb_struct );
+                mURLConnection->requestPOST( UrlBuilder::createPOSTURL(*it), UrlBuilder::createPOSTPayload(*it), Dispatcher::RequestCallback, cb_struct );
             }
             // fetch the next group of hits
             hits = mDataStore.fetchHits(kDispatchBlockSize, true);

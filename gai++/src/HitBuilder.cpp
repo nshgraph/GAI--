@@ -105,8 +105,6 @@ namespace GAI {
             
             requirements[kEventHit].push_back(kEventCategoryParamModelKey);
             requirements[kEventHit].push_back(kEventActionParamModelKey);
-            requirements[kEventHit].push_back(kEventLabelParamModelKey);
-            requirements[kEventHit].push_back(kEventValueParamModelKey);
             
             requirements[kTransactionHit].push_back(kTransationIdModelKey);
             requirements[kTransactionHit].push_back(kTransationAffiliationModelKey);

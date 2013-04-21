@@ -14,6 +14,9 @@ namespace GAI
 	{
     public:
 		static std::string createURL(const Hit& hit);
+        
+		static std::string createPOSTURL(const Hit& hit);
+		static std::string createPOSTPayload(const Hit& hit);
     protected:
         
 	};
