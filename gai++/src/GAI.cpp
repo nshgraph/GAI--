@@ -38,6 +38,7 @@ namespace GAI
 	///
 	{
         mDataStore = new DataStoreSqlite( data_store_path + mProductName + ".gai" );
+        mDataStore->open();
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
 	}
     
