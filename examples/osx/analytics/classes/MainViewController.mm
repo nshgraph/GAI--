@@ -41,4 +41,10 @@
     }
 }
 
+- (IBAction)dispatchQueue:(id)sender
+{
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+    gai->dispatch();
+}
+
 @end
