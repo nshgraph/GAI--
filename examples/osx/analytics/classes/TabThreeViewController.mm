@@ -25,13 +25,20 @@
 -(IBAction)sendEvent:(id)sender
 {
     GAI::Analytics* gai = GAI::Analytics::getInstance();
-    gai->getDefaultTracker()->sendEvent("Button","Pressed","Label?","Down");
+    gai->getDefaultTracker()->sendEvent("Button","Pressed","","");
 }
 
 -(IBAction)dispatchQueue:(id)sender
 {
     GAI::Analytics* gai = GAI::Analytics::getInstance();
     gai->dispatch();
+}
+
+
+-(IBAction)crash:(id)sender
+{
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+    gai->getDefaultTracker()->sendException(true, "Pressed the Crash Button");
 }
 
 

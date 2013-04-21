@@ -10,6 +10,8 @@
 
 -(IBAction)dispatchQueue:(id)sender;
 
+-(IBAction)crash:(id)sender;
+
 - (void)loadView;
 
 @end
