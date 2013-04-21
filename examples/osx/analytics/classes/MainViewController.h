@@ -12,6 +12,7 @@
     IBOutlet NSTabViewItem* tabThreeView;
 }
 
--(void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
+- (IBAction)dispatchQueue:(id)sender;
 
 @end
