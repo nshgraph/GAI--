@@ -22,61 +22,81 @@
 ///
 /// The following keys are used when adding information to a model
 ///
-#define kAppNameModelKey "an"
-#define kAppIdModelKey "aid"
-#define kAppVersionModelKey "av"
-#define kTrackingIdModelKey "tid"
-#define kHitTypeModelKey "t"
-#define kSessionControlModelKey "sc"
-#define kAnonymizeIpModelKey "aip"
-#define kClientIdModelKey "cid"
-#define kReferrerModelKey "dr"
-#define kCampaignModelKey "cn"
-#define kSampleRateModelKey "sf"
-#define kQueueTimeModelKey "qt"
-#define kCacheBusterModelKey "z"
-#define kScreenResolutionModelKey "sr"
-#define kUserLanguageModelKey "ul"
-#define kViewportSizeModelKey "vp"
+#define kAppNameModelKey				"an"
+#define kAppIdModelKey					"aid"
+#define kAppVersionModelKey				"av"
+#define kTrackingIdModelKey				"tid"
+#define kHitTypeModelKey				"t"
+#define kSessionControlModelKey			"sc"
+#define kAnonymizeIpModelKey			"aip"
+#define kClientIdModelKey				"cid"
+#define kReferrerModelKey				"dr"
+#define kCampaignModelKey				"cn"
+#define kSampleRateModelKey				"sf"
+#define kQueueTimeModelKey				"qt"
+#define kCacheBusterModelKey			"z"
+#define kScreenResolutionModelKey		"sr"
+#define kUserLanguageModelKey			"ul"
+#define kViewportSizeModelKey			"vp"
 
+///
+/// Hit Type Keys
+///
+#define kHitTypeAppViewValue			"appview"
+#define kHitTypeEventValue				"event"
+#define kHitTypeTransactionValue		"transaction"
+#define kHitTypeTransactionItemValue	"item"
+#define kHitTypeExceptionValue			"exception"
+#define kHitTypeTimingValue				"timing"
+#define kHitTypeSocialValue				"social"
 
-#define kScreenParamModelKey "cd"
+///
+/// AppView Keys
+///
+#define kScreenParamModelKey			"cd"
 
-#define kEventCategoryParamModelKey "ec"
-#define kEventActionParamModelKey "ea"
-#define kEventLabelParamModelKey "el"
-#define kEventValueParamModelKey "ev"
+///
+/// Event Keys
+///
+#define kEventCategoryParamModelKey		"ec"
+#define kEventActionParamModelKey		"ea"
+#define kEventLabelParamModelKey		"el"
+#define kEventValueParamModelKey		"ev"
 
-#define kTransationIdModelKey "ti"
-#define kTransationAffiliationModelKey "ta"
+///
+/// Transaction Keys
+///
+#define kTransationIdModelKey			"ti"
+#define kTransationAffiliationModelKey	"ta"
 
-#define kTransationItemNameModelKey "in"
-#define kTransationItemCodeModelKey "ic"
+///
+/// Transaction Item Keys
+///
+#define kTransationItemNameModelKey		"in"
+#define kTransationItemCodeModelKey		"ic"
 #define kTransationItemCategoryModelKey "iv"
 #define kTransationItemQuantityModelKey "iq"
-#define kTransationItemPriceModelKey "ip"
+#define kTransationItemPriceModelKey	"ip"
 
-#define kExceptionDescriptionModelKey "exd"
-#define kExceptionFatalModelKey "exf"
+///
+/// Exception Keys
+///
+#define kExceptionDescriptionModelKey	"exd"
+#define kExceptionFatalModelKey			"exf"
 
-#define kTimingCategoryModelKey "utc"
-#define kTimingValueModelKey "utt"
-#define kTimingNameModelKey "utv"
-#define kTimingLabelModelKey "utl"
+///
+/// Timing Keys
+///
+#define kTimingCategoryModelKey			"utc"
+#define kTimingValueModelKey			"utt"
+#define kTimingNameModelKey				"utv"
+#define kTimingLabelModelKey			"utl"
 
-#define kSocialNetworkModelKey "sn"
-#define kSocialActionModelKey "sa"
-#define kSocialTargetModelKey "st"
-
-
-#define kHitTypeAppViewValue "appview"
-#define kHitTypeEventValue "event"
-#define kHitTypeTransactionValue "transaction"
-#define kHitTypeTransactionItemValue "item"
-#define kHitTypeExceptionValue "exception"
-#define kHitTypeTimingValue "timing"
-#define kHitTypeSocialValue "social"
-
-
+///
+/// Social Keys
+///
+#define kSocialNetworkModelKey			"sn"
+#define kSocialActionModelKey			"sa"
+#define kSocialTargetModelKey			"st"
 
 #endif
