@@ -51,13 +51,17 @@
       'dependencies': [
       ],
       'include_dirs': [
+        '../include',
         'src',
-        'thirdparty/TinyThread++-1.1/source'
+        'thirdparty/TinyThread++-1.1/source',
+        'thirdparty/sqlite3',
       ],
       'sources': [
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
+        'thirdparty/sqlite3/sqlite3.h',
+        'thirdparty/sqlite3/sqlite3.c',
 
         'src/ClientID.cpp',
         'src/ClientID.h',
@@ -92,8 +96,11 @@
       ],
       'conditions': [
          ['OS=="win"', {
-            'sources': [
-         'src/win/Platform.cpp'
+          'defines': [
+            'WIN32',
+          ],
+          'sources': [
+            'src/win/Platform.cpp'
          ],
         }],
         ['OS=="mac"', {
@@ -112,8 +119,10 @@
       'dependencies': [
       ],
       'include_dirs': [
+        '../include',
         'src',
-        'thirdparty/TinyThread++-1.1/source'
+        'thirdparty/TinyThread++-1.1/source',
+        'thirdparty/sqlite3',
       ],
       'sources': [
         'unittests/main.cpp',
@@ -130,6 +139,8 @@
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
+        'thirdparty/sqlite3/sqlite3.h',
+        'thirdparty/sqlite3/sqlite3.c',
 
         'src/ClientID.h',
         'src/ClientID.cpp',
@@ -158,9 +169,18 @@
       ],
       'conditions': [
         ['OS=="win"', {
-          'sources': [
-            'src/mac/Platform.cpp'
+          'defines': [
+            'WIN32',
           ],
+          'sources': [
+            'src/win/Platform.cpp'
+          ],
+          'link_settings': {
+            'libraries' : [
+              'gtest.lib',
+              'libevent.lib',
+            ],
+          },
         }],
         ['OS=="mac"', {
           'mac_bundle': 1,
@@ -181,7 +201,6 @@
           'link_settings': {
             'libraries' : [
               'gtest.framework',
-              'libsqlite3.dylib',
               'libevent.dylib',
               'ApplicationServices.framework'
             ],

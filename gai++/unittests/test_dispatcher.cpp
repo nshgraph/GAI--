@@ -48,6 +48,7 @@ public:
 class DispatcherTest : public ::testing::Test
 {
 protected:
+	DispatcherTest(){}
 	virtual void SetUp()
 	{
         // delete existing test db

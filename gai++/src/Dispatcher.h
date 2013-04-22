@@ -3,8 +3,8 @@
 #define __Dispatcher_h__
 
 #include <string>
-#include <event.h>
-#include <evutil.h>
+#include <event2/event.h>
+#include <event2/util.h>
 #include "tinythread.h"
 
 #include "Hit.h"

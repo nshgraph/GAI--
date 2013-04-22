@@ -3,7 +3,7 @@
 
 namespace GAI
 {
-    TransactionItem* TransactionItem::createItem(const std::string& aProductCode, const std::string& aProductName, const std::string& aProductCategory, const double aPrice, const int32_t aQuantity)
+    TransactionItem* TransactionItem::createItem(const std::string& aProductCode, const std::string& aProductName, const std::string& aProductCategory, const double aPrice, const int aQuantity)
     ///
     /// Create a Transaction Item while sanity checking to ensure the required product code and name are provided
     ///
@@ -89,7 +89,7 @@ namespace GAI
         return this->mPrice;
     }
     
-    int32_t TransactionItem::getQuantity() const
+    int TransactionItem::getQuantity() const
     ///
     /// Return the Quantity of this item
     ///
