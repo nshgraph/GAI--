@@ -9,13 +9,13 @@ namespace GAI
 	class TransactionItem
 	{
     public:
-		static TransactionItem* createItem(const std::string& aProductCode, const std::string& aProductName, const std::string& aProductCategory, const double aPrice, const int aQuantity);
+		static TransactionItem* createItem(const char* aProductCode, const char* aProductName, const char* aProductCategory, const double aPrice, const int aQuantity);
     public:
-		std::string getProductCode() const;
+		const char* getProductCode() const;
 
-		std::string getProductName() const;
+		const char* getProductName() const;
 
-		std::string getProductCategory() const;
+		const char* getProductCategory() const;
 
 		double getPrice() const;
 

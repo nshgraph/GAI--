@@ -11,43 +11,34 @@
 namespace GAI
 {
     
-    Analytics* Analytics::sharedInstance( const char* product_name, const char* data_store_path )
+	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_path )
     ///
     /// Retrieve the singleton analytics instance
     ///
-    /// @param product_name
-    ///     Product name this analytics instance is intended to track
-    /// @param data_store_path
-    ///     Location to store cached hits
-    ///
-    /// @return
-    ///     The singleton instance of Analytics
-    ///
 	{
-        static Analytics* sharedInstance = NULL;
+		static Analytics* sharedInstance = NULL;
         if( sharedInstance == NULL )
 		{
-            sharedInstance = new Analytics( product_name, data_store_path );
+            if( product_name && product_version && data_store_path )
+                sharedInstance = new Analytics( product_name, product_version, data_store_path );
 		}
 		
         return sharedInstance;
-    }
-    
-    Analytics::Analytics( const char* product_name, const char* data_store_path ) :
-    ///
-    /// Create a new analytics instance
-    ///
-    /// @param product_name
-    ///     Product name this analytics instance is intended to track
-    /// @param data_store_path
-    ///     Location to store cached hits
-    ///
-	mProductName( product_name ),
-    mVersion(""),
-    mDefaultTracker(NULL),
+	}
+	
+	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_path ) :
+	mProductName(product_name),
+    mProductVersion(product_version),
+	mDataStore( NULL ),
+	mDispatcher( NULL ),
+    mDefaultTracker( NULL ),
 	mbDebug( false )
-    {
-        mDataStore = new DataStoreSqlite( data_store_path + mProductName );
+	///
+	/// Constructor
+	///
+	{
+        mDataStore = new DataStoreSqlite( data_store_path + mProductName + ".gai" );
+        mDataStore->open();
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
 	}
     
@@ -79,8 +70,11 @@ namespace GAI
 		
         // create a new tracker
         std::string client_id = ClientID::generateClientID(*mDataStore);
-        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id, tracker_id, mProductName, mVersion );
+        Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id.c_str(), tracker_id, mProductName.c_str(), mProductVersion.c_str() );
         mTrackers[ tracker_id ] = new_tracker;
+        
+        if( mDefaultTracker == NULL )
+            mDefaultTracker = new_tracker;
         
         return new_tracker;
     }
@@ -170,18 +164,7 @@ namespace GAI
     ///     Application version
     ///
 	{
-        return mVersion.c_str();
-    }
-    
-    void Analytics::setVersion( const char* version )
-    ///
-    /// Set the 'version' of the app sending data. Will be used with any tracker created after this call
-    ///
-    /// @param version
-    ///     Application version
-    ///
-    {
-        mVersion = version;
+        return mProductVersion.c_str();
     }
     
     bool Analytics::isDebug() const

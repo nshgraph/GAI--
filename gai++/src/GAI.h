@@ -2,19 +2,20 @@
 #ifndef __GAI_h__
 #define __GAI_h__
 
-#include <string>
 #include <map>
+#include "Tracker.h"
+#include "Transaction.h"
+#include "TransactionItem.h"
 
 namespace GAI
 {
-	class Tracker;
 	class Dispatcher;
     class DataStore;
     
 	class Analytics
 	{
     public:
-		static Analytics* sharedInstance( const char* product_name, const char* data_store_path );
+		static Analytics* getInstance(  const char* product_name = NULL, const char* product_version = NULL, const char* data_store_path = NULL );
 		
 		Tracker* createTracker( const char* tracking_id );
 		void removeTracker( const char* tracker_id );
@@ -26,7 +27,6 @@ namespace GAI
 		void setProductName( const char* product_name );
 		
 		const char* getVersion() const;
-		void setVersion( const char* version );
 		
 		bool isDebug() const;
 		void setDebug( const bool debug );
@@ -43,7 +43,7 @@ namespace GAI
 		void dispatch();
 		
     private:
-        Analytics( const char* product_name, const char* data_store_path );
+        Analytics(  const char* product_name, const char* product_version, const char* data_store_path );
         ~Analytics();
 		
 		typedef std::map<std::string, Tracker*> TrackerMap;
@@ -52,7 +52,7 @@ namespace GAI
 		Tracker* mDefaultTracker;
 		
         std::string mProductName;
-		std::string mVersion;
+		std::string mProductVersion;
 		
 		bool mbDebug;	///< print information about data being sent
 		

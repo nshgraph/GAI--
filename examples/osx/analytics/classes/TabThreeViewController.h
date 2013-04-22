@@ -7,4 +7,10 @@
 
 @interface TabThreeViewController : NSViewController
 
+-(IBAction)sendEvent:(id)sender;
+
+-(IBAction)crash:(id)sender;
+
+- (void)loadView;
+
 @end

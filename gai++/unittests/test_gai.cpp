@@ -10,20 +10,22 @@
 
 #include "GAI.h"
 
-
-
 TEST( GAITest, create_interface )
 {
     const char* product_name = "test_product";
     const char* product_name2 = "test_product2";
-    const char* version = "1.0.0";
+    const char* product_version = "1.0.0";
     const char* data_store_path = "test.db";
     
+    // fail to create instance
+    GAI::Analytics* gai_fail = GAI::Analytics::getInstance();
+    EXPECT_TRUE( gai_fail == NULL );
+    
     // create instance 1
-    GAI::Analytics* gai = GAI::Analytics::sharedInstance( product_name, data_store_path );
+    GAI::Analytics* gai = GAI::Analytics::getInstance(product_name, product_version, data_store_path);
     
     // create instance 2
-    GAI::Analytics* gai2 = GAI::Analytics::sharedInstance( product_name, data_store_path );
+    GAI::Analytics* gai2 = GAI::Analytics::getInstance(product_name, product_version, data_store_path);
     
     // should be the same
     EXPECT_EQ( gai, gai2 );
@@ -35,9 +37,8 @@ TEST( GAITest, create_interface )
     gai->setProductName( product_name2 );
     EXPECT_EQ(std::string(product_name2),std::string(gai->getProductName()));
     
-    // should be able to set the version
-    gai->setVersion( version );
-    EXPECT_EQ(std::string(version),std::string(gai->getVersion()));
+    // should have the correct product version
+    EXPECT_EQ(std::string(product_version),std::string(gai->getVersion()));
     
     // should be able to set the debug state
     gai->setDebug( true );
@@ -58,16 +59,16 @@ TEST( GAITest, create_interface )
     EXPECT_EQ(120.0,gai->getDispatchInterval());
 }
 
-
 TEST( GAITest, create_trackers )
 {
     const char* product_name = "test_product";
+    const char* product_version = "1.0.0";
     const char* data_store_path = "test.db";
     const char* tracker_id1 = "test_tracker1";
     const char* tracker_id2 = "test_tracker2";
     
     // create instance 1
-    GAI::Analytics* gai = GAI::Analytics::sharedInstance( product_name, data_store_path );
+    GAI::Analytics* gai = GAI::Analytics::getInstance( product_name, product_version, data_store_path );
     
     // should start without a default tracker
     EXPECT_TRUE( gai->getDefaultTracker() == NULL);
@@ -94,12 +95,10 @@ TEST( GAITest, create_trackers )
     gai->removeTracker(tracker_id1 );
     tracker3 = gai->createTracker( tracker_id1 );
     
-    EXPECT_NE( tracker1, tracker3 );
+    // this test cant be guaranteed as the address is likely to be reused
+    // EXPECT_NE( tracker1, tracker3 );
     
     // should be able to set the default tracker with one of these
     EXPECT_TRUE( gai->setDefaultTracker(tracker3) );
     EXPECT_TRUE( gai->getDefaultTracker() == tracker3);
-
-    
 }
-

@@ -25,6 +25,23 @@ namespace GAI
     {
         
     }
+    
+    
+    DataStoreSqlite& DataStoreSqlite::operator=( const DataStoreSqlite& other )
+    ///
+    /// Assign Operator. Will create a new database connection.
+    ///
+    /// @param other
+    ///     The other data store to copy.
+    ///
+    {
+        close();
+        mPath = other.mPath;
+        if( other.mDB )
+            open();
+    }
+    
+    
     DataStoreSqlite::~DataStoreSqlite()
     ///
     /// Destructor
@@ -127,6 +144,7 @@ namespace GAI
     ///     Whether the operation was successful
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         rc = sqlite3_exec(mDB, "DELETE FROM hits", 0, 0, 0);
         if( rc != SQLITE_OK)
@@ -146,6 +164,7 @@ namespace GAI
     ///     Whether the operation was successful
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f) ", hit.getGaiVersion().c_str(), hit.getDispatchURL().c_str(),hit.getTimestamp());
         rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
@@ -189,6 +208,7 @@ namespace GAI
     ///     A List of Hit objects corresponding to those retrieved from the datastore
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         std::list<Hit> hits;
         
         int rc;
@@ -214,7 +234,6 @@ namespace GAI
         {
             zSQL_delete = sqlite3_mprintf("DELETE FROM hits WHERE id IN (SELECT id FROM hits ORDER BY id LIMIT %i)",limit);
             rc = sqlite3_exec(mDB, zSQL_delete, 0, 0, 0);
-            printf("%i",rc);
             sqlite3_free(zSQL_delete);
             
         }
@@ -244,6 +263,7 @@ namespace GAI
     ///     Hit Count
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         int rows = 0;
         sqlite3_stmt *statement = NULL;
@@ -269,6 +289,7 @@ namespace GAI
     ///  Whether the operation was successful
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         rc = sqlite3_exec(mDB, "DELETE FROM properties", 0, 0, 0);
         if( rc != SQLITE_OK)
@@ -290,6 +311,7 @@ namespace GAI
     ///     Whether the operation was successful
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
         char *zSQL = sqlite3_mprintf("INSERT INTO properties(key,value) VALUES('%q','%q') ", name.c_str(), value.c_str());
@@ -322,6 +344,7 @@ namespace GAI
     ///     Value of property as retrieved. Or empty string if failed
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         sqlite3_stmt *statement = NULL;
         std::string result = "";
@@ -348,6 +371,7 @@ namespace GAI
     ///     Key Value map
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         DataStore::PropertyMap  properties;
         int rc;
         sqlite3_stmt *statement = NULL;
@@ -374,6 +398,7 @@ namespace GAI
     ///  Property Count
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         int rows = 0;
         sqlite3_stmt *statement = NULL;
@@ -399,6 +424,7 @@ namespace GAI
     ///     Whether the operation was successful
     ///
     {
+        tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
         rc = sqlite3_exec(mDB, "CREATE TABLE properties (key TEXT PRIMARY KEY, value TEXT);", NULL,NULL,NULL);
         // ignore rc, if there is an issue with this, it is probably because the table already exists

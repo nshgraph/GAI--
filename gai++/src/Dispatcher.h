@@ -48,6 +48,7 @@ namespace GAI
 		
 		bool mbThreadRunning;
         bool mbCancelDispatch;
+        bool mbImmediateDispatch;
 		event_base*	mDispatchEventBase;
 		event*		mDispatchEvent;
         tthread::thread	mTimerThread;

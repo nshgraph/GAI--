@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include <CoreServices/CoreServices.h>
+#include <ApplicationServices/ApplicationServices.h>
 #include <sys/types.h>
 
 
@@ -31,8 +32,24 @@ namespace GAI
         return ss.str();
     }
     
-    std::string Platform::GetLocale( )
+    std::string Platform::GetUserLanguage( )
     {
-        return "en";
+        CFArrayRef langs = CFLocaleCopyPreferredLanguages();
+        CFStringRef langCode = (CFStringRef)CFArrayGetValueAtIndex (langs, 0);
+        char lang[100];
+        CFStringGetCString(langCode, lang, 100, kCFStringEncodingUTF8);
+        return lang;
+    }
+    
+    std::string Platform::GetScreenResolution( )
+    {
+        CGRect mainMonitor = CGDisplayBounds(CGMainDisplayID());
+        CGFloat monitorHeight = CGRectGetHeight(mainMonitor);
+        CGFloat monitorWidth = CGRectGetWidth(mainMonitor);
+        
+        std::stringstream ss;
+        ss << int(monitorWidth) << "x" << int(monitorHeight);
+        return ss.str();
+        
     }
 }

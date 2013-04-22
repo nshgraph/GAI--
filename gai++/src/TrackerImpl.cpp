@@ -8,9 +8,11 @@
 #include "TransactionItem.h"
 #include "HitBuilder.h"
 
+#include "Platform.h"
+
 namespace GAI {
     
-    TrackerImpl::TrackerImpl(HitStore& aHitStore, const std::string& aClientID, const std::string& aTrackingID, const std::string& aAppName, const std::string& aAppVersion) :
+    TrackerImpl::TrackerImpl(HitStore& aHitStore, const char* aClientID, const char* aTrackingID, const char* aAppName, const char* aAppVersion) :
     mHitStore( aHitStore ),
     mbTrackerOpen( true ),
     mbSessionStart( false ),
@@ -38,6 +40,8 @@ namespace GAI {
         setAppVersion( aAppVersion );
         // make sure the first hit sent indicates that this is the start of a new tracking session
         mModel->setForNextHit(kSessionControlModelKey, "start");
+        mModel->set(kScreenResolutionModelKey, Platform::GetScreenResolution() );
+        mModel->set(kUserLanguageModelKey, Platform::GetUserLanguage() );
     }
     
     TrackerImpl::~TrackerImpl()
@@ -45,11 +49,21 @@ namespace GAI {
     /// Destructor
     ///
     {
+        if( mbTrackerOpen )
+        {
+            // send a final hit to end this session
+            mModel->setForNextHit(kSessionControlModelKey, "end");
+        
+            ParameterMap parameters;
+            parameters[kScreenParamModelKey] = "exit";
+            internalSend(kAppViewHit, parameters);
+        }
+        
         delete mModel;
     }
     
     
-    bool TrackerImpl::sendView(const std::string& aScreen)
+    bool TrackerImpl::sendView(const char* aScreen)
     ///
     /// Send a 'hit' representing the user viewing a screen
     ///
@@ -64,7 +78,7 @@ namespace GAI {
         if( !mbTrackerOpen )
             return false;
         // ensure valid values have been provided
-        if( aScreen == "" )
+        if( std::string(aScreen) == "" )
             return false;
         // pack parameters
         ParameterMap parameters;
@@ -72,7 +86,7 @@ namespace GAI {
         return internalSend(kAppViewHit, parameters);
     }
     
-    bool TrackerImpl::sendEvent(const std::string& aCategory, const std::string& aAction, const std::string& aLabel, const std::string& aValue)
+    bool TrackerImpl::sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const char* aValue)
     ///
     /// Send a 'hit' representing a user generated event
     ///
@@ -89,6 +103,7 @@ namespace GAI {
     ///     Whether the operation was successful
     ///
     {
+        
         // ensure tracker is open
         if( !mbTrackerOpen )
             return false;
@@ -96,7 +111,7 @@ namespace GAI {
         parameters[kEventCategoryParamModelKey] = aCategory;
         parameters[kEventActionParamModelKey] = aAction;
         parameters[kEventLabelParamModelKey] = aLabel;
-        if( aValue != "" )
+        if( std::string(aValue) != "" )
             parameters[kEventValueParamModelKey] = aValue;
         return internalSend(kEventHit, parameters);
     }
@@ -141,7 +156,7 @@ namespace GAI {
         return success;
     }
     
-    bool TrackerImpl::sendException(const bool aIsFatal, const std::string& aDescription)
+    bool TrackerImpl::sendException(const bool aIsFatal, const char* aDescription)
     ///
     /// Send a 'hit' representing an exception
     ///
@@ -164,7 +179,7 @@ namespace GAI {
         return internalSend(kExceptionHit,parameters);
     }
     
-    bool TrackerImpl::sendTimingWithCategory(const std::string& aCategory, const double aTime, const std::string& aName, const std::string& aLabel)
+    bool TrackerImpl::sendTimingWithCategory(const char* aCategory, const double aTime, const char* aName, const char* aLabel)
     ///
     /// Send a 'hit' representing a timing event
     ///
@@ -192,7 +207,7 @@ namespace GAI {
         return internalSend(kTimingHit,parameters);
     }
     
-    bool TrackerImpl::sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget)
+    bool TrackerImpl::sendSocial(const char* aNetwork, const char* aAction, const char* aTarget)
     ///
     /// Send a 'hit' representing social media interaction
     ///
@@ -226,7 +241,7 @@ namespace GAI {
         mbTrackerOpen = false;
     }
     
-    void TrackerImpl::setTrackingId(const std::string& aTrackingId)
+    void TrackerImpl::setTrackingId(const char* aTrackingId)
     ///
     /// Internal function to set the tracking ID. Will only work before the first Hit is sent
     ///
@@ -234,11 +249,11 @@ namespace GAI {
     ///     Tracking ID
     ///
     {
-        if( !mbSessionStart && aTrackingId != "")
+        if( !mbSessionStart && std::string(aTrackingId) != "")
             mModel->set(kTrackingIdModelKey, aTrackingId);
     }
     
-    std::string TrackerImpl::getTrackingId() const
+    const char* TrackerImpl::getTrackingId() const
     ///
     /// Retreive the id of this tracker
     ///
@@ -246,10 +261,10 @@ namespace GAI {
     ///     Tracker ID
     ///
     {
-        return mModel->get(kTrackingIdModelKey);
+        return mModel->get(kTrackingIdModelKey).c_str();
     }
     
-    void TrackerImpl::setAppName(const std::string& aAppName)
+    void TrackerImpl::setAppName(const char* aAppName)
     ///
     /// Set the App name reported by this tracker. Will only work before the first Hit is sent
     ///
@@ -257,11 +272,11 @@ namespace GAI {
     ///     App Name
     ///
     {
-        if( !mbSessionStart && aAppName != "")
+        if( !mbSessionStart && std::string(aAppName) != "")
             mModel->set(kAppNameModelKey, aAppName);
     }
     
-    std::string TrackerImpl::getAppName() const
+    const char* TrackerImpl::getAppName() const
     ///
     /// Retreive the app name this tracker is tracking
     ///
@@ -269,10 +284,10 @@ namespace GAI {
     ///     App Name
     ///
     {
-        return mModel->get(kAppNameModelKey);
+        return mModel->get(kAppNameModelKey).c_str();
     }
     
-    void TrackerImpl::setAppId(const std::string& aAppId)
+    void TrackerImpl::setAppId(const char* aAppId)
     ///
     /// Set the App ID reported by this tracker. Will only work before the first Hit is sent
     ///
@@ -280,11 +295,11 @@ namespace GAI {
     ///     App ID
     ///
     {
-        if( !mbSessionStart && aAppId != "")
+        if( !mbSessionStart && std::string(aAppId) != "")
             mModel->set(kAppIdModelKey, aAppId);
     }
     
-    std::string TrackerImpl::getAppId() const
+    const char* TrackerImpl::getAppId() const
     ///
     /// Retreive the app id this tracker is tracking
     ///
@@ -292,10 +307,10 @@ namespace GAI {
     ///     App ID
     ///
     {
-        return mModel->get(kAppIdModelKey);
+        return mModel->get(kAppIdModelKey).c_str();
     }
     
-    void TrackerImpl::setAppVersion(const std::string& aAppVersion)
+    void TrackerImpl::setAppVersion(const char* aAppVersion)
     ///
     /// Set the App version reported by this tracker. Will only work before the first Hit is sent
     ///
@@ -303,11 +318,11 @@ namespace GAI {
     ///     App Version
     ///
     {
-        if( !mbSessionStart && aAppVersion != "")
+        if( !mbSessionStart && std::string(aAppVersion) != "")
             mModel->set(kAppVersionModelKey, aAppVersion);
     }
     
-    std::string TrackerImpl::getAppVersion() const
+    const char* TrackerImpl::getAppVersion() const
     ///
     /// Retreive the app version this tracker is tracking
     ///
@@ -315,10 +330,10 @@ namespace GAI {
     ///     App Version
     ///
     {
-        return mModel->get(kAppVersionModelKey);
+        return mModel->get(kAppVersionModelKey).c_str();
     }
     
-    void TrackerImpl::setClientId(const std::string& aClientId)
+    void TrackerImpl::setClientId(const char* aClientId)
     ///
     /// Internal function to set the client ID. Will only work before the first Hit is sent
     ///
@@ -326,11 +341,11 @@ namespace GAI {
     ///     Client ID
     ///
     {
-        if( !mbSessionStart && aClientId != "")
+        if( !mbSessionStart && std::string(aClientId) != "")
             mModel->set(kClientIdModelKey, aClientId);
     }
     
-    std::string TrackerImpl::getClientId() const
+    const char* TrackerImpl::getClientId() const
     ///
     /// Retreive the unique client ID used by this trcker
     ///
@@ -338,7 +353,7 @@ namespace GAI {
     ///     Client ID
     ///
     {
-        return mModel->get(kClientIdModelKey);
+        return mModel->get(kClientIdModelKey).c_str();
     }
     
     void TrackerImpl::setAnonymize(const bool aAnonymize)
@@ -349,7 +364,10 @@ namespace GAI {
     ///    Seetting for anonymization
     ///
     {
-        mModel->set(kAnonymizeIpModelKey, aAnonymize ? "1" : "0");
+        if( aAnonymize )
+            mModel->set(kAnonymizeIpModelKey, "1" );
+        else
+            mModel->remove(kAnonymizeIpModelKey);
     }
     
     bool TrackerImpl::isAnonymize()
@@ -386,7 +404,7 @@ namespace GAI {
     }
     
     
-    void TrackerImpl::setReferrerUrl(const std::string& aReferrerUrl)
+    void TrackerImpl::setReferrerUrl(const char* aReferrerUrl)
     ///
     /// Set the refferer url to send to the analytics servce
     ///
@@ -397,7 +415,7 @@ namespace GAI {
         mModel->set(kReferrerModelKey, aReferrerUrl);
     }
     
-    std::string TrackerImpl::getReferrerUrl()
+    const char* TrackerImpl::getReferrerUrl()
     ///
     /// Retreive the referrer url sent to the analytics service
     ///
@@ -405,10 +423,10 @@ namespace GAI {
     ///     Referrer URL
     ///
     {
-        return mModel->get(kReferrerModelKey);
+        return mModel->get(kReferrerModelKey).c_str();
     }
     
-    void TrackerImpl::setCampaignUrl(const std::string& aCampaignUrl)
+    void TrackerImpl::setCampaignUrl(const char* aCampaignUrl)
     ///
     /// Set the campaign url to send to the analytics servce
     ///
@@ -419,7 +437,7 @@ namespace GAI {
         mModel->set(kCampaignModelKey, aCampaignUrl);
     }
     
-    std::string TrackerImpl::getCampaignUrl()
+    const char* TrackerImpl::getCampaignUrl()
     ///
     /// Retreive the campaign url sent to the analytics service
     ///
@@ -427,7 +445,7 @@ namespace GAI {
     ///     Campaign URL
     ///
     {
-        return mModel->get(kCampaignModelKey);
+        return mModel->get(kCampaignModelKey).c_str();
     }
     
     void TrackerImpl::setSessionTimeout(const double aSessionTimeout)
@@ -452,6 +470,16 @@ namespace GAI {
         return this->mSessionTimeout;
     }
     
+    void TrackerImpl::setViewportSize( const char* aViewportSize )
+    ///
+    /// Set the viewport size to be sent
+    ///
+    /// @param
+    ///     Viewport size
+    ///
+    {
+        mModel->set(kViewportSizeModelKey, aViewportSize);
+    }
     
     bool TrackerImpl::internalSend(const HitType aType, const ParameterMap& aParameters)
     ///

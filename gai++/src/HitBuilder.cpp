@@ -35,12 +35,42 @@ namespace GAI {
             if( !aModel.hasParameter( *it) )
                 hasRequired = false;
         }
+        Model::ParameterMap params = aModel.getKeysAndValues();
+        
+        // insert the correct hit type
+        switch( aType )
+        {
+            case kAppViewHit:
+                params[kHitTypeModelKey] = kHitTypeAppViewValue;
+                break;
+            case kEventHit:
+                params[kHitTypeModelKey] = kHitTypeEventValue;
+                break;
+            case kTransactionHit:
+                params[kHitTypeModelKey] = kHitTypeTransactionValue;
+                break;
+            case kTransactionItemHit:
+                params[kHitTypeModelKey] = kHitTypeTransactionItemValue;
+                break;
+            case kExceptionHit:
+                params[kHitTypeModelKey] = kHitTypeExceptionValue;
+                break;
+            case kTimingHit:
+                params[kHitTypeModelKey] = kHitTypeTimingValue;
+                break;
+            case kSocialHit:
+                params[kHitTypeModelKey] = kHitTypeSocialValue;
+                break;
+            default:
+                hasRequired = false;
+                break;
+        }
         
         hit = NULL;
         if( hasRequired )
         {
             hit = new Hit();
-            hit->setParameters(aModel.getKeysAndValues());
+            hit->setParameters(params);
             hit->setTimestamp( Timestamp::generateTimestamp());
         }
         return (hit!=NULL);
@@ -75,8 +105,6 @@ namespace GAI {
             
             requirements[kEventHit].push_back(kEventCategoryParamModelKey);
             requirements[kEventHit].push_back(kEventActionParamModelKey);
-            requirements[kEventHit].push_back(kEventLabelParamModelKey);
-            requirements[kEventHit].push_back(kEventValueParamModelKey);
             
             requirements[kTransactionHit].push_back(kTransationIdModelKey);
             requirements[kTransactionHit].push_back(kTransationAffiliationModelKey);

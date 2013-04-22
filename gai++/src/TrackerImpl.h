@@ -19,38 +19,38 @@ namespace GAI
 	class TrackerImpl: public Tracker
 	{
     public:
-		TrackerImpl(HitStore& aHitStore, const std::string& aClientID, const std::string& aTrackingID,
-                    const std::string& aAppName, const std::string& aAppVersion);
+		TrackerImpl(HitStore& aHitStore, const char* aClientID, const char* aTrackingID,
+                    const char* aAppName, const char* aAppVersion);
         
         ~TrackerImpl();
 
-		bool sendView(const std::string& aScreen);
+		bool sendView(const char* aScreen);
 
-		bool sendEvent(const std::string& aCategory, const std::string& aAction, const std::string& aLabel, const std::string& aValue);
+		bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const char* aValue);
 
 		bool sendTransaction(const Transaction* aTransaction);
 
-		bool sendException(const bool aIsFatal, const std::string& aDescription);
+		bool sendException(const bool aIsFatal, const char* aDescription);
 
-		bool sendTimingWithCategory(const std::string& aCategory, double aTime, const std::string& aName, const std::string& aLabel);
+		bool sendTimingWithCategory(const char* aCategory, double aTime, const char* aName, const char* aLabel);
 
-		bool sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget);
+		bool sendSocial(const char* aNetwork, const char* aAction, const char* aTarget);
 
 		void close();
         
-        std::string getTrackingId() const;
+        const char* getTrackingId() const;
         
-        void setAppName(const std::string& aAppName);
+        void setAppName(const char* aAppName);
         
-        std::string getAppName() const;
+        const char* getAppName() const;
         
-        void setAppId(const std::string& aAppId);
+        void setAppId(const char* aAppId);
         
-        std::string getAppId() const;
+        const char* getAppId() const;
         
-        void setAppVersion(const std::string& aAppVersion);
+        void setAppVersion(const char* aAppVersion);
         
-        std::string getAppVersion() const;
+        const char* getAppVersion() const;
         
         void setAnonymize(const bool aAnonymize);
         
@@ -60,25 +60,27 @@ namespace GAI
         
         double getSampleRate();
         
-        std::string getClientId() const;
+        const char* getClientId() const;
         
-        void setReferrerUrl(const std::string& aReferrerUrl);
+        void setReferrerUrl(const char* aReferrerUrl);
         
-        std::string getReferrerUrl();
+        const char* getReferrerUrl();
         
-        void setCampaignUrl(const std::string& aCampaignUrl);
+        void setCampaignUrl(const char* aCampaignUrl);
         
-        std::string getCampaignUrl();
+        const char* getCampaignUrl();
         
         void setSessionTimeout(const double aSessionTimeout);
         
         double getSessionTimeout();
+        
+        void setViewportSize( const char* aViewportSize );
 
     private:
         typedef std::map<std::string, std::string> ParameterMap;
     private:
-        void setTrackingId(const std::string& aTrackingId);
-        void setClientId(const std::string& aClientId);
+        void setTrackingId(const char* aTrackingId);
+        void setClientId(const char* aClientId);
         bool internalSend(const HitType aType, const ParameterMap& aParameters);
         
         bool mbSessionStart; // Whether the first hit has been sent

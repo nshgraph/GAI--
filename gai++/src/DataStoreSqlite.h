@@ -13,6 +13,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include "tinythread.h"
 #include "Hit.h"
 
 class sqlite3;
@@ -52,11 +53,15 @@ namespace GAI
         std::string fetchProperty( const std::string& name );
         PropertyMap fetchProperties();
         int propertyCount();
+        
+        // assign opreator
+        DataStoreSqlite& operator=( const DataStoreSqlite& other );
     private:
         // ensure that the database has all strutures necessary
         bool initializeDatabase();
         
         sqlite3* mDB; // reference to
+        tthread::mutex mDBMutex;
         std::string mPath; // path to db on disk
     };
 }

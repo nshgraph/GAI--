@@ -14,14 +14,14 @@ namespace GAI
     public:
         typedef std::list<TransactionItem*> TransactionItemList;
     public:
-		static Transaction* createTransaction( std::string transaction_id, std::string affiliation );
+		static Transaction* createTransaction( const char* transaction_id, const char* affiliation );
 		
 		~Transaction();
 		
 		void addItem( TransactionItem* item );
 		
-		std::string getTransactionId() const;
-		std::string getAffiliation() const;
+		const char* getTransactionId() const;
+		const char* getAffiliation() const;
         
         TransactionItemList getTransactionItems() const;
 		

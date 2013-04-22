@@ -17,7 +17,8 @@ namespace GAI
 	{
     public:
         static std::string GetPlatformVersionString( );
-        static std::string GetLocale( );
+        static std::string GetUserLanguage( );
+        static std::string GetScreenResolution( );
     };
 };
 

@@ -36,6 +36,8 @@ namespace GAI
         void setForNextHit(const std::string& key, const std::string& value);
         void setAll(const ParameterMap& parameters, bool isForNextHit);
         
+        void remove(const std::string& key);
+        
         void clearTemporaryValues();
     private:
         ParameterMap values; // set of values that will be stored until object destruction

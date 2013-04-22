@@ -90,6 +90,8 @@
         'src/Transaction.h',
         'src/TransactionItem.cpp',
         'src/TransactionItem.h',
+        'src/URLBuilder.cpp',
+        'src/URLBuilder.h',
         'src/URLConnection.cpp',
         'src/URLConnection.h',
         'src/Platform.h'
@@ -181,8 +183,12 @@
         'src/Transaction.cpp',
         'src/TransactionItem.h',
         'src/TransactionItem.cpp',
+        'src/URLBuilder.cpp',
+        'src/URLBuilder.h',
         'src/URLConnection.h',
         'src/URLConnection.cpp',
+        'src/URLBuilder.cpp',
+        'src/URLBuilder.h',
       ],
       'conditions': [
         ['OS=="win"', {

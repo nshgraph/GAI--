@@ -26,7 +26,7 @@ namespace GAI
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual bool sendView(const std::string& aScreen) = 0;
+		 virtual bool sendView( const char* view ) = 0;
         
         ///
         /// Send a 'hit' representing a user generated event
@@ -43,7 +43,7 @@ namespace GAI
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual bool sendEvent(const std::string& aCategory, const std::string& aAction, const std::string& aLabel, const std::string& aValue) = 0;
+		 virtual bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const char* aValue) = 0;
         
         ///
         /// Send a 'hit' representing a Transaction
@@ -67,7 +67,7 @@ namespace GAI
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual bool sendException(const bool aIsFatal, const std::string& aDescription) = 0;
+		 virtual bool sendException(const bool aIsFatal, const char* aDescription) = 0;
         
         ///
         /// Send a 'hit' representing a timing event
@@ -84,7 +84,7 @@ namespace GAI
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual bool sendTimingWithCategory(const std::string& aCategory, const double aTime, const std::string& aName, const std::string& aLabel) = 0;
+		 virtual bool sendTimingWithCategory(const char* aCategory, const double aTime, const char* aName, const char* aLabel) = 0;
         
         ///
         /// Send a 'hit' representing social media interaction
@@ -99,7 +99,7 @@ namespace GAI
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual  bool sendSocial(const std::string& aNetwork, const std::string& aAction, const std::string& aTarget) = 0;
+		 virtual  bool sendSocial(const char* aNetwork, const char* aAction, const char* aTarget) = 0;
 
         ///
         /// Close the tracker. Any further events will be ignored
@@ -112,7 +112,7 @@ namespace GAI
         /// @return
         ///     Tracker ID
         ///
-		 virtual std::string getTrackingId() const = 0;
+		 virtual const char* getTrackingId() const = 0;
         
         ///
         /// Set the App name reported by this tracker. Will only work before the first Hit is sent
@@ -120,7 +120,7 @@ namespace GAI
         /// @param aAppName
         ///     App Name
         ///
-		 virtual void setAppName(const std::string& aAppName) = 0;
+		 virtual void setAppName(const char* aAppName) = 0;
         
         ///
         /// Retreive the app name this tracker is tracking
@@ -128,7 +128,7 @@ namespace GAI
         /// @return
         ///     App Name
         ///
-		 virtual std::string getAppName() const = 0;
+		 virtual const char* getAppName() const = 0;
         
         ///
         /// Set the App ID reported by this tracker. Will only work before the first Hit is sent
@@ -136,7 +136,7 @@ namespace GAI
         /// @param aAppId
         ///     App ID
         ///
-		 virtual void setAppId(const std::string& aAppId) = 0;
+		 virtual void setAppId(const char* aAppId) = 0;
         
         ///
         /// Retreive the app id this tracker is tracking
@@ -144,7 +144,7 @@ namespace GAI
         /// @return
         ///     App ID
         ///
-		 virtual std::string getAppId() const = 0;
+		 virtual const char* getAppId() const = 0;
         
         ///
         /// Set the App version reported by this tracker. Will only work before the first Hit is sent
@@ -152,7 +152,7 @@ namespace GAI
         /// @param aAppVersion
         ///     App Version
         ///
-		 virtual void setAppVersion(const std::string& aAppVersion) = 0;
+		 virtual void setAppVersion(const char* aAppVersion) = 0;
         
         ///
         /// Retreive the app version this tracker is tracking
@@ -160,7 +160,7 @@ namespace GAI
         /// @return
         ///     App Version
         ///
-		 virtual std::string getAppVersion() const = 0;
+		 virtual const char* getAppVersion() const = 0;
         
         ///
         /// Set whether the user's IP address will be anonymized. Will only work before the first Hit is sent
@@ -200,7 +200,7 @@ namespace GAI
         /// @return
         ///     Client ID
         ///
-		 virtual std::string getClientId() const = 0;
+		 virtual const char* getClientId() const = 0;
         
         ///
         /// Set the refferer url to send to the analytics servce
@@ -208,7 +208,7 @@ namespace GAI
         /// @param aReferrerUrl
         ///     Referrer url
         ///
-		 virtual void setReferrerUrl(const std::string& aReferrerUrl) = 0;
+		 virtual void setReferrerUrl(const char* aReferrerUrl) = 0;
         
         ///
         /// Retreive the referrer url sent to the analytics service
@@ -216,7 +216,7 @@ namespace GAI
         /// @return
         ///     Referrer URL
         ///
-		 virtual std::string getReferrerUrl() = 0;
+		 virtual const char* getReferrerUrl() = 0;
         
         ///
         /// Set the campaign url to send to the analytics servce
@@ -224,7 +224,7 @@ namespace GAI
         /// @param aCampaignUrl
         ///     Campaign url
         ///
-		 virtual void setCampaignUrl(const std::string& aCampaignUrl) = 0;
+		 virtual void setCampaignUrl(const char* aCampaignUrl) = 0;
         
         ///
         /// Retreive the campaign url sent to the analytics service
@@ -232,7 +232,7 @@ namespace GAI
         /// @return
         ///     Campaign URL
         ///
-		 virtual std::string getCampaignUrl() = 0;
+        virtual const char* getCampaignUrl() = 0;
         
         ///
         /// Set the session timeout
@@ -248,7 +248,15 @@ namespace GAI
         /// @return
         ///     Session Timeout
         ///
-		 virtual double getSessionTimeout() = 0;
+        virtual double getSessionTimeout() = 0;
+        
+        ///
+        /// Set the viewport size to be sent
+        ///
+        /// @param
+        ///     Viewport size
+        ///
+        virtual void setViewportSize( const char* aViewportSize ) = 0;
         
 	};
 }
