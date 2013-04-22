@@ -156,7 +156,7 @@ namespace GAI
     ///
     {
         std::ostringstream stringStream;
-        stringStream << "" << product << "/" << version << " ( " << Platform::GetPlatformVersionString() << "; " << Platform::GetLocale() << "; )";
+        stringStream << "" << product << "/" << version << " ( " << Platform::GetPlatformVersionString() << "; " << Platform::GetUserLanguage() << "; )";
         mUserAgent = stringStream.str();
      //   return String.format("%s/%s (Linux; U; Android %s; %s; %s Build/%s)", new Object[] { product, version, release, language, model, id });
     }

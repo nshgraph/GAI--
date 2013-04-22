@@ -232,7 +232,7 @@ namespace GAI
         /// @return
         ///     Campaign URL
         ///
-		 virtual const char* getCampaignUrl() = 0;
+        virtual const char* getCampaignUrl() = 0;
         
         ///
         /// Set the session timeout
@@ -248,7 +248,15 @@ namespace GAI
         /// @return
         ///     Session Timeout
         ///
-		 virtual double getSessionTimeout() = 0;
+        virtual double getSessionTimeout() = 0;
+        
+        ///
+        /// Set the viewport size to be sent
+        ///
+        /// @param
+        ///     Viewport size
+        ///
+        virtual void setViewportSize( const char* aViewportSize ) = 0;
         
 	};
 }

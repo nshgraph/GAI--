@@ -8,6 +8,8 @@
 #include "TransactionItem.h"
 #include "HitBuilder.h"
 
+#include "Platform.h"
+
 namespace GAI {
     
     TrackerImpl::TrackerImpl(HitStore& aHitStore, const char* aClientID, const char* aTrackingID, const char* aAppName, const char* aAppVersion) :
@@ -38,6 +40,8 @@ namespace GAI {
         setAppVersion( aAppVersion );
         // make sure the first hit sent indicates that this is the start of a new tracking session
         mModel->setForNextHit(kSessionControlModelKey, "start");
+        mModel->set(kScreenResolutionModelKey, Platform::GetScreenResolution() );
+        mModel->set(kUserLanguageModelKey, Platform::GetUserLanguage() );
     }
     
     TrackerImpl::~TrackerImpl()
@@ -456,6 +460,16 @@ namespace GAI {
         return this->mSessionTimeout;
     }
     
+    void TrackerImpl::setViewportSize( const char* aViewportSize )
+    ///
+    /// Set the viewport size to be sent
+    ///
+    /// @param
+    ///     Viewport size
+    ///
+    {
+        mModel->set(kViewportSizeModelKey, aViewportSize);
+    }
     
     bool TrackerImpl::internalSend(const HitType aType, const ParameterMap& aParameters)
     ///

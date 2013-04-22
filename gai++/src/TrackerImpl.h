@@ -73,6 +73,8 @@ namespace GAI
         void setSessionTimeout(const double aSessionTimeout);
         
         double getSessionTimeout();
+        
+        void setViewportSize( const char* aViewportSize );
 
     private:
         typedef std::map<std::string, std::string> ParameterMap;
