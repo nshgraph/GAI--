@@ -350,7 +350,10 @@ namespace GAI {
     ///    Seetting for anonymization
     ///
     {
-        mModel->set(kAnonymizeIpModelKey, aAnonymize ? "1" : "0");
+        if( aAnonymize )
+            mModel->set(kAnonymizeIpModelKey, "1" );
+        else
+            mModel->remove(kAnonymizeIpModelKey);
     }
     
     bool TrackerImpl::isAnonymize()

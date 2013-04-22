@@ -103,6 +103,18 @@ namespace GAI
             values.insert( parameters.begin(), parameters.end() );
     }
     
+    void Model::remove(const std::string& key)
+    ///
+    /// Removes a key from the set of parameters
+    ///
+    /// @param key
+    ///     The key to remove
+    ///
+    {
+        values.erase( key );
+        temporaryValues.erase( key );
+    }
+    
     void Model::clearTemporaryValues()
     ///
     /// Clears all temporary values in the Model while retaining those marked as permenant
