@@ -49,6 +49,16 @@ namespace GAI {
     /// Destructor
     ///
     {
+        if( mbTrackerOpen )
+        {
+            // send a final hit to end this session
+            mModel->setForNextHit(kSessionControlModelKey, "end");
+        
+            ParameterMap parameters;
+            parameters[kScreenParamModelKey] = "exit";
+            internalSend(kAppViewHit, parameters);
+        }
+        
         delete mModel;
     }
     

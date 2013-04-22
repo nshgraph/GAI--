@@ -35,6 +35,9 @@
 #define kSampleRateModelKey "sf"
 #define kQueueTimeModelKey "qt"
 #define kCacheBusterModelKey "z"
+#define kScreenResolutionModelKey "sr"
+#define kUserLanguageModelKey "ul"
+#define kViewportSizeModelKey "vp"
 
 
 #define kScreenParamModelKey "cd"
