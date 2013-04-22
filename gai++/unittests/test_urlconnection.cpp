@@ -7,12 +7,22 @@
 //
 
 #include "gtest/gtest.h"
-#include <event.h>
+
+#include <event2/event.h>
 #include <event2/http.h>
+#include <event2/thread.h>
 
 #include "tinythread.h"
 #include "URLConnection.h"
 #include "Timestamp.h"
+
+
+#ifdef WIN32
+#include <windows.h>
+static void SleepMS(int ms){ Sleep(ms); }
+#else
+static void SleepMS(int ms){ usleep(ms*1000); }
+#endif
 
 class RunServer
 {
@@ -20,9 +30,9 @@ public:
     RunServer() :
         mbRunning(true),
         mbReceivedRequest(false),
-        mThread(  RunServer::ServerFunction, (void*)this)
+        mThread( )
     {
-        
+        mThread = tthread::thread( RunServer::ServerFunction, (void*)this);
     }
     
     ~RunServer()
@@ -96,7 +106,7 @@ TEST( URLConnection, test_connections )
     event_base* eb = event_base_new();
     
     
-    usleep(1000); // allow server time to start running
+    SleepMS(1); // allow server time to start running
     server.clearReceivedRequest();
     
     // create a url connection object

@@ -14,6 +14,13 @@
 
 
 
+#ifdef WIN32
+#include <windows.h>
+static void SleepMS(int ms){ Sleep(ms); }
+#else
+static void SleepMS(int ms){ usleep(ms*1000); }
+#endif
+
 TEST( ClientIDTest, create_clientID )
 {
     // create the datastore that client id needs
@@ -61,7 +68,7 @@ TEST( TimestampTest, create_timestamp )
     timestamp1 = GAI::Timestamp::generateTimestamp();
     
     // now create a new one
-    usleep(1000);
+    SleepMS(1);
     timestamp2 = GAI::Timestamp::generateTimestamp();
     
     // timestamp should be in realm timestamp1 to 5s

@@ -102,6 +102,18 @@
           'sources': [
             'src/win/Platform.cpp'
          ],
+          'link_settings': {
+            'libraries' : [
+              'libevent.lib',
+            ],
+          },
+          'msbuild_settings': {
+            'Link': {
+              'AdditionalLibraryDirectories': [
+                '../lib/',
+              ],
+            },
+          },
         }],
         ['OS=="mac"', {
           'include_dirs': [
@@ -110,6 +122,11 @@
           'sources': [
             'src/mac/Platform.cpp'
           ],
+          'link_settings': {
+            'libraries' : [
+              'libevent.a',
+            ],
+          }
         }],
       ],
     },
@@ -177,9 +194,22 @@
           ],
           'link_settings': {
             'libraries' : [
-              'gtest.lib',
+              'gtestd.lib',
               'libevent.lib',
+              'ws2_32.lib',
             ],
+          },
+          'msbuild_settings': {
+            'Link': {
+              'IgnoreSpecificDefaultLibraries': [
+                'uafxcwd.lib',
+                'libcmtd.lib',
+                'libcmt.lib',
+              ],
+              'AdditionalLibraryDirectories': [
+                '../lib/',
+              ],
+            },
           },
         }],
         ['OS=="mac"', {
@@ -201,7 +231,7 @@
           'link_settings': {
             'libraries' : [
               'gtest.framework',
-              'libevent.dylib',
+              'libevent.a',
               'ApplicationServices.framework'
             ],
           },

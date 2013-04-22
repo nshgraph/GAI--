@@ -16,6 +16,14 @@
 #include <iostream>
 #include <string>
 
+#ifdef WIN32
+#include <windows.h>
+static void SleepMS(int ms){ Sleep(ms); }
+#else
+static void SleepMS(int ms){ usleep(ms*1000); }
+#endif
+
+
 class DispatcherTestClass : public GAI::Dispatcher
 {
 public:
@@ -48,7 +56,7 @@ public:
 class DispatcherTest : public ::testing::Test
 {
 protected:
-	DispatcherTest(){}
+	DispatcherTest() : test_db("test.db"){}
 	virtual void SetUp()
 	{
         // delete existing test db
@@ -63,7 +71,7 @@ protected:
     }
     
     // Objects declared here can be used by all tests in the test case.
-    const std::string test_db = "test.db";
+    const std::string test_db;
 };
 
 TEST_F( DispatcherTest, dispatch_interval_callback )
@@ -73,7 +81,7 @@ TEST_F( DispatcherTest, dispatch_interval_callback )
     GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
 	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval );
 	
-	usleep( dispatch_interval * 1000000 * 1.5 );
+	SleepMS( dispatch_interval * 1000 * 1.5 );
 	
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
 }
@@ -87,7 +95,7 @@ TEST_F( DispatcherTest, set_dispatch_interval )
 	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval_1 );
 	dispatcher.setDispatchInterval( dispatch_interval_2 );
 	
-	usleep( dispatch_interval_2 * 1000000 * 1.5 );
+	SleepMS( dispatch_interval_2 * 1000 * 1.5 );
 	
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
 }
@@ -126,7 +134,7 @@ TEST_F( DispatcherTest, dispatch )
 	HitTestClass hit;
     hit.setParameters( parameters );
 	dispatcher.storeHit( hit );
-	usleep( 2 * 1000000 * 1.5 );
+	SleepMS( 2 * 1000 * 1.5 );
     
     // should have printed
 }

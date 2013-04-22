@@ -33,7 +33,7 @@ public:
 // The fixture for testing class Foo.
 class DataStoreSqlLiteTest : public ::testing::Test {
 protected:
-    
+	DataStoreSqlLiteTest() : test_db("test.db"){}
     virtual void SetUp() {
         // delete existing test db
         int rc = unlink( test_db.c_str() ); // we don't test the return code becuase we aren't guaranteed the file exists before the test
@@ -46,7 +46,7 @@ protected:
     }
     
     // Objects declared here can be used by all tests in the test case for Foo.
-    const std::string test_db = "test.db";
+    const std::string test_db;
 };
 
 TEST_F (DataStoreSqlLiteTest, open_and_close)

@@ -14,6 +14,13 @@
 #include "Model.h"
 
 
+#ifdef WIN32
+#include <windows.h>
+static void SleepMS(int ms){ Sleep(ms); }
+#else
+static void SleepMS(int ms){ usleep(ms*1000); }
+#endif
+
 TEST( HitBuilderTest, create_valid_hits )
 {
     GAI::Model model;
@@ -56,7 +63,7 @@ TEST( HitBuilderTest, create_valid_hits )
     delete( hit );
     
     // now create a new hit after a small timeout
-    usleep(1000);
+    SleepMS(1);
     GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
     EXPECT_FALSE(hit == NULL);
     
