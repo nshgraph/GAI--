@@ -37,7 +37,7 @@ namespace GAI
     mbThreadRunning(true),
     mbCancelDispatch(false),
     mbImmediateDispatch(false),
-    mTimerThread( ),
+    mTimerThread( Dispatcher::TimerThreadFunction, (void*)this ),
     mURLConnection( NULL )
     ///
     /// Constructor
@@ -52,7 +52,6 @@ namespace GAI
     ///     Time (in seconds) that each dispatch will occur
     ///
 	{
-		mTimerThread = tthread::thread( Dispatcher::TimerThreadFunction, (void*)this );
         mURLConnection = new URLConnection( mDispatchEventBase );
         mURLConnection->createUserAgentString("GAI++","1.0");
         // begin the initial dispatch

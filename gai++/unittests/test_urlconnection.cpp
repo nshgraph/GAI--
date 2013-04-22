@@ -30,9 +30,8 @@ public:
     RunServer() :
         mbRunning(true),
         mbReceivedRequest(false),
-        mThread( )
+        mThread( RunServer::ServerFunction, (void*)this )
     {
-        mThread = tthread::thread( RunServer::ServerFunction, (void*)this);
     }
     
     ~RunServer()
