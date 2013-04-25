@@ -16,14 +16,16 @@ namespace GAI
     /// Retrieve the singleton analytics instance
     ///
 	{
-		static Analytics* sharedInstance = NULL;
-        if( sharedInstance == NULL )
+		static std::auto_ptr<Analytics> sharedInstance;
+		if( sharedInstance.get() == 0 )
 		{
             if( product_name && product_version && data_store_path )
-                sharedInstance = new Analytics( product_name, product_version, data_store_path );
+			{
+				sharedInstance.reset( new Analytics( product_name, product_version, data_store_path ) );
+			}
 		}
 		
-        return sharedInstance;
+        return sharedInstance.get();
 	}
 	
 	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_path ) :
@@ -47,6 +49,13 @@ namespace GAI
     /// Destructor
     ///
     {
+		for( TrackerMap::iterator it = mTrackers.begin(); it != mTrackers.end(); ++it )
+		{
+			delete it->second;
+		}
+		mTrackers.clear();
+		
+		delete mDispatcher;
         delete mDataStore;
     }
     
@@ -146,18 +155,7 @@ namespace GAI
         return mProductName.c_str();
     }
     
-    void Analytics::setProductName( const char* product_name )
-    ///
-    /// Set the 'name' of the app sending data. Will be used with any tracker created after this call
-    ///
-    /// @param product_name
-    ///     Application name
-    ///
-    {
-		mProductName = product_name;
-    }
-    
-    const char* Analytics::getVersion() const
+    const char* Analytics::getProductVersion() const
     ///
     /// Retrieve the 'version' of the app sending data
     ///
@@ -211,18 +209,8 @@ namespace GAI
 	{
         mDispatcher->setOptOut( opt_out );
     }
-    void Analytics::setUseHttps(const bool aUseHttps)
-    ///
-    /// Set whether HTTPS will be used
-    ///
-    /// @param aUseHttps
-    ///     Whether to use Https
-    ///
-    {
-        mDispatcher->setUseHttps( aUseHttps );
-    }
     
-    bool Analytics::isUseHttps()
+    bool Analytics::isUseHttps() const
     ///
     /// Retreive whether the dispatcher will use secure connection
     ///
@@ -231,6 +219,17 @@ namespace GAI
     ///
     {
         return mDispatcher->isUseHttps();
+    }
+	
+    void Analytics::setUseHttps( const bool use_https )
+    ///
+    /// Set whether HTTPS will be used
+    ///
+    /// @param aUseHttps
+    ///     Whether to use Https
+    ///
+    {
+        mDispatcher->setUseHttps( use_https );
     }
     
     double Analytics::getDispatchInterval() const

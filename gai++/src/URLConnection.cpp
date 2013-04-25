@@ -86,8 +86,10 @@ namespace GAI
         evhttp_connection_get_peer(mConnection, &host_address, &port);
         evhttp_add_header( request->output_headers, "Host", host_address );
         evhttp_add_header( request->output_headers, "User-Agent", mUserAgent.c_str() );
-
-        printf("Requesting URL: %s\n", url.c_str());
+		
+        printf( "Requesting URL: %s\n", url.c_str() );
+        printf( "User-Agent: %s\n", mUserAgent.c_str() );
+		
         evhttp_make_request(mConnection, request, EVHTTP_REQ_GET, url.c_str());
         
     }
@@ -121,12 +123,14 @@ namespace GAI
         ev_uint16_t port;
         evhttp_connection_get_peer(mConnection, &host_address, &port);
         evhttp_add_header( request->output_headers, "Host", host_address );
-        const char* test_user_agent = "GoogleAnalytics/2.0b4 (iPad Simulator; U; CPU iPhone OS 5.1 like Mac OS X; en-us)";
-        evhttp_add_header( request->output_headers, "User-Agent", test_user_agent );
+		evhttp_add_header( request->output_headers, "User-Agent", mUserAgent.c_str() );
         evhttp_add_header( request->output_headers, "Connection", "keep-alive" );
         evhttp_add_header( request->output_headers, "Content-Type", "application/x-www-form-urlencoded; charset=UTF-8" );
         evbuffer_add(request->output_buffer, payload.c_str(), payload.size());
-        printf("Requesting URL: %s\n", url.c_str());
+		
+        printf( "Requesting URL: %s\n", url.c_str() );
+        printf( "User-Agent: %s\n", mUserAgent.c_str() );
+		
         evhttp_make_request(mConnection, request, EVHTTP_REQ_POST, url.c_str());
     }
     
@@ -155,9 +159,20 @@ namespace GAI
     ///     Host Port
     ///
     {
-        std::ostringstream stringStream;
-        stringStream << "" << product << "/" << version << " ( " << Platform::GetPlatformVersionString() << "; " << Platform::GetUserLanguage() << "; )";
-        mUserAgent = stringStream.str();
-     //   return String.format("%s/%s (Linux; U; Android %s; %s; %s Build/%s)", new Object[] { product, version, release, language, model, id });
+        std::ostringstream ss;
+		
+		/// @todo os specific agent
+		/// @todo language
+		
+		/// WIN
+//		ss << product << "/" << version << " (U; Windows NT 5.1)"; //xp
+//		ss << product << "/" << version << " (U; Windows NT 6.0)"; //vista
+//		ss << product << "/" << version << " (U; Windows NT 6.1)"; //win7
+//		ss << product << "/" << version << " (U; Windows NT 6.2)"; //win8
+		
+		/// MAC
+		ss << product << "/" << version << " (Macintosh; U; " << Platform::GetPlatformVersionString() << ")";
+		
+		mUserAgent = ss.str();
     }
 }

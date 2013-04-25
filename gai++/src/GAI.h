@@ -16,6 +16,7 @@ namespace GAI
 	{
     public:
 		static Analytics* getInstance(  const char* product_name = NULL, const char* product_version = NULL, const char* data_store_path = NULL );
+        ~Analytics();
 		
 		Tracker* createTracker( const char* tracking_id );
 		void removeTracker( const char* tracker_id );
@@ -24,9 +25,8 @@ namespace GAI
 		bool setDefaultTracker( Tracker* tracker );
 		
 		const char* getProductName() const;
-		void setProductName( const char* product_name );
 		
-		const char* getVersion() const;
+		const char* getProductVersion() const;
 		
 		bool isDebug() const;
 		void setDebug( const bool debug );
@@ -34,8 +34,8 @@ namespace GAI
 		bool isOptOut() const;
 		void setOptOut( const bool opt_out );
         
-        void setUseHttps(const bool aUseHttps);
-        bool isUseHttps();
+        bool isUseHttps() const;
+		void setUseHttps(const bool use_https );
 		
 		double getDispatchInterval() const;
 		void setDispatchInterval( const double dispatch_interval );
@@ -43,8 +43,7 @@ namespace GAI
 		void dispatch();
 		
     private:
-        Analytics(  const char* product_name, const char* product_version, const char* data_store_path );
-        ~Analytics();
+        Analytics( const char* product_name, const char* product_version, const char* data_store_path );
 		
 		typedef std::map<std::string, Tracker*> TrackerMap;
 		TrackerMap mTrackers;
