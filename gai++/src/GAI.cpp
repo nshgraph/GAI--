@@ -154,17 +154,6 @@ namespace GAI
         return mProductName.c_str();
     }
     
-    void Analytics::setProductName( const char* product_name )
-    ///
-    /// Set the 'name' of the app sending data. Will be used with any tracker created after this call
-    ///
-    /// @param product_name
-    ///     Application name
-    ///
-    {
-		mProductName = product_name;
-    }
-    
     const char* Analytics::getVersion() const
     ///
     /// Retrieve the 'version' of the app sending data

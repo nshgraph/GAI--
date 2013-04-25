@@ -25,7 +25,6 @@ namespace GAI
 		bool setDefaultTracker( Tracker* tracker );
 		
 		const char* getProductName() const;
-		void setProductName( const char* product_name );
 		
 		const char* getVersion() const;
 		

@@ -33,10 +33,6 @@ TEST( GAITest, create_interface )
     // should have the correct product name
     EXPECT_EQ(std::string(product_name),std::string(gai->getProductName()));
     
-    // should be able to set the product name
-    gai->setProductName( product_name2 );
-    EXPECT_EQ(std::string(product_name2),std::string(gai->getProductName()));
-    
     // should have the correct product version
     EXPECT_EQ(std::string(product_version),std::string(gai->getVersion()));
     
