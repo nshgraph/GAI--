@@ -14,8 +14,12 @@ namespace GAI
 	{
 		return "Windows";
 	}
-    std::string Platform::GetLocale( )
+    std::string Platform::GetUserLanguage( )
 	{
 		return "en";
+	}
+    std::string Platform::GetScreenResolution( )
+	{
+		return "800x600";
 	}
 }
