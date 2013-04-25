@@ -3,6 +3,7 @@
 
 namespace GAI
 {
+	std::string Model::FailString = "";
     
     Model::Model()
     {
@@ -25,7 +26,7 @@ namespace GAI
         return ( it != values.end() || it_temp != temporaryValues.end() );
     }
     
-    std::string Model::get(const std::string& key) const
+    const std::string& Model::get(const std::string& key) const
     ///
     /// Retrieves the value of the assoicated key. Looks in the temporary values first
     ///
@@ -45,7 +46,7 @@ namespace GAI
         if( it != values.end() )
             return it->second;
         // if fails return empty string
-        return "";
+        return FailString;
     }
     
     Model::ParameterMap Model::getKeysAndValues() const

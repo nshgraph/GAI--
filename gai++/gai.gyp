@@ -49,12 +49,14 @@
       'target_name': 'gai++',
       'type': 'static_library',
       'dependencies': [
+        'libevent',
       ],
       'include_dirs': [
         '../include',
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
+        'thirdparty/libevent-2.0.21-stable/include',
       ],
       'sources': [
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
@@ -107,6 +109,7 @@
           'link_settings': {
             'libraries' : [
               'libevent.lib',
+              'Rpcrt4.lib',
             ],
           },
           'msbuild_settings': {
@@ -136,6 +139,7 @@
       'target_name': 'gai++test',
       'type': 'executable',
       'dependencies': [
+        'libevent',
       ],
       'include_dirs': [
         '../include',
@@ -198,11 +202,144 @@
           'sources': [
             'src/win/Platform.cpp'
           ],
+          'configurations': {
+            'Debug': {
+              'defines': [
+                '_DEBUG',
+              ],
+              'msbuild_settings': {
+                'ClCompile': {
+                  'DebugInformationFormat': 'EditAndContinue',
+                  'Optimization': 'Disabled',
+                  'RuntimeLibrary': 'MultiThreadedDebugDLL',
+                  'MinimalRebuild': 'true',
+                  'BasicRuntimeChecks': 'Default',
+                },
+                'Link': {
+                  'GenerateDebugInformation': 'true',
+                  'EnableCOMDATFolding': 'false', # Disable COMDAT folding because gtestd.lib is linked with /EDITANDCONTINUE
+                  'OptimizeReferences': 'false', # Disable Refernce optimisation because gtestd.lib is linked with /EDITANDCONTINUE
+                  'IgnoreSpecificDefaultLibraries': [
+                    'uafxcwd.lib',
+                    'libcmtd.lib',
+                    'libcmt.lib',
+                  ],
+                  'AdditionalLibraryDirectories': [
+                    '../lib/',
+                  ],
+                  'AdditionalDependencies': [
+                    'gtestd.lib',
+                    'ws2_32.lib',
+                    'Rpcrt4.lib',
+                  ],
+                }, 
+              },
+            }, # end of Debug configuration
+            'Release': {
+              'msbuild_settings': {
+                'Link': {
+                  'IgnoreSpecificDefaultLibraries': [
+                    'uafxcwd.lib',
+                    'libcmtd.lib',
+                    'libcmt.lib',
+                  ],
+                  'AdditionalLibraryDirectories': [
+                    '../lib/',
+                  ],
+                  'AdditionalDependencies': [
+                    'gtest.lib',
+                    'ws2_32.lib',
+                    'Rpcrt4.lib',
+                  ],
+                }, 
+              },
+            } # end of Release configuration
+          },
+        }
+        ],
+        ['OS=="mac"', {
+          'mac_bundle': 1,
+          'include_dirs': [
+            '/usr/local/include',
+          ],
+          'sources': [
+            'src/mac/Platform.cpp'
+          ],
+          'xcode_settings': {
+            'LIBRARY_SEARCH_PATHS': [
+              '/usr/local/lib'
+            ],
+            'FRAMEWORK_SEARCH_PATHS': [
+              '/Library/Frameworks'
+            ],
+          },
           'link_settings': {
             'libraries' : [
-              'gtestd.lib',
-              'libevent.lib',
-              'ws2_32.lib',
+              'gtest.framework',
+              'libevent.a',
+              'ApplicationServices.framework'
+            ],
+          },
+        }],
+      ],
+    },
+    {
+      'target_name': 'libevent',
+      'type': 'static_library',
+      'dependencies': [
+      ],
+      'include_dirs': [
+        'thirdparty/libevent-2.0.21-stable',
+        'thirdparty/libevent-2.0.21-stable/include',
+      ],
+      'sources': [
+        
+        'thirdparty/libevent-2.0.21-stable/event.h',
+        'thirdparty/libevent-2.0.21-stable/event.c',
+        'thirdparty/libevent-2.0.21-stable/buffer.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_filter.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_sock.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_pair.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_ratelim.c',
+        'thirdparty/libevent-2.0.21-stable/listener.c',
+        'thirdparty/libevent-2.0.21-stable/evmap.c',
+        'thirdparty/libevent-2.0.21-stable/log.c',
+        'thirdparty/libevent-2.0.21-stable/evutil.h',
+        'thirdparty/libevent-2.0.21-stable/evutil.c',
+        'thirdparty/libevent-2.0.21-stable/evutil_rand.c',
+        'thirdparty/libevent-2.0.21-stable/evthread.c',
+        'thirdparty/libevent-2.0.21-stable/strlcpy.c',
+        'thirdparty/libevent-2.0.21-stable/signal.c',
+
+        'thirdparty/libevent-2.0.21-stable/event_tagging.c',
+        'thirdparty/libevent-2.0.21-stable/http.c',
+        'thirdparty/libevent-2.0.21-stable/evdns.h',
+        'thirdparty/libevent-2.0.21-stable/evdns.c',
+        'thirdparty/libevent-2.0.21-stable/evrpc.h',
+        'thirdparty/libevent-2.0.21-stable/evrpc.c',
+
+
+      ],
+      'conditions': [
+        ['OS=="win"', {
+          'defines': [
+            'WIN32',
+            'HAVE_CONFIG_H',
+          ],
+          'include_dirs': [
+            'thirdparty/libevent-2.0.21-stable/compat',
+            'thirdparty/libevent-2.0.21-stable/WIN32-Code',
+          ],
+          'sources': [
+            'thirdparty/libevent-2.0.21-stable/win32select.c',
+            'thirdparty/libevent-2.0.21-stable/evthread_win32.c',
+            'thirdparty/libevent-2.0.21-stable/buffer_iocp.c',
+            'thirdparty/libevent-2.0.21-stable/event_iocp.c',
+            'thirdparty/libevent-2.0.21-stable/bufferevent_async.c',
+          ],
+          'link_settings': {
+            'libraries' : [
             ],
           },
           'msbuild_settings': {
@@ -213,7 +350,6 @@
                 'libcmt.lib',
               ],
               'AdditionalLibraryDirectories': [
-                '../lib/',
               ],
             },
           },
@@ -236,9 +372,6 @@
           },
           'link_settings': {
             'libraries' : [
-              'gtest.framework',
-              'libevent.a',
-              'ApplicationServices.framework'
             ],
           },
         }],

@@ -39,6 +39,7 @@ namespace GAI
         mPath = other.mPath;
         if( other.mDB )
             open();
+		return *this;
     }
     
     
