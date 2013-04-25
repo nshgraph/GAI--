@@ -34,7 +34,7 @@ TEST( GAITest, create_interface )
     EXPECT_EQ(std::string(product_name),std::string(gai->getProductName()));
     
     // should have the correct product version
-    EXPECT_EQ(std::string(product_version),std::string(gai->getVersion()));
+    EXPECT_EQ(std::string(product_version),std::string(gai->getProductVersion()));
     
     // should be able to set the debug state
     gai->setDebug( true );

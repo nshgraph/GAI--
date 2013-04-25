@@ -154,7 +154,7 @@ namespace GAI
         return mProductName.c_str();
     }
     
-    const char* Analytics::getVersion() const
+    const char* Analytics::getProductVersion() const
     ///
     /// Retrieve the 'version' of the app sending data
     ///

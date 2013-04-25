@@ -26,7 +26,7 @@ namespace GAI
 		
 		const char* getProductName() const;
 		
-		const char* getVersion() const;
+		const char* getProductVersion() const;
 		
 		bool isDebug() const;
 		void setDebug( const bool debug );
