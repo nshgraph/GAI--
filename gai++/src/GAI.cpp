@@ -208,18 +208,8 @@ namespace GAI
 	{
         mDispatcher->setOptOut( opt_out );
     }
-    void Analytics::setUseHttps(const bool aUseHttps)
-    ///
-    /// Set whether HTTPS will be used
-    ///
-    /// @param aUseHttps
-    ///     Whether to use Https
-    ///
-    {
-        mDispatcher->setUseHttps( aUseHttps );
-    }
     
-    bool Analytics::isUseHttps()
+    bool Analytics::isUseHttps() const
     ///
     /// Retreive whether the dispatcher will use secure connection
     ///
@@ -228,6 +218,17 @@ namespace GAI
     ///
     {
         return mDispatcher->isUseHttps();
+    }
+	
+    void Analytics::setUseHttps( const bool use_https )
+    ///
+    /// Set whether HTTPS will be used
+    ///
+    /// @param aUseHttps
+    ///     Whether to use Https
+    ///
+    {
+        mDispatcher->setUseHttps( use_https );
     }
     
     double Analytics::getDispatchInterval() const
