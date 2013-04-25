@@ -49,6 +49,13 @@ namespace GAI
     /// Destructor
     ///
     {
+		for( TrackerMap::iterator it = mTrackers.begin(); it != mTrackers.end(); ++it )
+		{
+			delete it->second;
+		}
+		mTrackers.clear();
+		
+		delete mDispatcher;
         delete mDataStore;
     }
     
