@@ -16,14 +16,16 @@ namespace GAI
     /// Retrieve the singleton analytics instance
     ///
 	{
-		static Analytics* sharedInstance = NULL;
-        if( sharedInstance == NULL )
+		static std::auto_ptr<Analytics> sharedInstance;
+		if( sharedInstance.get() == 0 )
 		{
             if( product_name && product_version && data_store_path )
-                sharedInstance = new Analytics( product_name, product_version, data_store_path );
+			{
+				sharedInstance.reset( new Analytics( product_name, product_version, data_store_path ) );
+			}
 		}
 		
-        return sharedInstance;
+        return sharedInstance.get();
 	}
 	
 	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_path ) :
