@@ -148,7 +148,7 @@ TEST_F( DispatcherTest, immediate_dispatch )
     parameters[kAppNameModelKey] = "app";
 	
     dispatcher.queueDispatch();
-	usleep( 2 * 1000000 * 1.5 );
+	SleepMS( 2 * 1000 * 1.5 );
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
 }
 
@@ -168,13 +168,13 @@ TEST_F( DispatcherTest, cancel_dispatch )
     EXPECT_EQ( data_store.hitCount(), 1000 );
     dispatcher.queueDispatch();
     
-	usleep( 1000 );
+	SleepMS( 1 );
     
     EXPECT_LT( data_store.hitCount(), 1000 );
     dispatcher.cancelDispatch();
     EXPECT_LT( data_store.hitCount(), 1000 );
     int before_count = data_store.hitCount();
-	usleep( 5000 );
+	SleepMS( 5 );
     // note: dispatch cancel can allow up to kDispatchBlockSize
     EXPECT_GE( data_store.hitCount(), before_count - kDispatchBlockSize);
     
