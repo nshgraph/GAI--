@@ -45,6 +45,119 @@
     }
   },
   'targets': [
+  {
+      'target_name': 'libevent',
+      'type': 'static_library',
+      'dependencies': [
+      ],
+      'include_dirs': [
+        'thirdparty/libevent-2.0.21-stable',
+        'thirdparty/libevent-2.0.21-stable/include',
+        'thirdparty/libevent-2.0.21-stable/compat',
+      ],
+      'sources': [
+        
+        'thirdparty/libevent-2.0.21-stable/event.h',
+        'thirdparty/libevent-2.0.21-stable/event.c',
+        'thirdparty/libevent-2.0.21-stable/buffer.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_filter.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_sock.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_pair.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_ratelim.c',
+        'thirdparty/libevent-2.0.21-stable/listener.c',
+        'thirdparty/libevent-2.0.21-stable/evmap.c',
+        'thirdparty/libevent-2.0.21-stable/log.c',
+        'thirdparty/libevent-2.0.21-stable/evutil.h',
+        'thirdparty/libevent-2.0.21-stable/evutil.c',
+        'thirdparty/libevent-2.0.21-stable/evutil_rand.c',
+        'thirdparty/libevent-2.0.21-stable/evthread.c',
+        'thirdparty/libevent-2.0.21-stable/strlcpy.c',
+        'thirdparty/libevent-2.0.21-stable/signal.c',
+
+        'thirdparty/libevent-2.0.21-stable/event_tagging.c',
+        'thirdparty/libevent-2.0.21-stable/http.c',
+        'thirdparty/libevent-2.0.21-stable/evdns.h',
+        'thirdparty/libevent-2.0.21-stable/evdns.c',
+        'thirdparty/libevent-2.0.21-stable/evrpc.h',
+        'thirdparty/libevent-2.0.21-stable/evrpc.c',
+
+
+      ],
+      'conditions': [
+        ['OS=="win"', {
+          'defines': [
+            'WIN32',
+            'HAVE_CONFIG_H',
+          ],
+          'include_dirs': [
+            'thirdparty/libevent-2.0.21-stable/WIN32-Code',
+          ],
+          'sources': [
+            'thirdparty/libevent-2.0.21-stable/win32select.c',
+            'thirdparty/libevent-2.0.21-stable/evthread_win32.c',
+            'thirdparty/libevent-2.0.21-stable/buffer_iocp.c',
+            'thirdparty/libevent-2.0.21-stable/event_iocp.c',
+            'thirdparty/libevent-2.0.21-stable/bufferevent_async.c',
+          ],
+          'link_settings': {
+            'libraries' : [
+            ],
+          },
+          'msbuild_settings': {
+            'Link': {
+              'IgnoreSpecificDefaultLibraries': [
+                'uafxcwd.lib',
+                'libcmtd.lib',
+                'libcmt.lib',
+              ],
+              'AdditionalLibraryDirectories': [
+              ],
+            },
+          },
+
+          'copies': [
+            {
+              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
+              'files' : [
+                'thirdparty/libevent-2.0.21-stable/WIN32-Code/event2/event-config.h',
+              ]
+            }
+          ]
+        }],
+        ['OS=="mac"', {
+          'include_dirs': [
+            '/usr/local/include',
+          ],
+          'sources': [
+            'thirdparty/libevent-2.0.21-stable/kqueue.c',
+            'thirdparty/libevent-2.0.21-stable/poll.c',
+            'thirdparty/libevent-2.0.21-stable/select.c',
+
+          ],
+          'xcode_settings': {
+            'LIBRARY_SEARCH_PATHS': [
+              '/usr/local/lib'
+            ],
+            'FRAMEWORK_SEARCH_PATHS': [
+              '/Library/Frameworks'
+            ],
+          },
+          'link_settings': {
+            'libraries' : [
+            ],
+          },
+          'copies': [
+            {
+              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
+              'files' : [
+                'thirdparty/libevent-2.0.21-stable/MacOSX-Code/event2/event-config.h',
+              ]
+            }
+          ]
+        }],
+      ],
+    },
     {
       'target_name': 'gai++',
       'type': 'static_library',
@@ -52,7 +165,7 @@
         'libevent',
       ],
       'include_dirs': [
-        '../include',
+        'include/gai++',
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
@@ -65,6 +178,9 @@
         'thirdparty/sqlite3/sqlite3.h',
         'thirdparty/sqlite3/sqlite3.c',
 
+        'include/gai++/GAI.h',
+        'include/gai++/Tracker.h',
+
         'src/ClientID.cpp',
         'src/ClientID.h',
         'src/DataStoreSqlite.h',
@@ -73,7 +189,6 @@
         'src/Dispatcher.cpp',
         'src/Dispatcher.h',
         'src/GAI.cpp',
-        'src/GAI.h',
         'src/GAIDefines.h',
         'src/Hit.cpp',
         'src/Hit.h',
@@ -85,7 +200,6 @@
         'src/Model.h',
         'src/Timestamp.cpp',
         'src/Timestamp.h',
-        'src/Tracker.h',
         'src/TrackerImpl.cpp',
         'src/TrackerImpl.h',
         'src/Transaction.cpp',
@@ -164,6 +278,9 @@
         'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
         'thirdparty/sqlite3/sqlite3.h',
         'thirdparty/sqlite3/sqlite3.c',
+
+        'include/gai++/GAI.h',
+        'include/gai++/Tracker.h',
 
         'src/ClientID.h',
         'src/ClientID.cpp',
@@ -281,119 +398,6 @@
               'ApplicationServices.framework'
             ],
           },
-        }],
-      ],
-    },
-    {
-      'target_name': 'libevent',
-      'type': 'static_library',
-      'dependencies': [
-      ],
-      'include_dirs': [
-        'thirdparty/libevent-2.0.21-stable',
-        'thirdparty/libevent-2.0.21-stable/include',
-        'thirdparty/libevent-2.0.21-stable/compat',
-      ],
-      'sources': [
-        
-        'thirdparty/libevent-2.0.21-stable/event.h',
-        'thirdparty/libevent-2.0.21-stable/event.c',
-        'thirdparty/libevent-2.0.21-stable/buffer.c',
-        'thirdparty/libevent-2.0.21-stable/bufferevent.c',
-        'thirdparty/libevent-2.0.21-stable/bufferevent_filter.c',
-        'thirdparty/libevent-2.0.21-stable/bufferevent_sock.c',
-        'thirdparty/libevent-2.0.21-stable/bufferevent_pair.c',
-        'thirdparty/libevent-2.0.21-stable/bufferevent_ratelim.c',
-        'thirdparty/libevent-2.0.21-stable/listener.c',
-        'thirdparty/libevent-2.0.21-stable/evmap.c',
-        'thirdparty/libevent-2.0.21-stable/log.c',
-        'thirdparty/libevent-2.0.21-stable/evutil.h',
-        'thirdparty/libevent-2.0.21-stable/evutil.c',
-        'thirdparty/libevent-2.0.21-stable/evutil_rand.c',
-        'thirdparty/libevent-2.0.21-stable/evthread.c',
-        'thirdparty/libevent-2.0.21-stable/strlcpy.c',
-        'thirdparty/libevent-2.0.21-stable/signal.c',
-
-        'thirdparty/libevent-2.0.21-stable/event_tagging.c',
-        'thirdparty/libevent-2.0.21-stable/http.c',
-        'thirdparty/libevent-2.0.21-stable/evdns.h',
-        'thirdparty/libevent-2.0.21-stable/evdns.c',
-        'thirdparty/libevent-2.0.21-stable/evrpc.h',
-        'thirdparty/libevent-2.0.21-stable/evrpc.c',
-
-
-      ],
-      'conditions': [
-        ['OS=="win"', {
-          'defines': [
-            'WIN32',
-            'HAVE_CONFIG_H',
-          ],
-          'include_dirs': [
-            'thirdparty/libevent-2.0.21-stable/WIN32-Code',
-          ],
-          'sources': [
-            'thirdparty/libevent-2.0.21-stable/win32select.c',
-            'thirdparty/libevent-2.0.21-stable/evthread_win32.c',
-            'thirdparty/libevent-2.0.21-stable/buffer_iocp.c',
-            'thirdparty/libevent-2.0.21-stable/event_iocp.c',
-            'thirdparty/libevent-2.0.21-stable/bufferevent_async.c',
-          ],
-          'link_settings': {
-            'libraries' : [
-            ],
-          },
-          'msbuild_settings': {
-            'Link': {
-              'IgnoreSpecificDefaultLibraries': [
-                'uafxcwd.lib',
-                'libcmtd.lib',
-                'libcmt.lib',
-              ],
-              'AdditionalLibraryDirectories': [
-              ],
-            },
-          },
-
-          'copies': [
-            {
-              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
-              'files' : [
-                'thirdparty/libevent-2.0.21-stable/WIN32-Code/event2/event-config.h',
-              ]
-            }
-          ]
-        }],
-        ['OS=="mac"', {
-          'include_dirs': [
-            '/usr/local/include',
-          ],
-          'sources': [
-            'thirdparty/libevent-2.0.21-stable/kqueue.c',
-            'thirdparty/libevent-2.0.21-stable/poll.c',
-            'thirdparty/libevent-2.0.21-stable/select.c',
-
-          ],
-          'xcode_settings': {
-            'LIBRARY_SEARCH_PATHS': [
-              '/usr/local/lib'
-            ],
-            'FRAMEWORK_SEARCH_PATHS': [
-              '/Library/Frameworks'
-            ],
-          },
-          'link_settings': {
-            'libraries' : [
-            ],
-          },
-          'copies': [
-            {
-              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
-              'files' : [
-                'thirdparty/libevent-2.0.21-stable/MacOSX-Code/event2/event-config.h',
-              ]
-            }
-          ]
         }],
       ],
     },
