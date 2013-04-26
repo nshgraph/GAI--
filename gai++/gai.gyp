@@ -180,6 +180,8 @@
 
         'include/gai++/GAI.h',
         'include/gai++/Tracker.h',
+        'include/gai++/Transaction.h',
+        'include/gai++/TransactionItem.h',
 
         'src/ClientID.cpp',
         'src/ClientID.h',
@@ -203,9 +205,7 @@
         'src/TrackerImpl.cpp',
         'src/TrackerImpl.h',
         'src/Transaction.cpp',
-        'src/Transaction.h',
         'src/TransactionItem.cpp',
-        'src/TransactionItem.h',
         'src/URLBuilder.cpp',
         'src/URLBuilder.h',
         'src/URLConnection.cpp',
@@ -281,6 +281,8 @@
 
         'include/gai++/GAI.h',
         'include/gai++/Tracker.h',
+        'include/gai++/Transaction.h',
+        'include/gai++/TransactionItem.h',
 
         'src/ClientID.h',
         'src/ClientID.cpp',
@@ -300,9 +302,7 @@
         'src/Timestamp.cpp',
         'src/TrackerImpl.h',
         'src/TrackerImpl.cpp',
-        'src/Transaction.h',
         'src/Transaction.cpp',
-        'src/TransactionItem.h',
         'src/TransactionItem.cpp',
         'src/URLBuilder.cpp',
         'src/URLBuilder.h',
