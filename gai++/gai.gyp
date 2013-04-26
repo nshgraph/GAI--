@@ -122,7 +122,6 @@
         }],
         ['OS=="mac"', {
           'include_dirs': [
-            '/usr/local/include',
           ],
           'sources': [
             'src/mac/Platform.cpp'
@@ -146,6 +145,7 @@
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
+        'thirdparty/libevent-2.0.21-stable/include',
       ],
       'sources': [
         'unittests/main.cpp',
@@ -267,7 +267,8 @@
           ],
           'xcode_settings': {
             'LIBRARY_SEARCH_PATHS': [
-              '/usr/local/lib'
+              '/usr/local/lib',
+              '../lib'
             ],
             'FRAMEWORK_SEARCH_PATHS': [
               '/Library/Frameworks'
@@ -275,7 +276,7 @@
           },
           'link_settings': {
             'libraries' : [
-              'gtest.framework',
+              'libgtest.a',
               'libevent.a',
               'ApplicationServices.framework'
             ],
@@ -291,6 +292,7 @@
       'include_dirs': [
         'thirdparty/libevent-2.0.21-stable',
         'thirdparty/libevent-2.0.21-stable/include',
+        'thirdparty/libevent-2.0.21-stable/compat',
       ],
       'sources': [
         
@@ -328,7 +330,6 @@
             'HAVE_CONFIG_H',
           ],
           'include_dirs': [
-            'thirdparty/libevent-2.0.21-stable/compat',
             'thirdparty/libevent-2.0.21-stable/WIN32-Code',
           ],
           'sources': [
@@ -353,14 +354,25 @@
               ],
             },
           },
+
+          'copies': [
+            {
+              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
+              'files' : [
+                'thirdparty/libevent-2.0.21-stable/WIN32-Code/event2/event-config.h',
+              ]
+            }
+          ]
         }],
         ['OS=="mac"', {
-          'mac_bundle': 1,
           'include_dirs': [
             '/usr/local/include',
           ],
           'sources': [
-            'src/mac/Platform.cpp'
+            'thirdparty/libevent-2.0.21-stable/kqueue.c',
+            'thirdparty/libevent-2.0.21-stable/poll.c',
+            'thirdparty/libevent-2.0.21-stable/select.c',
+
           ],
           'xcode_settings': {
             'LIBRARY_SEARCH_PATHS': [
@@ -374,6 +386,14 @@
             'libraries' : [
             ],
           },
+          'copies': [
+            {
+              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
+              'files' : [
+                'thirdparty/libevent-2.0.21-stable/MacOSX-Code/event2/event-config.h',
+              ]
+            }
+          ]
         }],
       ],
     },
