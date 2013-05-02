@@ -64,11 +64,12 @@ namespace GAI
     /// Destructor
     ///
 	{
-        delete mURLConnection;
 		mbThreadRunning = false;
         mbCancelDispatch = true;
         // ensure the thread has ended
         mTimerThread.join();
+		
+        delete mURLConnection;
         
         // instruct the event loop to stop
         event_base_loopbreak( mDispatchEventBase );

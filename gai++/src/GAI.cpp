@@ -70,7 +70,7 @@ namespace GAI
     ///
 	{
         // first attempt to retrive the tracker with the same id
-        TrackerMap::const_iterator it = mTrackers.find( tracker_id );
+        TrackerMap::const_iterator it = mTrackers.find( std::string(tracker_id) );
         if( it != mTrackers.end() )
 		{
             return it->second;
@@ -79,7 +79,7 @@ namespace GAI
         // create a new tracker
         std::string client_id = ClientID::generateClientID(*mDataStore);
         Tracker* new_tracker = new TrackerImpl( *mDispatcher, client_id.c_str(), tracker_id, mProductName.c_str(), mProductVersion.c_str() );
-        mTrackers[ tracker_id ] = new_tracker;
+        mTrackers[ std::string(tracker_id) ] = new_tracker;
         
         if( mDefaultTracker == NULL )
             mDefaultTracker = new_tracker;
@@ -95,12 +95,13 @@ namespace GAI
     ///     Tracker to delete
     ///
 	{
-        TrackerMap::iterator it = mTrackers.find( tracker_id );
+        TrackerMap::iterator it = mTrackers.find( std::string(tracker_id) );
         if( it != mTrackers.end() )
 		{
+			Tracker* tracker = it->second;
             mTrackers.erase( it );
-            delete it->second;
-            if( it->second == mDefaultTracker)
+            delete tracker;
+            if( tracker == mDefaultTracker)
                 mDefaultTracker = NULL;
 		}
     }

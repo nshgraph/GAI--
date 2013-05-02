@@ -8,9 +8,22 @@
 
 #include <gtest/gtest.h>
 
+#ifdef WIN32
+#include <winsock2.h>
+#endif
+
 int main(int argc, char** argv)
 {
     
+#ifdef WIN32
+	WSADATA WSAData;
+	WSAStartup(0x101, &WSAData);
+#endif
     ::testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();}
+    int result =  RUN_ALL_TESTS();
+#ifdef WIN32
+	WSACleanup();
+#endif
+	return result;
+}
 

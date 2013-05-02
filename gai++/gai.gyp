@@ -45,16 +45,131 @@
     }
   },
   'targets': [
-    {
-      'target_name': 'gai++',
+  {
+      'target_name': 'libevent',
       'type': 'static_library',
       'dependencies': [
       ],
       'include_dirs': [
-        '../include',
+        'thirdparty/libevent-2.0.21-stable',
+        'thirdparty/libevent-2.0.21-stable/include',
+        'thirdparty/libevent-2.0.21-stable/compat',
+      ],
+      'sources': [
+        
+        'thirdparty/libevent-2.0.21-stable/event.h',
+        'thirdparty/libevent-2.0.21-stable/event.c',
+        'thirdparty/libevent-2.0.21-stable/buffer.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_filter.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_sock.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_pair.c',
+        'thirdparty/libevent-2.0.21-stable/bufferevent_ratelim.c',
+        'thirdparty/libevent-2.0.21-stable/listener.c',
+        'thirdparty/libevent-2.0.21-stable/evmap.c',
+        'thirdparty/libevent-2.0.21-stable/log.c',
+        'thirdparty/libevent-2.0.21-stable/evutil.h',
+        'thirdparty/libevent-2.0.21-stable/evutil.c',
+        'thirdparty/libevent-2.0.21-stable/evutil_rand.c',
+        'thirdparty/libevent-2.0.21-stable/evthread.c',
+        'thirdparty/libevent-2.0.21-stable/strlcpy.c',
+        'thirdparty/libevent-2.0.21-stable/signal.c',
+
+        'thirdparty/libevent-2.0.21-stable/event_tagging.c',
+        'thirdparty/libevent-2.0.21-stable/http.c',
+        'thirdparty/libevent-2.0.21-stable/evdns.h',
+        'thirdparty/libevent-2.0.21-stable/evdns.c',
+        'thirdparty/libevent-2.0.21-stable/evrpc.h',
+        'thirdparty/libevent-2.0.21-stable/evrpc.c',
+
+
+      ],
+      'conditions': [
+        ['OS=="win"', {
+          'defines': [
+            'WIN32',
+            'HAVE_CONFIG_H',
+          ],
+          'include_dirs': [
+            'thirdparty/libevent-2.0.21-stable/WIN32-Code',
+          ],
+          'sources': [
+            'thirdparty/libevent-2.0.21-stable/win32select.c',
+            'thirdparty/libevent-2.0.21-stable/evthread_win32.c',
+            'thirdparty/libevent-2.0.21-stable/buffer_iocp.c',
+            'thirdparty/libevent-2.0.21-stable/event_iocp.c',
+            'thirdparty/libevent-2.0.21-stable/bufferevent_async.c',
+          ],
+          'link_settings': {
+            'libraries' : [
+            ],
+          },
+          'msbuild_settings': {
+            'Link': {
+              'IgnoreSpecificDefaultLibraries': [
+                'uafxcwd.lib',
+                'libcmtd.lib',
+                'libcmt.lib',
+              ],
+              'AdditionalLibraryDirectories': [
+              ],
+            },
+          },
+
+          'copies': [
+            {
+              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
+              'files' : [
+                'thirdparty/libevent-2.0.21-stable/WIN32-Code/event2/event-config.h',
+              ]
+            }
+          ]
+        }],
+        ['OS=="mac"', {
+          'include_dirs': [
+            '/usr/local/include',
+          ],
+          'sources': [
+            'thirdparty/libevent-2.0.21-stable/kqueue.c',
+            'thirdparty/libevent-2.0.21-stable/poll.c',
+            'thirdparty/libevent-2.0.21-stable/select.c',
+
+          ],
+          'xcode_settings': {
+            'LIBRARY_SEARCH_PATHS': [
+              '/usr/local/lib'
+            ],
+            'FRAMEWORK_SEARCH_PATHS': [
+              '/Library/Frameworks'
+            ],
+          },
+          'link_settings': {
+            'libraries' : [
+            ],
+          },
+          'copies': [
+            {
+              'destination' : 'thirdparty/libevent-2.0.21-stable/include/event2',
+              'files' : [
+                'thirdparty/libevent-2.0.21-stable/MacOSX-Code/event2/event-config.h',
+              ]
+            }
+          ]
+        }],
+      ],
+    },
+    {
+      'target_name': 'gai++',
+      'type': 'static_library',
+      'dependencies': [
+        'libevent',
+      ],
+      'include_dirs': [
+        'include/gai++',
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
+        'thirdparty/libevent-2.0.21-stable/include',
       ],
       'sources': [
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
@@ -62,6 +177,11 @@
         'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
         'thirdparty/sqlite3/sqlite3.h',
         'thirdparty/sqlite3/sqlite3.c',
+
+        'include/gai++/GAI.h',
+        'include/gai++/Tracker.h',
+        'include/gai++/Transaction.h',
+        'include/gai++/TransactionItem.h',
 
         'src/ClientID.cpp',
         'src/ClientID.h',
@@ -72,7 +192,6 @@
         'src/Dispatcher.cpp',
         'src/Dispatcher.h',
         'src/GAI.cpp',
-        'src/GAI.h',
         'src/GAIDefines.h',
         'src/Hit.cpp',
         'src/Hit.h',
@@ -84,13 +203,10 @@
         'src/Model.h',
         'src/Timestamp.cpp',
         'src/Timestamp.h',
-        'src/Tracker.h',
         'src/TrackerImpl.cpp',
         'src/TrackerImpl.h',
         'src/Transaction.cpp',
-        'src/Transaction.h',
         'src/TransactionItem.cpp',
-        'src/TransactionItem.h',
         'src/URLBuilder.cpp',
         'src/URLBuilder.h',
         'src/URLConnection.cpp',
@@ -108,6 +224,7 @@
           'link_settings': {
             'libraries' : [
               'libevent.lib',
+              'Rpcrt4.lib',
             ],
           },
           'msbuild_settings': {
@@ -120,7 +237,6 @@
         }],
         ['OS=="mac"', {
           'include_dirs': [
-            '/usr/local/include',
           ],
           'sources': [
             'src/mac/Platform.cpp'
@@ -137,12 +253,14 @@
       'target_name': 'gai++test',
       'type': 'executable',
       'dependencies': [
+        'libevent',
       ],
       'include_dirs': [
         '../include',
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
+        'thirdparty/libevent-2.0.21-stable/include',
       ],
       'sources': [
         'unittests/main.cpp',
@@ -162,6 +280,11 @@
         'thirdparty/sqlite3/sqlite3.h',
         'thirdparty/sqlite3/sqlite3.c',
 
+        'include/gai++/GAI.h',
+        'include/gai++/Tracker.h',
+        'include/gai++/Transaction.h',
+        'include/gai++/TransactionItem.h',
+
         'src/ClientID.h',
         'src/ClientID.cpp',
         'src/DataStoreSqlite.h',
@@ -181,9 +304,7 @@
         'src/Timestamp.cpp',
         'src/TrackerImpl.h',
         'src/TrackerImpl.cpp',
-        'src/Transaction.h',
         'src/Transaction.cpp',
-        'src/TransactionItem.h',
         'src/TransactionItem.cpp',
         'src/URLBuilder.cpp',
         'src/URLBuilder.h',
@@ -200,26 +321,61 @@
           'sources': [
             'src/win/Platform.cpp'
           ],
-          'link_settings': {
-            'libraries' : [
-              'gtestd.lib',
-              'libevent.lib',
-              'ws2_32.lib',
-            ],
-          },
-          'msbuild_settings': {
-            'Link': {
-              'IgnoreSpecificDefaultLibraries': [
-                'uafxcwd.lib',
-                'libcmtd.lib',
-                'libcmt.lib',
+          'configurations': {
+            'Debug': {
+              'defines': [
+                '_DEBUG',
               ],
-              'AdditionalLibraryDirectories': [
-                '../lib/',
-              ],
-            },
+              'msbuild_settings': {
+                'ClCompile': {
+                  'DebugInformationFormat': 'EditAndContinue',
+                  'Optimization': 'Disabled',
+                  'RuntimeLibrary': 'MultiThreadedDebugDLL',
+                  'MinimalRebuild': 'true',
+                  'BasicRuntimeChecks': 'Default',
+                },
+                'Link': {
+                  'GenerateDebugInformation': 'true',
+                  'EnableCOMDATFolding': 'false', # Disable COMDAT folding because gtestd.lib is linked with /EDITANDCONTINUE
+                  'OptimizeReferences': 'false', # Disable Refernce optimisation because gtestd.lib is linked with /EDITANDCONTINUE
+                  'IgnoreSpecificDefaultLibraries': [
+                    'uafxcwd.lib',
+                    'libcmtd.lib',
+                    'libcmt.lib',
+                  ],
+                  'AdditionalLibraryDirectories': [
+                    '../lib/',
+                  ],
+                  'AdditionalDependencies': [
+                    'gtestd.lib',
+                    'ws2_32.lib',
+                    'Rpcrt4.lib',
+                  ],
+                }, 
+              },
+            }, # end of Debug configuration
+            'Release': {
+              'msbuild_settings': {
+                'Link': {
+                  'IgnoreSpecificDefaultLibraries': [
+                    'uafxcwd.lib',
+                    'libcmtd.lib',
+                    'libcmt.lib',
+                  ],
+                  'AdditionalLibraryDirectories': [
+                    '../lib/',
+                  ],
+                  'AdditionalDependencies': [
+                    'gtest.lib',
+                    'ws2_32.lib',
+                    'Rpcrt4.lib',
+                  ],
+                }, 
+              },
+            } # end of Release configuration
           },
-        }],
+        }
+        ],
         ['OS=="mac"', {
           'mac_bundle': 1,
           'include_dirs': [
@@ -230,7 +386,8 @@
           ],
           'xcode_settings': {
             'LIBRARY_SEARCH_PATHS': [
-              '/usr/local/lib'
+              '/usr/local/lib',
+              '../lib'
             ],
             'FRAMEWORK_SEARCH_PATHS': [
               '/Library/Frameworks'
@@ -238,7 +395,7 @@
           },
           'link_settings': {
             'libraries' : [
-              'gtest.framework',
+              'libgtest.a',
               'libevent.a',
               'ApplicationServices.framework'
             ],

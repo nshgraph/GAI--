@@ -29,7 +29,7 @@ namespace GAI
     public:
         Model();
         bool hasParameter( const std::string& key) const;
-        std::string get(const std::string& key) const;
+        const std::string& get(const std::string& key) const;
         Model::ParameterMap getKeysAndValues() const;
         
         void set(const std::string& key, const std::string& value);
@@ -40,6 +40,7 @@ namespace GAI
         
         void clearTemporaryValues();
     private:
+		static std::string FailString;
         ParameterMap values; // set of values that will be stored until object destruction
         ParameterMap temporaryValues; // set of values that can be cleared with clearTemporaryValues()
 	};
