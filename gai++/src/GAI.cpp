@@ -7,10 +7,10 @@
 #include "DataStoreSqlite.h"
 #include "ClientID.h"
 #include "Timestamp.h"
+#include "DebugPrint.h"
 
 namespace GAI
 {
-    
 	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_path )
     ///
     /// Retrieve the singleton analytics instance
@@ -33,8 +33,7 @@ namespace GAI
     mProductVersion(product_version),
 	mDataStore( NULL ),
 	mDispatcher( NULL ),
-    mDefaultTracker( NULL ),
-	mbDebug( false )
+    mDefaultTracker( NULL )
 	///
 	/// Constructor
 	///
@@ -173,7 +172,7 @@ namespace GAI
     ///     Whether debug data eill be printed to the console
     ///
 	{
-        return mbDebug;
+        return sbDebugPrint;
     }
     
     void Analytics::setDebug( bool debug )
@@ -184,7 +183,7 @@ namespace GAI
     ///     Whether debug data should be printed to the console
     ///
 	{
-		mbDebug = debug;
+		sbDebugPrint = debug;
     }
     
     bool Analytics::isOptOut() const

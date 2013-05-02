@@ -9,6 +9,7 @@
 
 namespace GAI
 {
+	
 	class Dispatcher;
     class DataStore;
     
@@ -52,8 +53,6 @@ namespace GAI
 		
         std::string mProductName;
 		std::string mProductVersion;
-		
-		bool mbDebug;	///< print information about data being sent
 		
 		Dispatcher* mDispatcher;
         DataStore* mDataStore;
