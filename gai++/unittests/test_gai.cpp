@@ -8,7 +8,7 @@
 
 #include "gtest/gtest.h"
 
-#include "GAI.h"
+#include "gai++/GAI.h"
 
 TEST( GAITest, create_interface )
 {

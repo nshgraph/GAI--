@@ -1,7 +1,8 @@
 
-#include "GAI.h"
+#include "gai++/GAI.h"
+#include "gai++/Tracker.h"
+
 #include "GAIDefines.h"
-#include "Tracker.h"
 #include "TrackerImpl.h"
 #include "Dispatcher.h"
 #include "DataStoreSqlite.h"

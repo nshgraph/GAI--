@@ -7,10 +7,10 @@
 //
 
 #include "gtest/gtest.h"
+#include "gai++/Transaction.h"
 
 #include "TrackerImpl.h"
 #include "HitStore.h"
-#include "Transaction.h"
 
 
 class FakeHitStore : public GAI::HitStore

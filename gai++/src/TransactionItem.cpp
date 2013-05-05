@@ -1,5 +1,5 @@
 
-#include "TransactionItem.h"
+#include "gai++/TransactionItem.h"
 
 namespace GAI
 {

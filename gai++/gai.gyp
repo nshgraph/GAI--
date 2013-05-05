@@ -165,7 +165,7 @@
         'libevent',
       ],
       'include_dirs': [
-        'include/gai++',
+        'include',
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
@@ -256,7 +256,7 @@
         'libevent',
       ],
       'include_dirs': [
-        '../include',
+        'include',
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
@@ -395,7 +395,7 @@
           },
           'link_settings': {
             'libraries' : [
-              'libgtest.a',
+              'gtest.framework',
               'libevent.a',
               'ApplicationServices.framework'
             ],

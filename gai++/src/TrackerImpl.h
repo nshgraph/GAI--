@@ -8,7 +8,7 @@
 #include "tinythread.h"
 
 #include "HitType.h"
-#include "Tracker.h"
+#include "gai++/Tracker.h"
 
 namespace GAI
 {

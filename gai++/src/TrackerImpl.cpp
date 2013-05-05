@@ -1,11 +1,12 @@
 
 #include "TrackerImpl.h"
 
+#include "gai++/Transaction.h"
+#include "gai++/TransactionItem.h"
+
 #include "GAIDefines.h"
 #include "Model.h"
 #include "Dispatcher.h"
-#include "Transaction.h"
-#include "TransactionItem.h"
 #include "HitBuilder.h"
 
 #include "Platform.h"
