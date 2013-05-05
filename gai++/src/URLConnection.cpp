@@ -128,8 +128,8 @@ namespace GAI
         evhttp_add_header( request->output_headers, "Content-Type", "application/x-www-form-urlencoded; charset=UTF-8" );
         evbuffer_add(request->output_buffer, payload.c_str(), payload.size());
 		
-        DEBUG_PRINT( "Requesting URL: " << url );
-        DEBUG_PRINT( "User-Agent: " << mUserAgent );
+        DEBUG_PRINT( "Requesting URL: " << url << "\n");
+        DEBUG_PRINT( "User-Agent: " << mUserAgent << "\n" );
 		
         evhttp_make_request(mConnection, request, EVHTTP_REQ_POST, url.c_str());
     }
@@ -160,19 +160,7 @@ namespace GAI
     ///
     {
         std::ostringstream ss;
-		
-		/// @todo os specific agent
-		/// @todo language
-		
-		/// WIN
-//		ss << product << "/" << version << " (U; Windows NT 5.1)"; //xp
-//		ss << product << "/" << version << " (U; Windows NT 6.0)"; //vista
-//		ss << product << "/" << version << " (U; Windows NT 6.1)"; //win7
-//		ss << product << "/" << version << " (U; Windows NT 6.2)"; //win8
-		
-		/// MAC
-		ss << product << "/" << version << " (Macintosh; U; " << Platform::GetPlatformVersionString() << ")";
-		
+		ss << product << "/" << version << Platform::GetPlatformUserAgentString();
 		mUserAgent = ss.str();
     }
 }

@@ -18,6 +18,12 @@
 
 namespace GAI
 {
+    std::string Platform::GetPlatformUserAgentString()
+    {
+        std::stringstream ss;
+        ss <<" (Macintosh; U; " << Platform::GetPlatformVersionString() << ")";
+        return ss.str();
+    }
     std::string Platform::GetPlatformVersionString( )
     {
         SInt32 major_version, minor_version, bugfix_version;
