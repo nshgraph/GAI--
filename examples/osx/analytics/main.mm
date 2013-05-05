@@ -5,7 +5,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#include "GAI.h"
+#include "gai++/GAI.h"
 
 int main(int argc, char *argv[])
 {

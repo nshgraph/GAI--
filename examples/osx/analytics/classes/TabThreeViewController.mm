@@ -4,7 +4,7 @@
 //
 
 #import "TabThreeViewController.h"
-#include "GAI.h"
+#include "gai++/GAI.h"
 
 @interface TabThreeViewController ()
 

@@ -5,7 +5,7 @@
 
 #import "MainViewController.h"
 
-#include "GAI.h"
+#include "gai++/GAI.h"
 
 @interface MainViewController ()
 
