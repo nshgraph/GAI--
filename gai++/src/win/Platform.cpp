@@ -9,6 +9,33 @@
 #include "Platform.h"
 #include <windows.h>
 
+bool PlatformIs64Bit()
+{
+#if _WIN64
+		return true;
+#else
+	BOOL isWow64 = FALSE;
+	LPFN_ISWOW64PROCESS fnIsWow64Process  = (LPFN_ISWOW64PROCESS)
+	GetProcAddress(GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+	
+	if(fnIsWow64Process)
+	{
+		if (!fnIsWow64Process(GetCurrentProcess(), &isWow64))
+			return false;
+		
+		if(isWow64)
+			isWindows64bit =  true;
+		else
+			isWindows64bit =  false;
+		
+		return true;
+	}
+	else
+		return false;
+#endif
+	
+}
+
 namespace GAI
 {
     std::string Platform::GetPlatformUserAgentString( )
@@ -29,6 +56,8 @@ namespace GAI
         
         std::stringstream ss;
         ss << "Windows NT " << osvi.dwMajorVersion << "." << osvi.dwMinorVersion;
+		if( PlatformIs64Bit() )
+			ss << "; Win64; x64";
         return ss.str();
 	}
     std::string Platform::GetUserLanguage( )
