@@ -12,6 +12,8 @@
 
 namespace GAI {
     
+	std::list<std::string> HitBuilder::sRequirements[kNumHitTypes];
+	bool HitBuilder::sRequirementsInitialized = false;
     
     bool HitBuilder::createHit(const HitType aType, const Model& aModel, Hit*& hit)
     ///
@@ -87,50 +89,48 @@ namespace GAI {
     ///     A list of all the required parameters that must be set for this HitType
     ///
     {
-        static std::list<std::string> requirements[kNumHitTypes];
-        static bool initialized = false;
-        if(!initialized)
+        if(!sRequirementsInitialized)
         {
-            initialized = true;
+            sRequirementsInitialized = true;
             
             // First register all parameters that are needed regardless of hit type
             for( int i=0;i<kNumHitTypes;i++)
             {
-                requirements[i].push_back(kAppNameModelKey);
-                requirements[i].push_back(kTrackingIdModelKey);
-                requirements[i].push_back(kClientIdModelKey);
+                sRequirements[i].push_back(kAppNameModelKey);
+                sRequirements[i].push_back(kTrackingIdModelKey);
+                sRequirements[i].push_back(kClientIdModelKey);
             }
             // Now register each individual hit type's requirements
-            requirements[kAppViewHit].push_back(kScreenParamModelKey);
+            sRequirements[kAppViewHit].push_back(kScreenParamModelKey);
             
-            requirements[kEventHit].push_back(kEventCategoryParamModelKey);
-            requirements[kEventHit].push_back(kEventActionParamModelKey);
+            sRequirements[kEventHit].push_back(kEventCategoryParamModelKey);
+            sRequirements[kEventHit].push_back(kEventActionParamModelKey);
             
-            requirements[kTransactionHit].push_back(kTransationIdModelKey);
-            requirements[kTransactionHit].push_back(kTransationAffiliationModelKey);
+            sRequirements[kTransactionHit].push_back(kTransationIdModelKey);
+            sRequirements[kTransactionHit].push_back(kTransationAffiliationModelKey);
             
-            requirements[kTransactionItemHit].push_back(kTransationIdModelKey);
-            requirements[kTransactionItemHit].push_back(kTransationItemNameModelKey);
-            requirements[kTransactionItemHit].push_back(kTransationItemCodeModelKey);
-            requirements[kTransactionItemHit].push_back(kTransationItemCategoryModelKey);
-            requirements[kTransactionItemHit].push_back(kTransationItemQuantityModelKey);
-            requirements[kTransactionItemHit].push_back(kTransationItemPriceModelKey);
+            sRequirements[kTransactionItemHit].push_back(kTransationIdModelKey);
+            sRequirements[kTransactionItemHit].push_back(kTransationItemNameModelKey);
+            sRequirements[kTransactionItemHit].push_back(kTransationItemCodeModelKey);
+            sRequirements[kTransactionItemHit].push_back(kTransationItemCategoryModelKey);
+            sRequirements[kTransactionItemHit].push_back(kTransationItemQuantityModelKey);
+            sRequirements[kTransactionItemHit].push_back(kTransationItemPriceModelKey);
             
-            requirements[kExceptionHit].push_back(kExceptionDescriptionModelKey);
-            requirements[kExceptionHit].push_back(kExceptionFatalModelKey);
+            sRequirements[kExceptionHit].push_back(kExceptionDescriptionModelKey);
+            sRequirements[kExceptionHit].push_back(kExceptionFatalModelKey);
             
-            requirements[kTimingHit].push_back(kTimingCategoryModelKey);
-            requirements[kTimingHit].push_back(kTimingValueModelKey);
-            requirements[kTimingHit].push_back(kTimingNameModelKey);
-            requirements[kTimingHit].push_back(kTimingLabelModelKey);
+            sRequirements[kTimingHit].push_back(kTimingCategoryModelKey);
+            sRequirements[kTimingHit].push_back(kTimingValueModelKey);
+            sRequirements[kTimingHit].push_back(kTimingNameModelKey);
+            sRequirements[kTimingHit].push_back(kTimingLabelModelKey);
             
-            requirements[kSocialHit].push_back(kSocialNetworkModelKey);
-            requirements[kSocialHit].push_back(kSocialActionModelKey);
-            requirements[kSocialHit].push_back(kSocialTargetModelKey);
+            sRequirements[kSocialHit].push_back(kSocialNetworkModelKey);
+            sRequirements[kSocialHit].push_back(kSocialActionModelKey);
+            sRequirements[kSocialHit].push_back(kSocialTargetModelKey);
             
         }
         
-        return requirements[aType];
+        return sRequirements[aType];
         
     }
     

@@ -18,6 +18,8 @@ namespace GAI
     public:
 		static bool createHit(const HitType aType, const Model& aModel, Hit*& hit);
     protected:
+        static std::list<std::string> sRequirements[kNumHitTypes];
+        static bool sRequirementsInitialized;
 		static const std::list<std::string>& requiredParametersForType(const HitType aType);
         
 	};
