@@ -19,7 +19,12 @@
       'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
 
     },
-    #todo win default settings
+    'msvs_configuration_attributes': {
+      'UseOfMFC': '2', # 0=false 1=Static 2=Dynamic
+      'CharacterSet': '1', # Unicode
+      'OutputDirectory': '<(DEPTH)/bin/$(ProjectName)/$(Configuration)',
+      'IntermediateDirectory': '<(DEPTH)/bin/$(ProjectName)/obj/$(Configuration)',
+    },
 
     'configurations': {
       'Debug': {
@@ -28,7 +33,8 @@
         },
         'msbuild_settings': {
           'ClCompile': { 
-            'Optimization': 'Disabled'
+            'Optimization': 'Disabled',
+            'RuntimeLibrary': 'MultiThreadedDebugDLL',
           }
         }
       },
@@ -38,7 +44,8 @@
         },
         'msbuild_settings': {
           'ClCompile': { 
-            'Optimization': 'MaxSpeed'
+            'Optimization': 'MaxSpeed',
+            'RuntimeLibrary': 'MultiThreadedDLL',
           }
         }
       }
@@ -52,7 +59,6 @@
       ],
       'include_dirs': [
         'thirdparty/libevent-2.0.21-stable',
-        'thirdparty/libevent-2.0.21-stable/include',
         'thirdparty/libevent-2.0.21-stable/compat',
       ],
       'sources': [
@@ -92,6 +98,7 @@
           ],
           'include_dirs': [
             'thirdparty/libevent-2.0.21-stable/WIN32-Code',
+            'thirdparty/libevent-2.0.21-stable/include',
           ],
           'sources': [
             'thirdparty/libevent-2.0.21-stable/win32select.c',
@@ -128,6 +135,8 @@
         ['OS=="mac"', {
           'include_dirs': [
             '/usr/local/include',
+            'thirdparty/libevent-2.0.21-stable/MacOSX-Code/',
+            'thirdparty/libevent-2.0.21-stable/include',
           ],
           'sources': [
             'thirdparty/libevent-2.0.21-stable/kqueue.c',
@@ -169,7 +178,6 @@
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
-        'thirdparty/libevent-2.0.21-stable/include',
       ],
       'sources': [
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
@@ -218,6 +226,10 @@
           'defines': [
             'WIN32',
           ],
+          'include_dirs': [
+            'thirdparty/libevent-2.0.21-stable/WIN32-Code/',
+            'thirdparty/libevent-2.0.21-stable/include',
+          ],
           'sources': [
             'src/win/Platform.cpp'
          ],
@@ -237,6 +249,8 @@
         }],
         ['OS=="mac"', {
           'include_dirs': [
+            'thirdparty/libevent-2.0.21-stable/MacOSX-Code/',
+            'thirdparty/libevent-2.0.21-stable/include',
           ],
           'sources': [
             'src/mac/Platform.cpp'
@@ -260,7 +274,6 @@
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
-        'thirdparty/libevent-2.0.21-stable/include',
       ],
       'sources': [
         'unittests/main.cpp',
@@ -317,6 +330,10 @@
         ['OS=="win"', {
           'defines': [
             'WIN32',
+          ],
+          'include_dirs': [
+            'thirdparty/libevent-2.0.21-stable/WIN32-Code/',
+            'thirdparty/libevent-2.0.21-stable/include',
           ],
           'sources': [
             'src/win/Platform.cpp'
@@ -380,6 +397,8 @@
           'mac_bundle': 1,
           'include_dirs': [
             '/usr/local/include',
+            'thirdparty/libevent-2.0.21-stable/MacOSX-Code/',
+            'thirdparty/libevent-2.0.21-stable/include',
           ],
           'sources': [
             'src/mac/Platform.cpp'
