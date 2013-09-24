@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gyp --depth ./ ./gai++/gai.gyp
+./gai++/thirdparty/gyp-r1738/gyp --depth ./ ./gai++/gai.gyp
