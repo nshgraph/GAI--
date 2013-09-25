@@ -1,8 +1,8 @@
-# GAI--
+# GAI++
 
 Google Analytics Implementation for C++
 
-## How to use
+## Usage
 
 ### OSX
 
