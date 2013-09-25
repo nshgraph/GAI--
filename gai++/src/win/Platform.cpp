@@ -7,33 +7,31 @@
 //
 
 #include "Platform.h"
+
 #include <windows.h>
+#include <string>
+#include <sstream>
+
+typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 
 bool PlatformIs64Bit()
 {
 #if _WIN64
-		return true;
+	return true;
 #else
 	BOOL isWow64 = FALSE;
-	LPFN_ISWOW64PROCESS fnIsWow64Process  = (LPFN_ISWOW64PROCESS)
-	GetProcAddress(GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+	LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
 	
 	if(fnIsWow64Process)
 	{
-		if (!fnIsWow64Process(GetCurrentProcess(), &isWow64))
+		if(!fnIsWow64Process(GetCurrentProcess(), &isWow64))
+		{
 			return false;
-		
-		if(isWow64)
-			isWindows64bit =  true;
-		else
-			isWindows64bit =  false;
-		
-		return true;
+		}
 	}
-	else
-		return false;
-#endif
 	
+	return isWow64;
+#endif
 }
 
 namespace GAI
@@ -45,7 +43,7 @@ namespace GAI
         return ss.str();
     }
 	
-	std::string Platform::GetPlatformVersionString( )
+	std::string Platform::GetPlatformVersionString()
 	{
         OSVERSIONINFO osvi;
         ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
@@ -60,16 +58,18 @@ namespace GAI
 			ss << "; Win64; x64";
         return ss.str();
 	}
-    std::string Platform::GetUserLanguage( )
+
+    std::string Platform::GetUserLanguage()
 	{
         char buf[19];
-        int ccBuf = GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, buf, 9);
+        int ccBuf = GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, (LPWSTR)buf, 9);
         buf[ccBuf++] = '-';
-        ccBuf += GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, buf+ccBuf, 9);
+        ccBuf += GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, (LPWSTR)buf+ccBuf, 9);
         
-		return std::string(ccBuf);
+		return std::string(buf);
 	}
-    std::string Platform::GetScreenResolution( )
+
+    std::string Platform::GetScreenResolution()
 	{
         RECT desktop;
         // Get a handle to the desktop window
