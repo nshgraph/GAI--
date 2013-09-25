@@ -21,5 +21,12 @@ xcuserdata
 Build/
 lib/
 
+# Visual Studio Projects
+ipch/
+*.opensdf
+*.sdf
+*.sln
+*.vcxproj*
+
 # GAI lib project is generated with GYP
 gai++/gai.xcodeproj
