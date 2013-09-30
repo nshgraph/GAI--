@@ -16,10 +16,10 @@ namespace GAI
 	class Platform
 	{
     public:
-        static std::string GetPlatformUserAgentString( );
-        static std::string GetPlatformVersionString( );
-        static std::string GetUserLanguage( );
-        static std::string GetScreenResolution( );
+        static std::string GetPlatformUserAgentString();
+        static std::string GetPlatformVersionString();
+        static std::string GetUserLanguage();
+        static std::string GetScreenResolution();
     };
 };
 
