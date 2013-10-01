@@ -35,12 +35,12 @@ namespace GAI
         ConnectionCallbackData* cb_data = (ConnectionCallbackData*)arg;
         if( req && req->response_code == 200 )
         {
-			DEBUG_PRINT("200 OK\n");
+			DEBUG_PRINT( "Connection Callback: 200 OK"  << std::endl );
             cb_data->callback(true, cb_data->data);
         }
         else
         {
-			DEBUG_PRINT( (req ?req->response_code : 0) << " Error" );
+			DEBUG_PRINT( "Connection Callback: " << (req ? req->response_code : 0) << " Error" << std::endl );
             cb_data->callback(false, cb_data->data);
         }
         
@@ -85,17 +85,14 @@ namespace GAI
         ev_uint16_t port;
         evhttp_connection_get_peer(mConnection, &host_address, &port);
         evhttp_add_header( request->output_headers, "Host", host_address );
-        evhttp_add_header( request->output_headers, "User-Agent", mUserAgent.c_str() );
-		
-        DEBUG_PRINT( "Requesting URL: " << url );
-        DEBUG_PRINT( "User-Agent: " << mUserAgent );
-		
+        evhttp_add_header( request->output_headers, "User-Agent", mUserAgent.c_str() );		
         evhttp_make_request(mConnection, request, EVHTTP_REQ_GET, url.c_str());
         
     }
     
-    void URLConnection::requestPOST(const std::string& url, const std::string& payload, URLConnectionCompleteCB callback, void* callback_data )    ///
-    /// Function to request a page via the GET protocol
+    void URLConnection::requestPOST(const std::string& url, const std::string& payload, URLConnectionCompleteCB callback, void* callback_data )
+	///
+    /// Function to request a page via the POST protocol
     ///
     /// @param url
     ///     The url to request (note, this does NOT include the host)
@@ -127,9 +124,6 @@ namespace GAI
         evhttp_add_header( request->output_headers, "Connection", "keep-alive" );
         evhttp_add_header( request->output_headers, "Content-Type", "application/x-www-form-urlencoded; charset=UTF-8" );
         evbuffer_add(request->output_buffer, payload.c_str(), payload.size());
-		
-        DEBUG_PRINT( "Requesting URL: " << url << "\n");
-        DEBUG_PRINT( "User-Agent: " << mUserAgent << "\n" );
 		
         evhttp_make_request(mConnection, request, EVHTTP_REQ_POST, url.c_str());
     }
@@ -163,4 +157,15 @@ namespace GAI
 		ss << product << "/" << version << Platform::GetPlatformUserAgentString();
 		mUserAgent = ss.str();
     }
+	
+	std::string URLConnection::getUserAgentString()
+	///
+	/// Get the user agent string
+	///
+	/// @return
+	/// The current user agent string
+	///
+	{
+		return mUserAgent;
+	}
 }

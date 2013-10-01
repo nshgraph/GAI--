@@ -8,6 +8,7 @@
 #include "GAIDefines.h"
 #include "URLBuilder.h"
 #include "URLConnection.h"
+#include "DebugPrint.h"
 
 namespace GAI
 {
@@ -310,6 +311,14 @@ namespace GAI
         {
             cb_struct->dispatcher->mDataStore.addHit(cb_struct->hit);
         }
+		else
+		{
+			cb_struct->dispatcher->mURLConnection->getUserAgentString();
+			
+			DEBUG_PRINT( "URL: " << UrlBuilder::createPOSTURL(cb_struct->hit) << std::endl );
+			DEBUG_PRINT( "Payload: " << UrlBuilder::createPOSTPayload(cb_struct->hit) << std::endl );
+			DEBUG_PRINT( "User Agent: " << cb_struct->dispatcher->mURLConnection->getUserAgentString() << std::endl );
+		}
      
         delete cb_struct;
     }

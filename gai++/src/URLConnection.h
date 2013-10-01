@@ -13,12 +13,15 @@ namespace GAI
 	{
     public:
         typedef void (*URLConnectionCompleteCB)(bool success, void* callback_data);
+		
     public:
         URLConnection( event_base *base );
         void request(const std::string& url, URLConnectionCompleteCB callback, void* callback_data );
         void requestPOST(const std::string& url, const std::string& payload, URLConnectionCompleteCB callback, void* callback_data );
         void setAddress( const std::string& address, int port );
         void createUserAgentString( const std::string& product, const std::string& version );
+		std::string getUserAgentString();
+		
     private:
         evhttp_connection *mConnection; //< Connection object to send all requests from
         event_base *mEventBase; //<Event Base for async requests
