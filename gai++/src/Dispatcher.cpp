@@ -1,6 +1,9 @@
 
 #include "Dispatcher.h"
 
+#ifdef WIN32
+#include <windows.h>
+#endif
 #include <math.h>
 #include <event2/thread.h>
 
@@ -256,10 +259,7 @@ namespace GAI
     ///
 	{
 		Dispatcher *dispatcher = static_cast<Dispatcher*>( context );
-		
-		
-		
-        while(dispatcher->mbThreadRunning)
+        while( dispatcher->mbThreadRunning )
         {
             if( dispatcher->mbImmediateDispatch )
             {
@@ -267,6 +267,12 @@ namespace GAI
                 dispatcher->dispatch();
             }
             event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);
+			
+#ifdef WIN32
+			Sleep( 2000 );
+#else
+			sleep( 2 );
+#endif
         }
 	}
 	
