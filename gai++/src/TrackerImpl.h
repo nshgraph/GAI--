@@ -26,7 +26,7 @@ namespace GAI
 
 		bool sendView(const char* aScreen);
 
-		bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const char* aValue);
+		bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue = -1);
 
 		bool sendTransaction(const Transaction* aTransaction);
 

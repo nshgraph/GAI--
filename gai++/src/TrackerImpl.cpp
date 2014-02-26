@@ -1,6 +1,8 @@
 
 #include "TrackerImpl.h"
 
+#include <sstream>
+
 #include "gai++/Transaction.h"
 #include "gai++/TransactionItem.h"
 
@@ -87,7 +89,7 @@ namespace GAI {
         return internalSend(kAppViewHit, parameters);
     }
     
-    bool TrackerImpl::sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const char* aValue)
+    bool TrackerImpl::sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue)
     ///
     /// Send a 'hit' representing a user generated event
     ///
@@ -108,12 +110,18 @@ namespace GAI {
         // ensure tracker is open
         if( !mbTrackerOpen )
             return false;
+		
         ParameterMap parameters;
         parameters[kEventCategoryParamModelKey] = aCategory;
         parameters[kEventActionParamModelKey] = aAction;
         parameters[kEventLabelParamModelKey] = aLabel;
-        if( std::string(aValue) != "" )
-            parameters[kEventValueParamModelKey] = aValue;
+        if( aValue != -1 )
+		{
+			std::ostringstream s;
+			s << aValue;
+            parameters[kEventValueParamModelKey] = s.str();
+		}
+		
         return internalSend(kEventHit, parameters);
     }
     

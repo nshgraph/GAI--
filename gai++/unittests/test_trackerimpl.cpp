@@ -50,7 +50,7 @@ TEST( TrackerImplTest, send_types )
     EXPECT_EQ(dispatch.getNumHits(),1);
     
     // attempt to send an event
-    EXPECT_TRUE( tracker.sendEvent("category","action","label","value") );
+    EXPECT_TRUE( tracker.sendEvent("category","action","label") );
     EXPECT_EQ(dispatch.getNumHits(),2);
     
     // attempt to send an exception

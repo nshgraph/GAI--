@@ -43,7 +43,7 @@ namespace GAI
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const char* aValue) = 0;
+		 virtual bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue = -1) = 0;
         
         ///
         /// Send a 'hit' representing a Transaction
