@@ -16,16 +16,17 @@ TEST( GAITest, create_interface )
     const char* product_name2 = "test_product2";
     const char* product_version = "1.0.0";
     const char* data_store_path = "./";
+    const char* data_store_full_path = "./test_product";
     
     // fail to create instance
     GAI::Analytics* gai_fail = GAI::Analytics::getInstance();
     EXPECT_TRUE( gai_fail == NULL );
     
     // create instance 1
-    GAI::Analytics* gai = GAI::Analytics::getInstance(product_name, product_version, data_store_path);
+    GAI::Analytics* gai = GAI::Analytics::getInstance(product_name, product_version, data_store_full_path);
     
     // create instance 2
-    GAI::Analytics* gai2 = GAI::Analytics::getInstance(product_name, product_version, data_store_path);
+    GAI::Analytics* gai2 = GAI::Analytics::getInstance(product_name, product_version, data_store_full_path);
     
     // should be the same
     EXPECT_EQ( gai, gai2 );
@@ -53,6 +54,15 @@ TEST( GAITest, create_interface )
     EXPECT_EQ(20.0,gai->getDispatchInterval());
     gai->setDispatchInterval( 120.0 );
     EXPECT_EQ(120.0,gai->getDispatchInterval());
+	
+	// check db location
+	char db_location[100];
+	strcpy(db_location, data_store_path);
+	strcat(db_location, product_name);
+	strcat(db_location, ".gai");
+	
+	struct stat buffer;
+	EXPECT_TRUE(stat(db_location, &buffer) == 0);
 }
 
 TEST( GAITest, create_trackers )

@@ -16,7 +16,7 @@ namespace GAI
 	class Analytics
 	{
     public:
-		static Analytics* getInstance(  const char* product_name = NULL, const char* product_version = NULL, const char* data_store_path = NULL );
+		static Analytics* getInstance(  const char* product_name = NULL, const char* product_version = NULL, const char* data_store_full_path = NULL );
         ~Analytics();
 		
 		Tracker* createTracker( const char* tracking_id );

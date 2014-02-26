@@ -12,7 +12,7 @@
 
 namespace GAI
 {
-	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_path )
+	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_full_path )
     ///
     /// Retrieve the singleton analytics instance
     ///
@@ -20,16 +20,16 @@ namespace GAI
 		static std::auto_ptr<Analytics> sharedInstance;
 		if( sharedInstance.get() == 0 )
 		{
-            if( product_name && product_version && data_store_path )
+            if( product_name && product_version && data_store_full_path )
 			{
-				sharedInstance.reset( new Analytics( product_name, product_version, data_store_path ) );
+				sharedInstance.reset( new Analytics( product_name, product_version, data_store_full_path ) );
 			}
 		}
 		
         return sharedInstance.get();
 	}
 	
-	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_path ) :
+	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_full_path ) :
 	mProductName(product_name),
     mProductVersion(product_version),
 	mDataStore( NULL ),
@@ -39,7 +39,7 @@ namespace GAI
 	/// Constructor
 	///
 	{
-        mDataStore = new DataStoreSqlite( data_store_path + mProductName + ".gai" );
+        mDataStore = new DataStoreSqlite( std::string(data_store_full_path) + ".gai" );
         mDataStore->open();
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
 	}
