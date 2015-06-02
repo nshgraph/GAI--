@@ -16,7 +16,7 @@
 
       #todo warning settings
       'GCC_SYMBOLS_PRIVATE_EXTERN': 'YES',
-      'GCC_TREAT_WARNINGS_AS_ERRORS': 'YES',
+      'GCC_TREAT_WARNINGS_AS_ERRORS': 'NO',
 
     },
     'msvs_configuration_attributes': {
@@ -38,6 +38,10 @@
           }
         }
       },
+      'Debug_x64': {
+        'inherit_from': [ 'Debug', ],
+        'msvs_configuration_platform': 'x64',
+      },
       'Release': {
         'xcode_settings': {
           'GCC_OPTIMIZATION_LEVEL': 's'
@@ -48,7 +52,11 @@
             'RuntimeLibrary': 'MultiThreadedDLL',
           }
         }
-      }
+      },
+      'Release_x64': {
+        'inherit_from': [ 'Release', ],
+        'msvs_configuration_platform': 'x64',
+      },
     }
   },
   'targets': [
