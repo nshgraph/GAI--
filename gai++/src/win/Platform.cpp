@@ -17,20 +17,20 @@ typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
 bool PlatformIs64Bit()
 {
 #if _WIN64
-	return true;
+    return true;
 #else
-	BOOL isWow64 = FALSE;
-	LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
-	
-	if(fnIsWow64Process)
-	{
-		if(!fnIsWow64Process(GetCurrentProcess(), &isWow64))
-		{
-			return false;
-		}
-	}
-	
-	return isWow64;
+    BOOL isWow64 = FALSE;
+    LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
+    
+    if(fnIsWow64Process)
+    {
+        if(!fnIsWow64Process(GetCurrentProcess(), &isWow64))
+        {
+            return false;
+        }
+    }
+    
+    return isWow64;
 #endif
 }
 
@@ -42,9 +42,9 @@ namespace GAI
         ss << " (U; "<< GetPlatformVersionString() <<")";
         return ss.str();
     }
-	
-	std::string Platform::GetPlatformVersionString()
-	{
+    
+    std::string Platform::GetPlatformVersionString()
+    {
         OSVERSIONINFO osvi;
         ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
         osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
@@ -54,23 +54,27 @@ namespace GAI
         
         std::stringstream ss;
         ss << "Windows NT " << osvi.dwMajorVersion << "." << osvi.dwMinorVersion;
-		if( PlatformIs64Bit() )
-			ss << "; Win64; x64";
+        if( PlatformIs64Bit() )
+            ss << "; Win64; x64";
         return ss.str();
-	}
+    }
 
     std::string Platform::GetUserLanguage()
-	{
+    {
         char buf[19];
-        int ccBuf = GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, (LPWSTR)buf, 9);
-        buf[ccBuf++] = '-';
-        ccBuf += GetLocaleInfo(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, (LPWSTR)buf+ccBuf, 9);
+        int ccBuf = GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO639LANGNAME, (LPSTR)buf, 9);
+
+        // ccBuf is the number of bytes used INCLUDING null terminator
+        buf[ccBuf-1] = '-';
+        // do not need to increment ccBuf here, but we should ensure that it is zero in case the next call returns nothing
+        buf[ccBuf] = 0;
+        ccBuf += GetLocaleInfoA(LOCALE_SYSTEM_DEFAULT, LOCALE_SISO3166CTRYNAME, (LPSTR)buf+ccBuf, 9);
         
-		return std::string(buf);
-	}
+        return std::string(buf);
+    }
 
     std::string Platform::GetScreenResolution()
-	{
+    {
         RECT desktop;
         // Get a handle to the desktop window
         const HWND hDesktop = GetDesktopWindow();
@@ -79,5 +83,5 @@ namespace GAI
         std::stringstream ss;
         ss << desktop.right << "x" << desktop.bottom;
         return ss.str();
-	}
+    }
 }
