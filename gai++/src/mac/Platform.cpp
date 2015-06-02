@@ -40,13 +40,21 @@ namespace GAI
     
     std::string Platform::GetUserLanguage()
     {
-        CFArrayRef langs = CFLocaleCopyPreferredLanguages();
-        CFStringRef langCode = (CFStringRef)CFArrayGetValueAtIndex(langs, 0);
-		CFRelease(langs);
-        
 		char lang[100];
+        CFArrayRef langs = CFLocaleCopyPreferredLanguages();
+		if( langs && CFArrayGetCount( langs ) < 1 )
+		{
+			CFRelease(langs);
+			return "en";
+		}
+        CFStringRef langCode = (CFStringRef)CFArrayGetValueAtIndex(langs, 0);
+		if( !langCode )
+		{
+		CFRelease(langs);
+			return "en";
+		}
         CFStringGetCString(langCode, lang, 100, kCFStringEncodingUTF8);
-        
+		CFRelease(langs);
 		return lang;
     }
     
