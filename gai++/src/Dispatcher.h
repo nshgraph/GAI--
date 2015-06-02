@@ -24,6 +24,8 @@ namespace GAI
 		Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval );
 		~Dispatcher();
         
+		void startEventLoop();
+        
         bool storeHit( const Hit& hit );
 		
         void queueDispatch();
@@ -47,6 +49,7 @@ namespace GAI
         virtual void dispatch();
 		
 		bool mbThreadRunning;
+		bool mbEvenLoopStarted;
         bool mbCancelDispatch;
         bool mbImmediateDispatch;
 		event_base*	mDispatchEventBase;

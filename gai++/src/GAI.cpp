@@ -59,6 +59,16 @@ namespace GAI
         delete mDataStore;
     }
     
+	///
+	/// Starts the main Dispatcher event loop
+	///
+	/// @return Nothing
+	///
+	void Analytics::start()
+	{
+		mDispatcher->startEventLoop();
+	}
+    
     Tracker* Analytics::createTracker( const char* tracker_id )
     ///
     /// Create or retrieve a tracker by name. If the tracker already exists it is returned, if not it is created and added to the list

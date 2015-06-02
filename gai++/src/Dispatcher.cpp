@@ -39,6 +39,7 @@ namespace GAI
     mDispatchEventBase(event_base_new()),
     mDispatchEvent(NULL),
     mbThreadRunning(true),
+	mbEvenLoopStarted(false),
     mbCancelDispatch(false),
     mbImmediateDispatch(false),
     mTimerThread( Dispatcher::TimerThreadFunction, (void*)this ),
@@ -84,6 +85,16 @@ namespace GAI
 		}
 		
 		mDataStore.close();
+	}
+    
+	///
+	/// Starts the main event loop
+	///
+	/// @return Nothing
+	///
+	void Dispatcher::startEventLoop()
+	{
+		mbEvenLoopStarted = true;
 	}
     
     bool Dispatcher::storeHit( const Hit& hit )
@@ -266,7 +277,10 @@ namespace GAI
                 dispatcher->mbImmediateDispatch = false;
                 dispatcher->dispatch();
             }
+			if ( dispatcher->mbEvenLoopStarted )
+			{
             event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);
+			}
 			
 #ifdef WIN32
 			Sleep( 2000 );
