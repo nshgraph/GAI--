@@ -9,34 +9,62 @@
 #include "Platform.h"
 
 #include <windows.h>
+#include <winternl.h>
 #include <string>
 #include <sstream>
 
-typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-
-bool PlatformIs64Bit()
+/* File-local */
+namespace
 {
+	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+
+	typedef NTSTATUS (WINAPI* _NtQueryInformationProcess)
+		(_In_ HANDLE ProcessHandle, _In_ PROCESSINFOCLASS ProcessInformationClass,
+		_Out_ PVOID ProcessInformation, _In_ ULONG ProcessInformationLength, _Out_opt_ PULONG ReturnLength);
+
+	bool PlatformIs64Bit()
+	{
 #if _WIN64
-    return true;
+		return true;
 #else
-    BOOL isWow64 = FALSE;
-    LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
+		BOOL isWow64 = FALSE;
+		LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle(TEXT("kernel32")), "IsWow64Process");
     
-    if(fnIsWow64Process)
-    {
-        if(!fnIsWow64Process(GetCurrentProcess(), &isWow64))
-        {
-            return false;
-        }
-    }
+		if(fnIsWow64Process)
+		{
+			if(!fnIsWow64Process(GetCurrentProcess(), &isWow64))
+			{
+				return false;
+			}
+		}
     
-    return isWow64;
+		return isWow64;
 #endif
+	}
+
+	DWORD GetProcessPEBAddress(HANDLE hProc)
+	{
+		PROCESS_BASIC_INFORMATION peb;
+		DWORD tmp;
+		_NtQueryInformationProcess NtQueryInformationProcess_ = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandle(L"ntdll.dll"), "NtQueryInformationProcess");
+		NtQueryInformationProcess_(hProc, ProcessBasicInformation, &peb, sizeof(PROCESS_BASIC_INFORMATION), &tmp);
+		return (DWORD)peb.PebBaseAddress;
+	}
+
+	void OSVersion( DWORD* major, DWORD* minor )
+	{
+		HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GetCurrentProcessId());
+		DWORD pebAddress = GetProcessPEBAddress(handle);
+		DWORD OSMajorVersionAddress = pebAddress + 0x0a4;
+		DWORD OSMinorVersionAddress = pebAddress + 0x0a8;
+		ReadProcessMemory(handle, (void*)OSMajorVersionAddress, major, sizeof(*major), 0);
+		ReadProcessMemory(handle, (void*)OSMinorVersionAddress, minor, sizeof(*minor), 0);
+	}
 }
 
 namespace GAI
 {
-    std::string Platform::GetPlatformUserAgentString( )
+    std::string Platform::GetPlatformUserAgentString()
     {
         std::stringstream ss;
         ss << " (U; "<< GetPlatformVersionString() <<")";
@@ -45,15 +73,12 @@ namespace GAI
     
     std::string Platform::GetPlatformVersionString()
     {
-        OSVERSIONINFO osvi;
-        ZeroMemory(&osvi, sizeof(OSVERSIONINFO));
-        osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-        
-        GetVersionEx(&osvi);
-        
-        
+		DWORD major;
+		DWORD minor;
+		OSVersion(&major, &minor);
+
         std::stringstream ss;
-        ss << "Windows NT " << osvi.dwMajorVersion << "." << osvi.dwMinorVersion;
+        ss << "Windows NT " << major << "." << minor;
         if( PlatformIs64Bit() )
             ss << "; Win64; x64";
         return ss.str();
