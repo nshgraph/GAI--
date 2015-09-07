@@ -4,7 +4,6 @@
       #todo compiler setting 'GCC_VERSION': 'com.apple.compilers.llvm.clang.1_0',
 
       'SYMROOT': '<(DEPTH)/bin',
-      'SDKROOT': 'macosx10.7',
       'MACOSX_DEPLOYMENT_TARGET': '10.6',
       'ARCHS': '$(ARCHS_STANDARD_64_BIT)',
       'VALID_ARCHS': [
@@ -282,6 +281,8 @@
         'src',
         'thirdparty/TinyThread++-1.1/source',
         'thirdparty/sqlite3',
+        'thirdparty/gtest-1.7.0/include',
+        'thirdparty/gtest-1.7.0/',
       ],
       'sources': [
         'unittests/main.cpp',
@@ -300,6 +301,9 @@
         'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
         'thirdparty/sqlite3/sqlite3.h',
         'thirdparty/sqlite3/sqlite3.c',
+
+        'thirdparty/gtest-1.7.0/include/gtest/gtest.h',
+        'thirdparty/gtest-1.7.0/src/gtest-all.cc',
 
         'include/gai++/GAI.h',
         'include/gai++/Tracker.h',
@@ -391,7 +395,6 @@
                     '../lib/',
                   ],
                   'AdditionalDependencies': [
-                    'gtest.lib',
                     'ws2_32.lib',
                     'Rpcrt4.lib',
                   ],
@@ -422,7 +425,6 @@
           },
           'link_settings': {
             'libraries' : [
-              'gtest.framework',
               'libevent.a',
               'ApplicationServices.framework'
             ],
