@@ -279,7 +279,7 @@ namespace GAI
             }
 			if ( dispatcher->mbEvenLoopStarted )
 			{
-            event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);
+                event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);
 			}
 			
 #ifdef WIN32

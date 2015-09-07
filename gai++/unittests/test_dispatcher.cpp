@@ -76,24 +76,26 @@ protected:
 
 TEST_F( DispatcherTest, dispatch_interval_callback )
 {
-	const double dispatch_interval = 0.1;
+	const double dispatch_interval = 1;
 	
     GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
 	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval );
+    dispatcher.startEventLoop();
 	
-	SleepMS( dispatch_interval * 1000 * 1.5 );
+	SleepMS( dispatch_interval * 1000 * 3 );
 	
 	EXPECT_TRUE( dispatcher.mbCallbackComplete );
 }
 
 TEST_F( DispatcherTest, set_dispatch_interval )
 {
-	const double dispatch_interval_1 = 1000;
-	const double dispatch_interval_2 = 0.05;
+	const double dispatch_interval_1 = 0.1;
+	const double dispatch_interval_2 = 2;
 	
     GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
 	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval_1 );
-	dispatcher.setDispatchInterval( dispatch_interval_2 );
+    dispatcher.setDispatchInterval( dispatch_interval_2 );
+    dispatcher.startEventLoop();
 	
 	SleepMS( dispatch_interval_2 * 1000 * 1.5 );
 	
@@ -156,6 +158,7 @@ TEST_F( DispatcherTest, cancel_dispatch )
 {
 	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
     GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 200 );
+    dispatcher.startEventLoop();
     std::map<std::string, std::string> parameters;
     parameters[kAppNameModelKey] = "app";
 	
@@ -168,7 +171,7 @@ TEST_F( DispatcherTest, cancel_dispatch )
     EXPECT_EQ( data_store.hitCount(), 1000 );
     dispatcher.queueDispatch();
     
-	SleepMS( 1 );
+	SleepMS( 1000 );
     
     EXPECT_LT( data_store.hitCount(), 1000 );
     dispatcher.cancelDispatch();
