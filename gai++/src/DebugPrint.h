@@ -11,7 +11,8 @@
 
 #include <iostream>
 
-static bool sbDebugPrint = true;
+
+extern bool sbDebugPrint;
 
 #define DEBUG_PRINT( x ) if( sbDebugPrint ) std::cout << x;
 

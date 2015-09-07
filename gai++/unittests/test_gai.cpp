@@ -8,6 +8,7 @@
 
 #include "gtest/gtest.h"
 
+#include "DebugPrint.h"
 #include "gai++/GAI.h"
 
 TEST( GAITest, create_interface )
@@ -107,4 +108,18 @@ TEST( GAITest, create_trackers )
     // should be able to set the default tracker with one of these
     EXPECT_TRUE( gai->setDefaultTracker(tracker3) );
     EXPECT_TRUE( gai->getDefaultTracker() == tracker3);
+}
+
+TEST( GAITest, debug_output )
+{
+    const char* product_name = "test_product";
+    const char* product_version = "1.0.0";
+    const char* data_store_path = "./";
+    GAI::Analytics* gai = GAI::Analytics::getInstance( product_name, product_version, data_store_path );
+    gai->setDebug(true);
+    EXPECT_TRUE( sbDebugPrint );
+    DEBUG_PRINT("THIS SHOULD SHOW\n");
+    gai->setDebug(false);
+    EXPECT_FALSE( sbDebugPrint );
+    DEBUG_PRINT("THIS SHOULD NOT\n");
 }

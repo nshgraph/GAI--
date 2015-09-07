@@ -10,6 +10,9 @@
 #include "Timestamp.h"
 #include "DebugPrint.h"
 
+// This is defined as extern in debugprint.h
+bool sbDebugPrint = true;
+
 namespace GAI
 {
 	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_full_path )
