@@ -3,13 +3,17 @@
 #define __Tracker_h__
 
 #include <string>
+#include <map>
 
 namespace GAI
 {
 	class Transaction;
     
 	class Tracker
-	{
+    {
+    public:
+        typedef std::map<int, std::string> CustomDimensionMap;
+        typedef std::map<int, std::string> CustomMetricMap;
     public:
         virtual ~Tracker()
         ///
@@ -39,11 +43,15 @@ namespace GAI
         ///     Label of this event
         /// @param aValue
         ///     Value of this event
+        /// @param aDimensions
+        ///     Any custom dimensions to be included in this hit
+        /// @param aMetrics
+        ///     Any custom metrics to be included in this hit
         ///
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue = -1) = 0;
+		 virtual bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue = -1, const CustomDimensionMap aDimensions = CustomDimensionMap(), const CustomMetricMap aMetrics = CustomMetricMap() ) = 0;
         
         ///
         /// Send a 'hit' representing a Transaction

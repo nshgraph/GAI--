@@ -74,4 +74,21 @@ namespace GAI
         return id;
     }
     
+    
+    void ClientID::setClientID( DataStore& store, std::string client_id )
+    ///
+    /// This function sets a custom ID for this client. This should be unique for all clients as otherwise hits will be reported against the same user
+    ///
+    /// @param store
+    ///     DataStore to use for retrieving and storing created clientID
+    ///
+    /// @param client_id
+    ///     custom client id to store
+    ///
+    {
+        // This has a potential race condition on the first access to the clientID as the lock could be allocated twice
+        tthread::lock_guard<tthread::mutex> lock(clientIDMutex);
+        store.addProperty("clientID", client_id);
+    }
+    
 }

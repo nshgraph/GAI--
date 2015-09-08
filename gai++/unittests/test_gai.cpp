@@ -32,6 +32,12 @@ TEST( GAITest, create_interface )
     // should be the same
     EXPECT_EQ( gai, gai2 );
     
+    // create instance 3
+    GAI::Analytics* gai3 = GAI::Analytics::getInstance();
+    
+    // should be the same
+    EXPECT_EQ( gai, gai3 );
+    
     // should have the correct product name
     EXPECT_EQ(std::string(product_name),std::string(gai->getProductName()));
     
@@ -122,4 +128,15 @@ TEST( GAITest, debug_output )
     gai->setDebug(false);
     EXPECT_FALSE( sbDebugPrint );
     DEBUG_PRINT("THIS SHOULD NOT\n");
+}
+
+TEST( GAITest, custom_clientid )
+{
+    const char* product_name = "test_product";
+    const char* product_version = "1.0.0";
+    const char* data_store_path = "./";
+    const char* custom_client_id = "test_id";
+    GAI::Analytics* gai = GAI::Analytics::getInstance( product_name, product_version, data_store_path, custom_client_id );
+    
+
 }

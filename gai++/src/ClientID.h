@@ -14,7 +14,9 @@ namespace GAI
     ///
 	{
     public:
-		static std::string generateClientID(DataStore& datastore);
+		static std::string generateClientID( DataStore& datastore );
+        
+        static void setClientID( DataStore& datastore, std::string client_id );
     private:
         static tthread::mutex clientIDMutex;
 	};

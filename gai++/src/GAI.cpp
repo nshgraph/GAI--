@@ -15,7 +15,7 @@ bool sbDebugPrint = true;
 
 namespace GAI
 {
-	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_full_path )
+	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id )
     ///
     /// Retrieve the singleton analytics instance
     ///
@@ -25,14 +25,14 @@ namespace GAI
 		{
             if( product_name && product_version && data_store_full_path )
 			{
-				sharedInstance.reset( new Analytics( product_name, product_version, data_store_full_path ) );
+				sharedInstance.reset( new Analytics( product_name, product_version, data_store_full_path, client_id ) );
 			}
 		}
 		
         return sharedInstance.get();
 	}
 	
-	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_full_path ) :
+	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id ) :
 	mProductName(product_name),
     mProductVersion(product_version),
 	mDataStore( NULL ),
@@ -45,6 +45,12 @@ namespace GAI
         mDataStore = new DataStoreSqlite( std::string(data_store_full_path) + ".gai" );
         mDataStore->open();
 		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
+        
+        // handle the custom client_id
+        if( client_id )
+        {
+            ClientID::setClientID( *mDataStore, client_id );
+        }
 	}
     
     Analytics::~Analytics()
