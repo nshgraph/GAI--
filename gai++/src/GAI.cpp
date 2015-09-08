@@ -11,10 +11,10 @@
 #include "DebugPrint.h"
 
 // This is defined as extern in debugprint.h
-bool sbDebugPrint = true;
 
 namespace GAI
 {
+    bool sbDebugPrint = true;
 	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id )
     ///
     /// Retrieve the singleton analytics instance

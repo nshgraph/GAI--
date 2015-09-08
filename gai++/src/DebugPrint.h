@@ -11,9 +11,11 @@
 
 #include <iostream>
 
+namespace GAI
+{
+    extern bool sbDebugPrint;
+}
 
-extern bool sbDebugPrint;
-
-#define DEBUG_PRINT( x ) if( sbDebugPrint ) std::cout << x;
+#define DEBUG_PRINT( x ) if( GAI::sbDebugPrint ) std::cout << x;
 
 #endif /* defined(__gai__DebugPrint__) */

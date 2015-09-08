@@ -123,10 +123,10 @@ TEST( GAITest, debug_output )
     const char* data_store_path = "./";
     GAI::Analytics* gai = GAI::Analytics::getInstance( product_name, product_version, data_store_path );
     gai->setDebug(true);
-    EXPECT_TRUE( sbDebugPrint );
+    EXPECT_TRUE( GAI::sbDebugPrint );
     DEBUG_PRINT("THIS SHOULD SHOW\n");
     gai->setDebug(false);
-    EXPECT_FALSE( sbDebugPrint );
+    EXPECT_FALSE( GAI::sbDebugPrint );
     DEBUG_PRINT("THIS SHOULD NOT\n");
 }
 
