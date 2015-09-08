@@ -15,22 +15,32 @@
 namespace GAI
 {
     bool sbDebugPrint = true;
+    
+    static std::auto_ptr<Analytics> sharedInstance;
+    
 	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id )
     ///
     /// Retrieve the singleton analytics instance
     ///
 	{
-		static std::auto_ptr<Analytics> sharedInstance;
 		if( sharedInstance.get() == 0 )
 		{
             if( product_name && product_version && data_store_full_path )
 			{
-				sharedInstance.reset( new Analytics( product_name, product_version, data_store_full_path, client_id ) );
+				sharedInstance = std::auto_ptr<Analytics>(new Analytics( product_name, product_version, data_store_full_path, client_id ));
 			}
 		}
 		
         return sharedInstance.get();
 	}
+    
+    void Analytics::invalidateInstance()
+    ///
+    /// Invalidate the singleton instance of analytics (if it exists).
+    ///
+    {
+        sharedInstance = std::auto_ptr<Analytics>(NULL);
+    }
 	
 	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id ) :
 	mProductName(product_name),

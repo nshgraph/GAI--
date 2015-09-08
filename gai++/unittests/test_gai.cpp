@@ -136,7 +136,12 @@ TEST( GAITest, custom_clientid )
     const char* product_version = "1.0.0";
     const char* data_store_path = "./";
     const char* custom_client_id = "test_id";
+    const char* tracker_id1 = "test_tracker1";
+    GAI::Analytics::invalidateInstance();
     GAI::Analytics* gai = GAI::Analytics::getInstance( product_name, product_version, data_store_path, custom_client_id );
     
+    GAI::Tracker* tracker1 = gai->createTracker( tracker_id1 );
+    
+    EXPECT_EQ( std::string(tracker1->getClientId()), std::string(custom_client_id) );
 
 }

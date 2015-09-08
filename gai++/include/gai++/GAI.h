@@ -35,6 +35,11 @@ namespace GAI
 		static Analytics* getInstance(  const char* product_name = NULL, const char* product_version = NULL, const char* data_store_full_path = NULL, const char* client_id = NULL );
         
         ///
+        /// Invalidate the singleton instance of analytics (if it exists).
+        ///
+        static void invalidateInstance();
+        
+        ///
         /// Destructor
         ///
         ~Analytics();
