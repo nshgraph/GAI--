@@ -24,7 +24,7 @@ namespace GAI
         
         ~TrackerImpl();
 
-		bool sendView(const char* aScreen);
+		bool sendView(const char* aScreen, const CustomDimensionMap aDimensions = CustomDimensionMap(), const CustomMetricMap aMetrics = CustomMetricMap());
 
 		bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue = -1, const CustomDimensionMap aDimensions = CustomDimensionMap(), const CustomMetricMap aMetrics = CustomMetricMap() );
 

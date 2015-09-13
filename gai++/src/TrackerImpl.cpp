@@ -66,7 +66,7 @@ namespace GAI {
     }
     
     
-    bool TrackerImpl::sendView(const char* aScreen)
+    bool TrackerImpl::sendView(const char* aScreen, const CustomDimensionMap aDimensions, const CustomMetricMap aMetrics)
     ///
     /// Send a 'hit' representing the user viewing a screen
     ///
@@ -86,6 +86,9 @@ namespace GAI {
         // pack parameters
         ParameterMap parameters;
         parameters[kScreenParamModelKey] = aScreen;
+        
+        appendCustomParameters( parameters, aDimensions, aMetrics );
+        
         return internalSend(kAppViewHit, parameters);
     }
     

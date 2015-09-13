@@ -26,11 +26,15 @@ namespace GAI
         ///
         /// @param aScreen
         ///     Name of the screen associated with this view
+        /// @param aDimensions
+        ///     Any custom dimensions to be included in this screen view
+        /// @param aMetrics
+        ///     Any custom metrics to be included in this screen view
         ///
         /// @return
         ///     Whether the operation was successful
         ///
-		 virtual bool sendView( const char* view ) = 0;
+		 virtual bool sendView( const char* view, const CustomDimensionMap aDimensions = CustomDimensionMap(), const CustomMetricMap aMetrics = CustomMetricMap() ) = 0;
         
         ///
         /// Send a 'hit' representing a user generated event

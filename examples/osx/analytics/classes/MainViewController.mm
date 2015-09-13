@@ -33,7 +33,10 @@
     }
     else if( tabViewItem == tabTwoView )
     {
-        gai->getDefaultTracker()->sendView("Tab Two");
+        GAI::CustomDimensionMap dimensions;
+        GAI::CustomMetricMap metrics;
+        dimensions[1] = "tabber";
+        gai->getDefaultTracker()->sendView("Tab Two",dimensions,metrics);
     }
     else if( tabViewItem == tabThreeView )
     {
