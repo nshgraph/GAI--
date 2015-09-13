@@ -28,6 +28,23 @@
     gai->getDefaultTracker()->sendEvent("Button","Pressed","",0);
 }
 
+-(IBAction)sendEventWithMetric:(id)sender
+{
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+    GAI::CustomDimensionMap dimensions;
+    GAI::CustomMetricMap metrics;
+    metrics[1] = "5";
+    gai->getDefaultTracker()->sendEvent("Button","Pressed","",0, dimensions, metrics);
+}
+-(IBAction)sendEventWithDimension:(id)sender
+{
+    GAI::Analytics* gai = GAI::Analytics::getInstance();
+    GAI::CustomDimensionMap dimensions;
+    GAI::CustomMetricMap metrics;
+    dimensions[1] = "testing dimension";
+    gai->getDefaultTracker()->sendEvent("Button","Pressed","",0, dimensions, metrics);
+}
+
 -(IBAction)crash:(id)sender
 {
     GAI::Analytics* gai = GAI::Analytics::getInstance();

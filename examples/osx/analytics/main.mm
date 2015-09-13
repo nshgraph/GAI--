@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 	
 	GAI::Analytics* gai = GAI::Analytics::getInstance( "Analytics Example App", "1.0b2", "./" );
     gai->createTracker("UA-39515904-1");
+    gai->start();
     
 	return NSApplicationMain(argc, (const char **)argv);
 }

@@ -8,6 +8,8 @@
 @interface TabThreeViewController : NSViewController
 
 -(IBAction)sendEvent:(id)sender;
+-(IBAction)sendEventWithMetric:(id)sender;
+-(IBAction)sendEventWithDimension:(id)sender;
 
 -(IBAction)crash:(id)sender;
 
