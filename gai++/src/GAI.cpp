@@ -14,7 +14,7 @@
 
 namespace GAI
 {
-    bool sbDebugPrint = true;
+    bool sbDebugPrint = false;
     
     static std::auto_ptr<Analytics> sharedInstance;
     
