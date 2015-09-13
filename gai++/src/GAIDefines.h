@@ -99,4 +99,10 @@
 #define kSocialActionModelKey			"sa"
 #define kSocialTargetModelKey			"st"
 
+///
+/// Custom Dimensions and Metrics Keys
+///
+#define kCustomDimensionPrefixKey             "cd"
+#define kCustomMetricPrefixKey                "cm"
+
 #endif

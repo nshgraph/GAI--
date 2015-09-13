@@ -89,7 +89,7 @@ namespace GAI {
         return internalSend(kAppViewHit, parameters);
     }
     
-    bool TrackerImpl::sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue)
+    bool TrackerImpl::sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue, const CustomDimensionMap aDimensions, const CustomMetricMap aMetrics)
     ///
     /// Send a 'hit' representing a user generated event
     ///
@@ -121,7 +121,9 @@ namespace GAI {
 			s << aValue;
             parameters[kEventValueParamModelKey] = s.str();
 		}
-		
+        
+        appendCustomParameters( parameters, aDimensions, aMetrics );
+        
         return internalSend(kEventHit, parameters);
     }
     
@@ -523,6 +525,35 @@ namespace GAI {
         // send this hit
         return mHitStore.storeHit(*hit);
         
+    }
+    
+    void TrackerImpl::appendCustomParameters( ParameterMap& aParameters, const CustomDimensionMap& aDimensions, const CustomMetricMap& aMetrics)
+    ///
+    /// Appends the custom dimensions and metrics to the parameter map
+    ///
+    /// @param aParameters
+    ///     The parameter map to add dimensions and metrics to
+    ///
+    /// @param aDimensions
+    ///     The dimensions (i.e. strings) to add along with their indices
+    /// @param aMetrics
+    ///     The metrics (i.e. numbers in string format) to add along with their indices
+    ///
+    {
+        for( CustomDimensionMap::const_iterator it = aDimensions.begin(), it_end = aDimensions.end(); it != it_end; it++)
+        {
+            
+            std::ostringstream key;
+            key << kCustomDimensionPrefixKey << it->first;
+            aParameters[key.str()] = it->second;
+            }
+            for( CustomMetricMap::const_iterator it = aMetrics.begin(), it_end = aMetrics.end(); it != it_end; it++)
+            {
+                
+                std::ostringstream key;
+                key << kCustomMetricPrefixKey << it->first;
+                aParameters[key.str()] = it->second;
+            }
     }
     
 }

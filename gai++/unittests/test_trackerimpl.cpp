@@ -11,29 +11,40 @@
 
 #include "TrackerImpl.h"
 #include "HitStore.h"
+#include "Hit.h"
 
 
 class FakeHitStore : public GAI::HitStore
 {
 public:
-    FakeHitStore() :
-    mNumHits(0)
+    FakeHitStore()
     {
-        
     }
     bool storeHit( const GAI::Hit& hit )
     {
-        mNumHits++;
+        mHits.push_back(hit);
         return true;
     }
     int getNumHits()
     {
-        return mNumHits;
+        return mHits.size();
+    }
+    
+    GAI::Hit& getHit(int index)
+    {
+        return mHits[index];
     }
 private:
-    int mNumHits;
+    std::vector<GAI::Hit> mHits;
 };
 
+void ensureHitHasParameter(const GAI::Hit& hit, std::string key, std::string value)
+{
+    std::string url = hit.getDispatchURL();
+    std::string test_string = key + "=" + value;
+    EXPECT_TRUE(url.find(test_string) != std::string::npos);
+    
+}
 
 TEST( TrackerImplTest, send_types )
 {
@@ -154,7 +165,28 @@ TEST( TrackerImplTest, get_and_set)
     
     tracker.setAppId(appID2.c_str());
     EXPECT_EQ( tracker.getAppId(), appID ); // no change!
-    
+}
 
+TEST( TrackerImplTest, custom_metrics_and_dimensions )
+{
+    FakeHitStore dispatch = FakeHitStore();
+    GAI::TrackerImpl tracker = GAI::TrackerImpl(dispatch,"clientID","trackingID","appName","appVersion");
+    
+    EXPECT_EQ(dispatch.getNumHits(),0);
+    
+    
+    // attempt to send an event
+    GAI::Tracker::CustomDimensionMap dimensions;
+    GAI::Tracker::CustomMetricMap metrics;
+    dimensions[1] = "test";
+    metrics[1] = "5";
+    
+    EXPECT_TRUE( tracker.sendEvent("category","action","label",0,dimensions,metrics) );
+    EXPECT_EQ(dispatch.getNumHits(),1);
+
+    // retrieve the event and ensure it has the dimension and metric
+    GAI::Hit& hit = dispatch.getHit(0);
+    ensureHitHasParameter(hit,"cd1","test");
+    ensureHitHasParameter(hit,"cm1","5");
     
 }

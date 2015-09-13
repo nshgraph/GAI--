@@ -26,7 +26,7 @@ namespace GAI
 
 		bool sendView(const char* aScreen);
 
-		bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue = -1);
+		bool sendEvent(const char* aCategory, const char* aAction, const char* aLabel, const int& aValue = -1, const CustomDimensionMap aDimensions = CustomDimensionMap(), const CustomMetricMap aMetrics = CustomMetricMap() );
 
 		bool sendTransaction(const Transaction* aTransaction);
 
@@ -82,6 +82,8 @@ namespace GAI
         void setTrackingId(const char* aTrackingId);
         void setClientId(const char* aClientId);
         bool internalSend(const HitType aType, const ParameterMap& aParameters);
+        
+        void appendCustomParameters( ParameterMap& aParameters, const CustomDimensionMap& aDimensions, const CustomMetricMap& aMetrics);
         
         bool mbSessionStart; // Whether the first hit has been sent
         bool mbTrackerOpen; // Whether this tracker is 'open'. If not Hit's can't be sent
