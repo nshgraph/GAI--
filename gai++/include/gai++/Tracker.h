@@ -9,11 +9,11 @@ namespace GAI
 {
 	class Transaction;
     
+    typedef std::map<int, std::string> CustomDimensionMap;
+    typedef std::map<int, std::string> CustomMetricMap;
+    
 	class Tracker
     {
-    public:
-        typedef std::map<int, std::string> CustomDimensionMap;
-        typedef std::map<int, std::string> CustomMetricMap;
     public:
         virtual ~Tracker()
         ///

@@ -176,8 +176,8 @@ TEST( TrackerImplTest, custom_metrics_and_dimensions )
     
     
     // attempt to send an event
-    GAI::Tracker::CustomDimensionMap dimensions;
-    GAI::Tracker::CustomMetricMap metrics;
+    GAI::CustomDimensionMap dimensions;
+    GAI::CustomMetricMap metrics;
     dimensions[1] = "test";
     metrics[1] = "5";
     

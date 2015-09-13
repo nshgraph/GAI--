@@ -171,7 +171,7 @@ TEST_F( DispatcherTest, cancel_dispatch )
     EXPECT_EQ( data_store.hitCount(), 1000 );
     dispatcher.queueDispatch();
     
-	SleepMS( 1000 );
+	SleepMS( 2 * 1000 * 1.5 );
     
     EXPECT_LT( data_store.hitCount(), 1000 );
     dispatcher.cancelDispatch();
