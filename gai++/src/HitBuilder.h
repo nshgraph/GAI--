@@ -16,11 +16,11 @@ namespace GAI
 	class HitBuilder
 	{
     public:
-		static bool createHit(const HitType aType, const Model& aModel, Hit*& hit);
+        HitBuilder();
+        bool createHit(const HitType aType, const Model& aModel, Hit*& hit) const;
     protected:
-        static std::list<std::string> sRequirements[kNumHitTypes];
-        static bool sRequirementsInitialized;
-		static const std::list<std::string>& requiredParametersForType(const HitType aType);
+        std::list<std::string> mRequirements[kNumHitTypes];
+        const std::list<std::string>& requiredParametersForType(const HitType aType) const;
         
 	};
 }

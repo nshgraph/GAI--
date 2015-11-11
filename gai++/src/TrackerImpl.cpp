@@ -37,6 +37,7 @@ namespace GAI {
     ///
     {
         mModel = new Model();
+		mHitBuilder = new HitBuilder();
         setClientId( aClientID );
         setTrackingId( aTrackingID );
         setAppName( aAppName );
@@ -63,6 +64,7 @@ namespace GAI {
         }
         
         delete mModel;
+		delete mHitBuilder;
     }
     
     
@@ -518,7 +520,7 @@ namespace GAI {
         // add the parameters as temporaries to the model
         mModel->setAll(aParameters, true);
         //create a hit
-        HitBuilder::createHit( aType, *mModel, hit );
+        mHitBuilder->createHit(aType, *mModel, hit);
         //reset the temporary values
         mModel->clearTemporaryValues();
         

@@ -24,6 +24,7 @@ static void SleepMS(int ms){ usleep(ms*1000); }
 TEST( HitBuilderTest, create_valid_hits )
 {
     GAI::Model model;
+    GAI::HitBuilder builder;
     GAI::Hit* hit;
     double timestamp;
     
@@ -34,12 +35,12 @@ TEST( HitBuilderTest, create_valid_hits )
     
     model.setForNextHit(kScreenParamModelKey, "screen");
     
-    GAI::HitBuilder::createHit( GAI::kAppViewHit, model, hit );
+    builder.createHit(GAI::kAppViewHit, model, hit);
     EXPECT_FALSE(hit == NULL);
     delete( hit );
     
     // but this should fail for a different type
-    GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
+    builder.createHit(GAI::kEventHit, model, hit);
     EXPECT_TRUE(hit == NULL);
 
     
@@ -51,7 +52,7 @@ TEST( HitBuilderTest, create_valid_hits )
     model.setForNextHit(kEventLabelParamModelKey, "screen");
     model.setForNextHit(kEventValueParamModelKey, "screen");
     
-    GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
+    builder.createHit(GAI::kEventHit, model, hit);
     EXPECT_FALSE(hit == NULL);
     
     // Validate the returned hit
@@ -64,7 +65,7 @@ TEST( HitBuilderTest, create_valid_hits )
     
     // now create a new hit after a small timeout
     SleepMS(1);
-    GAI::HitBuilder::createHit( GAI::kEventHit, model, hit );
+    builder.createHit(GAI::kEventHit, model, hit);
     EXPECT_FALSE(hit == NULL);
     
     // check that the hit has a timestamp later than the first hit
@@ -76,15 +77,16 @@ TEST( HitBuilderTest, create_valid_hits )
 TEST( HitBuilderTest, create_invalid_hits )
 {
     GAI::Model model;
+    GAI::HitBuilder builder;
     GAI::Hit* hit;
     
     // an empty model fails
-    GAI::HitBuilder::createHit( GAI::kAppViewHit, model, hit );
+    builder.createHit( GAI::kAppViewHit, model, hit );
     EXPECT_TRUE(hit == NULL);
     
     // a model with the wrong parameters fails
     model.set(kSocialNetworkModelKey,"test");
-    GAI::HitBuilder::createHit( GAI::kAppViewHit, model, hit );
+    builder.createHit(GAI::kAppViewHit, model, hit);
     EXPECT_TRUE(hit == NULL);
     
 }
