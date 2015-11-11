@@ -11,11 +11,46 @@
 #include "Timestamp.h"
 
 namespace GAI {
+
+    HitBuilder::HitBuilder()
+    {
+	    // First register all parameters that are needed regardless of hit type
+	    for (int i = 0; i<kNumHitTypes; i++)
+	    {
+		    mRequirements[i].push_back(kAppNameModelKey);
+		    mRequirements[i].push_back(kTrackingIdModelKey);
+		    mRequirements[i].push_back(kClientIdModelKey);
+	    }
+	    // Now register each individual hit type's requirements
+	    mRequirements[kAppViewHit].push_back(kScreenParamModelKey);
+
+	    mRequirements[kEventHit].push_back(kEventCategoryParamModelKey);
+	    mRequirements[kEventHit].push_back(kEventActionParamModelKey);
+
+	    mRequirements[kTransactionHit].push_back(kTransationIdModelKey);
+	    mRequirements[kTransactionHit].push_back(kTransationAffiliationModelKey);
+
+	    mRequirements[kTransactionItemHit].push_back(kTransationIdModelKey);
+	    mRequirements[kTransactionItemHit].push_back(kTransationItemNameModelKey);
+	    mRequirements[kTransactionItemHit].push_back(kTransationItemCodeModelKey);
+	    mRequirements[kTransactionItemHit].push_back(kTransationItemCategoryModelKey);
+	    mRequirements[kTransactionItemHit].push_back(kTransationItemQuantityModelKey);
+	    mRequirements[kTransactionItemHit].push_back(kTransationItemPriceModelKey);
+
+	    mRequirements[kExceptionHit].push_back(kExceptionDescriptionModelKey);
+	    mRequirements[kExceptionHit].push_back(kExceptionFatalModelKey);
+
+	    mRequirements[kTimingHit].push_back(kTimingCategoryModelKey);
+	    mRequirements[kTimingHit].push_back(kTimingValueModelKey);
+	    mRequirements[kTimingHit].push_back(kTimingNameModelKey);
+	    mRequirements[kTimingHit].push_back(kTimingLabelModelKey);
+
+	    mRequirements[kSocialHit].push_back(kSocialNetworkModelKey);
+	    mRequirements[kSocialHit].push_back(kSocialActionModelKey);
+	    mRequirements[kSocialHit].push_back(kSocialTargetModelKey);
+    }
     
-	std::list<std::string> HitBuilder::sRequirements[kNumHitTypes];
-	bool HitBuilder::sRequirementsInitialized = false;
-    
-    bool HitBuilder::createHit(const HitType aType, const Model& aModel, Hit*& hit)
+    bool HitBuilder::createHit(const HitType aType, const Model& aModel, Hit*& hit) const
     ///
     /// This function attempts to create a Hit by validating that the paramenters in the proided Model meet the requirements
     /// of the hit type. Returns either an allocated hit or NULL if fails.
@@ -78,7 +113,7 @@ namespace GAI {
         return (hit!=NULL);
     }
     
-    const std::list<std::string>& HitBuilder::requiredParametersForType(const HitType aType)
+    const std::list<std::string>& HitBuilder::requiredParametersForType(const HitType aType) const
     ///
     /// Retrieves a list of parameters that are needed for a HitType.
     ///
@@ -89,49 +124,7 @@ namespace GAI {
     ///     A list of all the required parameters that must be set for this HitType
     ///
     {
-        if(!sRequirementsInitialized)
-        {
-            sRequirementsInitialized = true;
-            
-            // First register all parameters that are needed regardless of hit type
-            for( int i=0;i<kNumHitTypes;i++)
-            {
-                sRequirements[i].push_back(kAppNameModelKey);
-                sRequirements[i].push_back(kTrackingIdModelKey);
-                sRequirements[i].push_back(kClientIdModelKey);
-            }
-            // Now register each individual hit type's requirements
-            sRequirements[kAppViewHit].push_back(kScreenParamModelKey);
-            
-            sRequirements[kEventHit].push_back(kEventCategoryParamModelKey);
-            sRequirements[kEventHit].push_back(kEventActionParamModelKey);
-            
-            sRequirements[kTransactionHit].push_back(kTransationIdModelKey);
-            sRequirements[kTransactionHit].push_back(kTransationAffiliationModelKey);
-            
-            sRequirements[kTransactionItemHit].push_back(kTransationIdModelKey);
-            sRequirements[kTransactionItemHit].push_back(kTransationItemNameModelKey);
-            sRequirements[kTransactionItemHit].push_back(kTransationItemCodeModelKey);
-            sRequirements[kTransactionItemHit].push_back(kTransationItemCategoryModelKey);
-            sRequirements[kTransactionItemHit].push_back(kTransationItemQuantityModelKey);
-            sRequirements[kTransactionItemHit].push_back(kTransationItemPriceModelKey);
-            
-            sRequirements[kExceptionHit].push_back(kExceptionDescriptionModelKey);
-            sRequirements[kExceptionHit].push_back(kExceptionFatalModelKey);
-            
-            sRequirements[kTimingHit].push_back(kTimingCategoryModelKey);
-            sRequirements[kTimingHit].push_back(kTimingValueModelKey);
-            sRequirements[kTimingHit].push_back(kTimingNameModelKey);
-            sRequirements[kTimingHit].push_back(kTimingLabelModelKey);
-            
-            sRequirements[kSocialHit].push_back(kSocialNetworkModelKey);
-            sRequirements[kSocialHit].push_back(kSocialActionModelKey);
-            sRequirements[kSocialHit].push_back(kSocialTargetModelKey);
-            
-        }
-        
-        return sRequirements[aType];
-        
+        return mRequirements[aType];
     }
     
 }
