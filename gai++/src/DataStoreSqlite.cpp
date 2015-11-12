@@ -227,7 +227,10 @@ namespace GAI
             char* version = (char *)sqlite3_column_text( statement, 1 );
             char* url = (char *)sqlite3_column_text( statement, 2 );
             double timestamp = sqlite3_column_double( statement, 3 );
-            hits.push_back(createHit(version,url,timestamp));
+            if( version && url )
+            {
+                hits.push_back(createHit(version,url,timestamp));
+            }
         }
         
         // if appropriate, delete the hits
