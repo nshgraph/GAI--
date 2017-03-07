@@ -18,6 +18,7 @@ namespace GAI
     
     static std::auto_ptr<Analytics> sharedInstance;
     
+#ifndef GAI_NO_DEPRECATED
 	Analytics* Analytics::getInstance( const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id )
     ///
     /// Retrieve the singleton analytics instance
@@ -41,6 +42,7 @@ namespace GAI
     {
         sharedInstance = std::auto_ptr<Analytics>(NULL);
     }
+#endif
 	
 	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id ) :
 	mProductName(product_name),

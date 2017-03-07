@@ -17,8 +17,9 @@ namespace GAI
 	{
     public:
         
+#ifndef GAI_NO_DEPRECATED
         ///
-        /// Create or retrieve the singelton analytics instance. IF an instance already exists then all parameters are optional.
+        /// Create or retrieve the singleton analytics instance. If an instance already exists then all parameters are optional.
         ///
         /// @param product_name
         ///     The application name to report analytics against
@@ -38,7 +39,23 @@ namespace GAI
         /// Invalidate the singleton instance of analytics (if it exists).
         ///
         static void invalidateInstance();
-        
+#endif
+
+	    ///
+	    /// Create an analytics instance
+	    ///
+	    /// @param product_name
+	    ///     The application name to report analytics against
+	    /// @param product_version
+	    ///     The application version to report analytics against
+	    /// @param data_store_full_path
+	    ///     The full path of a file to store offline hits and other metadata. Must be writeable.
+	    /// @param client_id
+	    ///     Always optional. A pre-specified client_id for this instance
+	    ///
+	    Analytics( const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id = NULL );
+		
+		
         ///
         /// Destructor
         ///
@@ -192,8 +209,6 @@ namespace GAI
 		void dispatch();
 		
     private:
-        Analytics( const char* product_name, const char* product_version, const char* data_store_path, const char* client_id );
-		
 		typedef std::map<std::string, Tracker*> TrackerMap;
 		TrackerMap mTrackers;
 		
