@@ -547,18 +547,17 @@ namespace GAI {
     {
         for( CustomDimensionMap::const_iterator it = aDimensions.begin(), it_end = aDimensions.end(); it != it_end; it++)
         {
-            
             std::ostringstream key;
             key << kCustomDimensionPrefixKey << it->first;
             aParameters[key.str()] = it->second;
-            }
-            for( CustomMetricMap::const_iterator it = aMetrics.begin(), it_end = aMetrics.end(); it != it_end; it++)
-            {
-                
-                std::ostringstream key;
-                key << kCustomMetricPrefixKey << it->first;
-                aParameters[key.str()] = it->second;
-            }
+		}
+		
+		for( CustomMetricMap::const_iterator it = aMetrics.begin(), it_end = aMetrics.end(); it != it_end; it++)
+		{
+			std::ostringstream key;
+			key << kCustomMetricPrefixKey << it->first;
+			aParameters[key.str()] = it->second;
+		}
     }
     
 }
