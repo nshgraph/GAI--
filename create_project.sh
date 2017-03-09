@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gyp --depth ./ ./gai++/gai.gyp
+gyp --depth ./ ./gai++/gai.gyp $@
