@@ -59,6 +59,9 @@ namespace GAI
     private:
         // ensure that the database has all strutures necessary
         bool initializeDatabase();
+		
+		// ensure that the database is healthy to use
+		bool databaseIntegrityCheck();
         
         sqlite3* mDB; // reference to
         tthread::mutex mDBMutex;
