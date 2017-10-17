@@ -39,7 +39,7 @@ namespace GAI
         mPath = other.mPath;
         if( other.mDB )
             open();
-		return *this;
+        return *this;
     }
     
     
@@ -53,32 +53,34 @@ namespace GAI
     
     bool DataStoreSqlite::open()
     ///
-    /// Open a connection to the DataStore
+    /// Open a connection to the DataStore, and we also perform an integrity check against the opened database
+    /// using "PRAGMA integrity_check" command, if there is any error found then we attempt to remove the corrupt
+    /// database and recreate a new one and we prevent GAI from using a corrupt database.
     ///
     /// @return
     ///     Whether the operation was successful
     ///
     {
         int return_code = sqlite3_open( mPath.c_str(), &mDB );
-		
-		// Attempt to recreate the database if it's corrupt
-		if ( !databaseIntegrityCheck() )
-		{
-			// Remove the corrupt database
-			if( remove( mPath.c_str() ) == 0 )
-			{
-				// Reopen a new connection to the DataStore after deleting
-				return_code = sqlite3_open( mPath.c_str(), &mDB );
-			}
-			else
-			{
-				// Close the connection to the DataStore and return false if failed to remove the corrupt database
-				close();
-				return false;
-			}
-		}
-		
-		// Here we have to check the integrity again to make sure the recreated database is healthy to use
+        
+        // Attempt to recreate the database if it's corrupt
+        if ( !databaseIntegrityCheck() )
+        {
+            // Remove the corrupt database
+            if( remove( mPath.c_str() ) == 0 )
+            {
+                // Reopen a new connection to the DataStore after deleting
+                return_code = sqlite3_open( mPath.c_str(), &mDB );
+            }
+            else
+            {
+                // Close the connection to the DataStore and return false if failed to remove the corrupt database
+                close();
+                return false;
+            }
+        }
+        
+        // Here we have to check the integrity again to make sure the recreated database is healthy to use
         if( return_code != SQLITE_OK || !databaseIntegrityCheck() || !initializeDatabase() )
         {
             close();
@@ -455,40 +457,40 @@ namespace GAI
         // ignore rc, if there is an issue with this, it is probably because the table already exists
         return true;
     }
-	
-	bool DataStoreSqlite::databaseIntegrityCheck()
-	///
-	///  Ensure that the database is healthy to use
-	///
-	///  @return
-	///		Whether the database we opened is healthy to use
-	///
-	{
-		bool passed_integrity_check = false;
-		
-		sqlite3_stmt *statement = NULL;
-		
-		// Perform an integrity check on the opened database
-		sqlite3_prepare_v2( mDB, "PRAGMA integrity_check", -1, &statement, 0 );
-		
-		//
-		//	Integrity check result (if 'PRAGMA integrity_check' finds no errors, a single row with the value 'ok' is returned):
-		//	╔═════════════════╗
-		//	║ integrity_check ║
-		//	╟─────────────────╢
-		//	║ result          ║
-		//	╚═════════════════╝
-		//
-		sqlite3_step( statement );
-		if( sqlite3_column_text( statement, 0 ) )
-		{
-			char* result = (char *)sqlite3_column_text( statement, 0 );
-			passed_integrity_check = strcmp( result, "ok" ) == 0;
-		}
-		
-		// Destroy the statement
-		sqlite3_finalize( statement );
-		
-		return passed_integrity_check;
-	}
+    
+    bool DataStoreSqlite::databaseIntegrityCheck()
+    ///
+    ///  Ensure that the database is healthy to use
+    ///
+    ///  @return
+    ///     Whether the database we opened is healthy to use
+    ///
+    {
+        bool passed_integrity_check = false;
+        
+        sqlite3_stmt *statement = NULL;
+        
+        // Perform an integrity check on the opened database
+        sqlite3_prepare_v2( mDB, "PRAGMA integrity_check", -1, &statement, 0 );
+        
+        //
+        //  Integrity check result (if 'PRAGMA integrity_check' finds no errors, a single row with the value 'ok' is returned):
+        //  ╔═════════════════╗
+        //  ║ integrity_check ║
+        //  ╟─────────────────╢
+        //  ║ result          ║
+        //  ╚═════════════════╝
+        //
+        sqlite3_step( statement );
+        if( sqlite3_column_text( statement, 0 ) )
+        {
+            char* result = (char *)sqlite3_column_text( statement, 0 );
+            passed_integrity_check = strcmp( result, "ok" ) == 0;
+        }
+        
+        // Destroy the statement
+        sqlite3_finalize( statement );
+        
+        return passed_integrity_check;
+    }
 }
