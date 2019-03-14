@@ -379,6 +379,7 @@
                     'gtestd.lib',
                     'ws2_32.lib',
                     'Rpcrt4.lib',
+		    'Mincore.lib',
                   ],
                 }, 
               },
