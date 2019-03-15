@@ -288,14 +288,15 @@
         'unittests/main.cpp',
         'unittests/test_datastoresqlite.cpp',
         'unittests/test_dispatcher.cpp',
+        'unittests/test_gai.cpp',
         'unittests/test_hit.cpp',
         'unittests/test_hitbuilder.cpp',
         'unittests/test_model.cpp',
         'unittests/test_trackerimpl.cpp',
-        'unittests/test_utils.cpp',
-        'unittests/test_gai.cpp',
+        'unittests/test_urlbuilder.cpp',
         'unittests/test_urlconnection.cpp',
-        
+        'unittests/test_utils.cpp',
+
         'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.h',
         'thirdparty/TinyThread++-1.1/source/tinythread.cpp',

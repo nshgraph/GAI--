@@ -1,42 +1,36 @@
 
-#include "GAIDefines.h"
+#include "URLBuilder.h"
 
 #include <string>
 #include <sstream>
 
-#include "UrlBuilder.h"
+#include "GAIDefines.h"
+#include "Hit.h"
 #include "Timestamp.h"
 
-namespace GAI {
-    
-    
-    std::string UrlBuilder::createURL(const Hit& hit)
-    ///
-    /// This function generates a URL from a given hit
-    ///
-    /// @param hit
-    ///     The hit to generate a url for
-    ///
-    /// @return
-    ///     URL representing the hit
-    ///
-    {
-        double timestamp = Timestamp::generateTimestamp();
-        std::stringstream str;
-        str << kGAIURLPage << "?" << hit.getDispatchURL() << "&" << kQueueTimeModelKey << "=" << (int)(timestamp - hit.getTimestamp()) << "&" << kCacheBusterModelKey << "=" << rand();
-        return str.str();
-    }
-    
-    std::string UrlBuilder::createPOSTURL(const Hit& hit)
+namespace
+{
+	const uint64_t MAXIMUM_QUEUE_TIME = 14400000; // Four hours in milliseconds
+}
+
+namespace GAI
+{
+   	std::string UrlBuilder::createPOSTURL(const Hit& hit)
     {
         return kGAIURLPage;
     }
     
-    std::string UrlBuilder::createPOSTPayload(const Hit& hit)
+    std::string UrlBuilder::createPOSTPayload(const Hit& hit, const uint64_t now_timestamp)
     {
-        double timestamp = Timestamp::generateTimestamp();
-        std::stringstream str;
-        str << hit.getDispatchURL() << "&" << kQueueTimeModelKey << "=" << (int)(timestamp - hit.getTimestamp()) << "&" << kCacheBusterModelKey << "=" << rand();
-        return str.str();
+		// Calculate the hits queue time (latent time). Measurement Protocol states
+		// that values greater than four hours may lead to hits not being processed
+		// so constraints are applied to favour a recorded hit over an accurate hit.
+		uint64_t queue_time = std::min(now_timestamp - hit.getTimestamp(), MAXIMUM_QUEUE_TIME);
+
+		std::stringstream ss;
+        ss << hit.getDispatchURL();
+		ss << "&" << kQueueTimeModelKey << "=" << queue_time;
+		ss << "&" << kCacheBusterModelKey << "=" << rand();
+		return ss.str();
     }
 }

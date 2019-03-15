@@ -12,7 +12,7 @@ namespace GAI
     ///
 	{
     public:
-        static unsigned long generateTimestamp();
+        static uint64_t generateTimestamp();
 	};
 }
 
