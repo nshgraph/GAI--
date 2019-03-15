@@ -69,7 +69,6 @@
         'thirdparty/libevent-2.0.21-stable/compat',
       ],
       'sources': [
-        
         'thirdparty/libevent-2.0.21-stable/event.h',
         'thirdparty/libevent-2.0.21-stable/event.c',
         'thirdparty/libevent-2.0.21-stable/buffer.c',
@@ -94,8 +93,6 @@
         'thirdparty/libevent-2.0.21-stable/evdns.c',
         'thirdparty/libevent-2.0.21-stable/evrpc.h',
         'thirdparty/libevent-2.0.21-stable/evrpc.c',
-
-
       ],
       'conditions': [
         ['OS=="win"', {
@@ -116,6 +113,7 @@
           ],
           'link_settings': {
             'libraries' : [
+              'Advapi32.lib'
             ],
           },
           'msbuild_settings': {
@@ -242,8 +240,8 @@
          ],
           'link_settings': {
             'libraries' : [
-              'libevent.lib',
               'Rpcrt4.lib',
+              'User32.lib'
             ],
           },
           'msbuild_settings': {
@@ -274,7 +272,8 @@
       'target_name': 'gai++test',
       'type': 'executable',
       'dependencies': [
-        'libevent',
+        'gai++',
+        'libevent'
       ],
       'include_dirs': [
         'include',
@@ -295,48 +294,9 @@
         'unittests/test_utils.cpp',
         'unittests/test_gai.cpp',
         'unittests/test_urlconnection.cpp',
-        
-        'thirdparty/TinyThread++-1.1/source/fast_mutex.h',
-        'thirdparty/TinyThread++-1.1/source/tinythread.h',
-        'thirdparty/TinyThread++-1.1/source/tinythread.cpp',
-        'thirdparty/sqlite3/sqlite3.h',
-        'thirdparty/sqlite3/sqlite3.c',
 
         'thirdparty/gtest-1.7.0/include/gtest/gtest.h',
-        'thirdparty/gtest-1.7.0/src/gtest-all.cc',
-
-        'include/gai++/GAI.h',
-        'include/gai++/Tracker.h',
-        'include/gai++/Transaction.h',
-        'include/gai++/TransactionItem.h',
-
-        'src/ClientID.h',
-        'src/ClientID.cpp',
-        'src/DataStoreSqlite.h',
-        'src/DataStoreSqlite.cpp',
-        'src/DataStore.h',
-        'src/DebugPrint.h',
-        'src/Dispatcher.h',
-        'src/Dispatcher.cpp',
-        'src/GAI.cpp',
-        'src/Hit.h',
-        'src/Hit.cpp',
-        'src/HitBuilder.h',
-        'src/HitBuilder.cpp',
-        'src/HitStore.h',
-        'src/Model.h',
-        'src/Model.cpp',
-        'src/Timestamp.cpp',
-        'src/TrackerImpl.h',
-        'src/TrackerImpl.cpp',
-        'src/Transaction.cpp',
-        'src/TransactionItem.cpp',
-        'src/URLBuilder.cpp',
-        'src/URLBuilder.h',
-        'src/URLConnection.h',
-        'src/URLConnection.cpp',
-        'src/URLBuilder.cpp',
-        'src/URLBuilder.h',
+        'thirdparty/gtest-1.7.0/src/gtest-all.cc'
       ],
       'conditions': [
         ['OS=="win"', {
@@ -364,9 +324,8 @@
                   'BasicRuntimeChecks': 'Default',
                 },
                 'Link': {
+                  'SubSystem': 'Console',
                   'GenerateDebugInformation': 'true',
-                  'EnableCOMDATFolding': 'false', # Disable COMDAT folding because gtestd.lib is linked with /EDITANDCONTINUE
-                  'OptimizeReferences': 'false', # Disable Refernce optimisation because gtestd.lib is linked with /EDITANDCONTINUE
                   'IgnoreSpecificDefaultLibraries': [
                     'uafxcwd.lib',
                     'libcmtd.lib',
@@ -376,7 +335,6 @@
                     '../lib/',
                   ],
                   'AdditionalDependencies': [
-                    'gtestd.lib',
                     'ws2_32.lib',
                     'Rpcrt4.lib',
                   ],
@@ -386,6 +344,7 @@
             'Release': {
               'msbuild_settings': {
                 'Link': {
+                  'SubSystem': 'Console',
                   'IgnoreSpecificDefaultLibraries': [
                     'uafxcwd.lib',
                     'libcmtd.lib',
