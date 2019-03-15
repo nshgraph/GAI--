@@ -33,3 +33,5 @@ ipch/
 # Project generated with GYP
 gai++/gai.xcodeproj
 gai++/.vs/
+*.gai
+*.db
