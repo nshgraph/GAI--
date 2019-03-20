@@ -20,6 +20,7 @@
 xcuserdata
 Build/
 lib/
+*.DS_Store
 
 # Visual Studio Projects
 ipch/
