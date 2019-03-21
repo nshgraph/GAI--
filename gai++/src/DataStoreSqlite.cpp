@@ -209,7 +209,10 @@ namespace GAI
     {
         tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
-        char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f) ", hit.getGaiVersion().c_str(), hit.getDispatchURL().c_str(),hit.getTimestamp());
+        char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f)",
+									 hit.getGaiVersion().c_str(),
+									 hit.getDispatchURL().c_str(),
+									 static_cast<double>(hit.getTimestamp()));
         rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
         sqlite3_free(zSQL);
         if( rc != SQLITE_OK)
@@ -256,8 +259,8 @@ namespace GAI
         std::list<Hit> hits;
         
         int rc;
-        sqlite3_stmt *statement = NULL;
-        char *zSQL = NULL;
+        sqlite3_stmt* statement = NULL;
+        char* zSQL = NULL;
         char* zSQL_delete = NULL;
         sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
 
@@ -270,7 +273,7 @@ namespace GAI
 			int id = sqlite3_column_int( statement, 0 );
             char* version = (char *)sqlite3_column_text( statement, 1 );
             char* url = (char *)sqlite3_column_text( statement, 2 );
-            double timestamp = sqlite3_column_double( statement, 3 );
+            uint64_t timestamp = static_cast<uint64_t>( sqlite3_column_double( statement, 3 ) );
             if( version && url )
             {
                 hits.push_back(createHit(id, version, url, timestamp));

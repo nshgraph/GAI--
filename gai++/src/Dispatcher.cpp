@@ -8,10 +8,11 @@
 #include <event2/thread.h>
 
 #include "DataStore.h"
+#include "DebugPrint.h"
 #include "GAIDefines.h"
+#include "Timestamp.h"
 #include "URLBuilder.h"
 #include "URLConnection.h"
-#include "DebugPrint.h"
 
 namespace GAI
 {
@@ -219,7 +220,7 @@ namespace GAI
             for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
             {
 				RequestCallbackStruct* cb_struct = new RequestCallbackStruct( this, it->getId() );
-				mURLConnection->requestPOST( UrlBuilder::createPOSTURL(*it), UrlBuilder::createPOSTPayload(*it), Dispatcher::RequestCallback, cb_struct );
+				mURLConnection->requestPOST( UrlBuilder::createPOSTURL(*it), UrlBuilder::createPOSTPayload(*it, Timestamp::generateTimestamp() ), Dispatcher::RequestCallback, cb_struct );
 				mLastDispatchedHitId = it->getId();
             }
 
@@ -303,7 +304,6 @@ namespace GAI
 		{
 			cb_struct->dispatcher->mDataStore.deleteHit( cb_struct->hitId );
         }
-
         delete cb_struct;
     }
 	

@@ -5,7 +5,6 @@
 #include <string>
 #include <map>
 
-
 namespace GAI
 {
 	class HitBuilder;
@@ -25,22 +24,22 @@ namespace GAI
 
 		std::string getGaiVersion() const;
 
-		void setTimestamp( double timestamp );
+		void setTimestamp( const uint64_t timestamp );
 
-		double getTimestamp() const;
+		uint64_t getTimestamp() const;
 		
     protected:
         friend HitBuilder; // this is required as HitBuilder should be the only user-accessable method of creating a Hit
         friend DataStore; // this is required to allow DataStore's to deserialize Hits
 		
         Hit();
-        Hit( const int id, const std::string& version, const std::string& url, const double timestamp );
+        Hit( const int id, const std::string& version, const std::string& url, const uint64_t timestamp );
 
 		int         mId;
+
         std::string mDispatchURL; // stores the encoded url representing all the parameters associated with this hit
         std::string mGaiVersion; // the Google analytics version this hit's parameters adhere to
-        double		mTimestamp; // the timestamp for this hit
-		
+        uint64_t mTimestamp; // the timestamp for this hit, in milliseconds
 	};
 }
 

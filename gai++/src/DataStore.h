@@ -211,7 +211,7 @@ namespace GAI
         /// @return
         ///     Generated Hit instance
         ///
-        Hit createHit(const int id, const std::string& version, const std::string& url, const double timestamp)
+        Hit createHit(const int id, const std::string& version, const std::string& url, const uint64_t timestamp)
         {
             return Hit(id, version, url, timestamp);
         }
