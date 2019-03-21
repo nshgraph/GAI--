@@ -1,18 +1,16 @@
 
-#include <event2/http.h>
+#include "Hit.h"
 
 #include <string>
 #include <map>
 
-#include "Hit.h"
+#include <event2/http.h>
 
 #include "GAIDefines.h"
-
 #include "HitBuilder.h"
 
 namespace GAI
-{
-    
+{    
     Hit::Hit() :
     mGaiVersion( kGAIVersion ),
 	mDispatchURL( "" ),
@@ -24,7 +22,7 @@ namespace GAI
     {
     }
     
-    Hit::Hit( const std::string& version, const std::string& url, const double timestamp ) :
+    Hit::Hit( const std::string& version, const std::string& url, const uint64_t timestamp ) :
     mGaiVersion( version ),
 	mDispatchURL( url ),
 	mTimestamp( timestamp )
@@ -94,7 +92,7 @@ namespace GAI
         return mGaiVersion;
     }
     
-    void Hit::setTimestamp( double timestamp )
+    void Hit::setTimestamp( const uint64_t timestamp )
     ///
     /// Sets the timestamp of this hi
     ///
@@ -105,7 +103,7 @@ namespace GAI
         mTimestamp = timestamp;
     }
     
-    double Hit::getTimestamp() const
+    uint64_t Hit::getTimestamp() const
     ///
     /// Retrieve the timestamp of this hit
     ///
@@ -115,5 +113,4 @@ namespace GAI
 	{
         return mTimestamp;
     }
-    
 }

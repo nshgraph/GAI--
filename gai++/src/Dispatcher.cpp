@@ -8,10 +8,11 @@
 #include <event2/thread.h>
 
 #include "DataStore.h"
+#include "DebugPrint.h"
 #include "GAIDefines.h"
+#include "Timestamp.h"
 #include "URLBuilder.h"
 #include "URLConnection.h"
-#include "DebugPrint.h"
 
 namespace GAI
 {
@@ -243,8 +244,11 @@ namespace GAI
             // for each hit
             for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
             {
-                RequestCallbackStruct* cb_struct = new RequestCallbackStruct(this,(*it));
-                mURLConnection->requestPOST( UrlBuilder::createPOSTURL(*it), UrlBuilder::createPOSTPayload(*it), Dispatcher::RequestCallback, cb_struct );
+                RequestCallbackStruct* cb_struct = new RequestCallbackStruct(this, (*it));
+                mURLConnection->requestPOST( UrlBuilder::createPOSTURL( *it ),
+											 UrlBuilder::createPOSTPayload( *it, Timestamp::generateTimestamp() ),
+											 Dispatcher::RequestCallback,
+											 cb_struct );
             }
             // fetch the next group of hits
             hits = mDataStore.fetchHits(kDispatchBlockSize, true);
@@ -336,7 +340,7 @@ namespace GAI
 			cb_struct->dispatcher->mURLConnection->getUserAgentString();
 			
 			DEBUG_PRINT( "URL: " << UrlBuilder::createPOSTURL(cb_struct->hit) << std::endl );
-			DEBUG_PRINT( "Payload: " << UrlBuilder::createPOSTPayload(cb_struct->hit) << std::endl );
+			DEBUG_PRINT( "Payload: " << UrlBuilder::createPOSTPayload(cb_struct->hit, Timestamp::generateTimestamp()) << std::endl );
 			DEBUG_PRINT( "User Agent: " << cb_struct->dispatcher->mURLConnection->getUserAgentString() << std::endl );
 		}
      

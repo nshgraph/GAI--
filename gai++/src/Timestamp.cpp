@@ -5,26 +5,19 @@
 #include "Timestamp.h"
 #include "DataStore.h"
 
-
-
 namespace GAI
 {
-    
-    unsigned long Timestamp::generateTimestamp( )
+    uint64_t Timestamp::generateTimestamp()
     ///
-    /// This function retrieves a timestamp
-    ///
-    /// @return
-    ///     The timestamp generated
+    /// Retrieves the current timestamp in milliseconds
     ///
     {
-        unsigned long ms;
+        uint64_t ms = 0;
         struct timeval tv;
-        if( evutil_gettimeofday(&tv, NULL) == 0)
+        if(evutil_gettimeofday(&tv, NULL) == 0)
         {
-            ms = (tv.tv_sec) * 1000.0 + tv.tv_usec * 0.001;
+            ms = tv.tv_sec * 1000.0 + tv.tv_usec * 0.001;
         }
         return ms;
     }
-    
 }

@@ -20,7 +20,8 @@
 #define kGAIPort            80
 
 ///
-/// The following keys are used when adding information to a model
+/// The following keys are used when adding information to a model.
+/// See https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters parameter documentation.
 ///
 #define kAppNameModelKey				"an"
 #define kAppIdModelKey					"aid"
