@@ -1,6 +1,7 @@
 
 #include "URLBuilder.h"
 
+#include <algorithm>
 #include <string>
 #include <sstream>
 
