@@ -10,7 +10,6 @@
 
 #include "Model.h"
 
-
 TEST( ModelTest, model_as_kv_store )
 {
     std::string test_key1 = "test_key1";
@@ -111,9 +110,7 @@ TEST( ModelTest, model_setall )
     parameters = model.getKeysAndValues();
     
     EXPECT_EQ( parameters, parameters_set);
-    
 }
-
 
 TEST( ModelTest, model_setall_temp )
 {
@@ -143,8 +140,4 @@ TEST( ModelTest, model_setall_temp )
     parameters = model.getKeysAndValues();
     
     EXPECT_EQ( parameters.size(), 0 );
-    
-    
 }
-
-

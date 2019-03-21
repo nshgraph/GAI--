@@ -47,6 +47,7 @@ namespace GAI
 	Analytics::Analytics(  const char* product_name, const char* product_version, const char* data_store_full_path, const char* client_id ) :
 	mProductName(product_name),
     mProductVersion(product_version),
+	mbUseHttps( false ),
 	mDataStore( NULL ),
 	mDispatcher( NULL ),
     mDefaultTracker( NULL )
@@ -56,7 +57,7 @@ namespace GAI
 	{
         mDataStore = new DataStoreSqlite( std::string(data_store_full_path) + ".gai" );
         mDataStore->open();
-		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval );
+		mDispatcher = new Dispatcher( *mDataStore, kOptOut, kDispatchInterval, kGAIURLHTTP, kGAIPort );
         
         // handle the custom client_id
         if( client_id )
@@ -249,7 +250,7 @@ namespace GAI
     ///     Whether HTTPS will be used
     ///
     {
-        return mDispatcher->isUseHttps();
+        return mbUseHttps;
     }
 	
     void Analytics::setUseHttps( const bool use_https )
@@ -260,7 +261,15 @@ namespace GAI
     ///     Whether to use Https
     ///
     {
-        mDispatcher->setUseHttps( use_https );
+		mbUseHttps = use_https;
+		if( mbUseHttps )
+		{
+			mDispatcher->setAddress( kGAIURLHTTPS, kGAIPort );
+		}
+		else
+		{
+			mDispatcher->setAddress( kGAIURLHTTP, kGAIPort );
+		}
     }
     
     double Analytics::getDispatchInterval() const

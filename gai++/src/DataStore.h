@@ -45,8 +45,7 @@ namespace GAI
         virtual void close() = 0;
         
         // Functions for managing the datastore state
-        
-        
+
         ///
         /// Query whether there is a difference in state between the on disk representation and the in memory
         ///
@@ -81,7 +80,15 @@ namespace GAI
         virtual int entityCount() = 0;
         
         // Functions for managing hits in the datastore
-        
+
+		///
+		/// Delete a hit with the givin id
+		///
+		/// @return
+		///     Whether the operation was successful
+		///
+		virtual bool deleteHit(const int id) = 0;
+
         ///
         /// Delete all stored hits
         ///
@@ -122,16 +129,20 @@ namespace GAI
         
         ///
         /// Retrieves hits from the datstore up to a limit, optionally removes them after retrieval (atomically)
-        ///
-        /// @param limit
-        ///     Maximum number of hits to return
+		///
+		/// @param offset
+		///     The hit id to offset the fetch from
+		///
+		/// @param limit
+		///     The maximum number of hits to return
+		///
         /// @param removeFetchedFromDataStore
         ///     Option to delete Hits from datastore before returning them
         ///
         /// @return
         ///     A List of Hit objects corresponding to those retrieved from the datastore
         ///
-        virtual std::list<Hit> fetchHits(const unsigned int limit, bool removeFetchedFromDataStore) = 0;
+        virtual std::list<Hit> fetchHits(const unsigned int offset, const unsigned int limit) = 0;
         
         // Functions for managing properties in the datastore
         
@@ -187,9 +198,11 @@ namespace GAI
         ///
         /// This internal function can be used by subclasses to generate a hit from a given set of values
         /// This is needed to overcome the protected constructor of the Hit class
-        ///
-        /// @param version
-        ///     GAI Protocol Version
+		///
+		/// @param id
+		///     The id of this hit
+		/// @param version
+		///     GAI Protocol Version
         /// @param url
         ///     Pre-encoded URL of values associated with the hit
         /// @param timestamp
@@ -198,9 +211,9 @@ namespace GAI
         /// @return
         ///     Generated Hit instance
         ///
-        Hit createHit(const std::string& version, const std::string& url, const double timestamp)
+        Hit createHit(const int id, const std::string& version, const std::string& url, const double timestamp)
         {
-            return Hit( version, url, timestamp);
+            return Hit(id, version, url, timestamp);
         }
         
 	};

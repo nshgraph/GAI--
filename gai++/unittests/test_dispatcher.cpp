@@ -1,199 +1,137 @@
-//
-//  test_dispatcher.cpp
-//  unittests
-//
-//  Created by Steve Hosking on 10/03/13.
-//  Copyright (c) 2013 hoseking. All rights reserved.
-//
-
 #include "gtest/gtest.h"
-
-#include "GAIDefines.h"
+#include "utilities.h"
 
 #include "Dispatcher.h"
 #include "DataStoreSqlite.h"
 
-#include <iostream>
-#include <string>
-
-#ifdef WIN32
-#include <windows.h>
-static void SleepMS(int ms){ Sleep(ms); }
-#else
-static void SleepMS(int ms){ usleep(ms*1000); }
-#endif
-
+namespace
+{
+	// The Dispatcher queue only processes an event once
+	// every 2000ms, we must allow for this in some tests.
+	const int DISPATCHER_TIMEOUT = 2000;
+}
 
 class DispatcherTestClass : public GAI::Dispatcher
 {
 public:
-	DispatcherTestClass( GAI::DataStore& data_store, bool opt_out, double dispatch_interval ) :
-	Dispatcher( data_store, opt_out, dispatch_interval ),
-	mbCallbackComplete( false )
+	DispatcherTestClass( GAI::DataStore& data_store )
+		: Dispatcher( data_store, false, 1, GAITest::Server::ADDRESS, GAITest::Server::PORT )
+		, mbDispatchComplete( false )
 	{
 	}
-	
+
 	virtual void dispatch()
 	{
-		mbCallbackComplete = true;
+		Dispatcher::dispatch();
+		mbDispatchComplete = true;
 	}
-	
-	int getHitCount() const
-	{
-		return mDataStore.entityCount();
-	}
-	
-	bool mbCallbackComplete;
-};
 
-class HitTestClass : public GAI::Hit
-{
-public:
-    HitTestClass() : Hit(){}
-	
+	bool mbDispatchComplete;
 };
 
 class DispatcherTest : public ::testing::Test
 {
 protected:
-	DispatcherTest() : test_db("test.db"){}
+	DispatcherTest() : test_db("test.db") {}
+
 	virtual void SetUp()
 	{
-        // delete existing test db
-        int rc = unlink( test_db.c_str() ); // we don't test the return code becuase we aren't guaranteed the file exists before the test
+        unlink( test_db.c_str() );
     }
     
     virtual void TearDown()
 	{
-        // delete existing test db
-        int rc = unlink( test_db.c_str() ); // we don't test the return code becuase we aren't guaranteed the file exists before the test
+        unlink( test_db.c_str() );
         
     }
     
-    // Objects declared here can be used by all tests in the test case.
     const std::string test_db;
 };
 
-TEST_F( DispatcherTest, dispatch_interval_callback )
+TEST_F( DispatcherTest, hits_are_removed_on_successful_response )
 {
-	const double dispatch_interval = 1;
-	
-    GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval );
-    dispatcher.startEventLoop();
-	
-	SleepMS( dispatch_interval * 1000 * 3 );
-	
-	EXPECT_TRUE( dispatcher.mbCallbackComplete );
+	GAITest::Server server;
+
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
+
+	GAITest::TestHit hit;
+	dispatcher.storeHit( hit );
+	EXPECT_EQ( 1, data_store.entityCount() );
+
+	dispatcher.startEventLoop();
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for thread loop
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for hit dispatch
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for post process
+	EXPECT_EQ( 0, data_store.entityCount() );
 }
 
-TEST_F( DispatcherTest, set_dispatch_interval )
+TEST_F( DispatcherTest, hits_are_not_removed_on_failed_response )
 {
-	const double dispatch_interval_1 = 0.1;
-	const double dispatch_interval_2 = 2;
-	
-    GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, dispatch_interval_1 );
-    dispatcher.setDispatchInterval( dispatch_interval_2 );
-    dispatcher.startEventLoop();
-	
-	SleepMS( dispatch_interval_2 * 1000 * 1.5 );
-	
-	EXPECT_TRUE( dispatcher.mbCallbackComplete );
+	GAITest::Server server( "/collect" );
+
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
+
+	GAITest::TestHit hit;
+	dispatcher.storeHit( hit );
+	EXPECT_EQ( 1, data_store.entityCount() );
+
+	dispatcher.startEventLoop();
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for thread loop
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for hit dispatch
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for post process
+	EXPECT_EQ( 1, data_store.entityCount() );
+}
+
+TEST_F( DispatcherTest, hits_are_not_removed_on_no_response )
+{
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
+
+	GAITest::TestHit hit;
+	dispatcher.storeHit( hit );
+	EXPECT_EQ( 1, data_store.entityCount() );
+
+	dispatcher.startEventLoop();
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for thread loop
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for hit dispatch
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for post process
+	EXPECT_EQ( 1, data_store.entityCount() );
+}
+
+TEST_F( DispatcherTest, dispatch_interval )
+{
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
+
+	dispatcher.startEventLoop();
+	dispatcher.setDispatchInterval( 4 );
+
+	GAITest::SleepMS( 4000 );
+	EXPECT_FALSE( dispatcher.mbDispatchComplete );
+
+	GAITest::SleepMS( DISPATCHER_TIMEOUT );
+	EXPECT_TRUE( dispatcher.mbDispatchComplete );
+}
+
+TEST_F( DispatcherTest, dispatch_immediately )
+{
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
+
+	dispatcher.queueDispatch();
+	GAITest::SleepMS( 100 + DISPATCHER_TIMEOUT );
+	EXPECT_TRUE( dispatcher.mbDispatchComplete );
 }
 
 TEST_F( DispatcherTest, opt_out )
 {
-	const bool opt_out = true;
-	
 	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, opt_out, kDispatchInterval );
-	
-	HitTestClass hit;
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
+	dispatcher.setOptOut( true );
+
+	GAITest::TestHit hit;
 	dispatcher.storeHit( hit );
-	
-	EXPECT_EQ( dispatcher.getHitCount(), 0 );
+	EXPECT_EQ( 0, data_store.hitCount() );
 }
-
-TEST_F( DispatcherTest, store_hit )
-{
-	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-	DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, kDispatchInterval );
-	
-	HitTestClass hit;
-	dispatcher.storeHit( hit );
-	
-	EXPECT_EQ( dispatcher.getHitCount(), 1 );
-}
-
-TEST_F( DispatcherTest, dispatch )
-{
-	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-    GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 2 );
-    std::map<std::string, std::string> parameters;
-    parameters[kAppNameModelKey] = "app";
-	
-	HitTestClass hit;
-    hit.setParameters( parameters );
-	dispatcher.storeHit( hit );
-	SleepMS( 2 * 1000 * 1.5 );
-    
-    // should have printed
-}
-
-
-TEST_F( DispatcherTest, immediate_dispatch )
-{
-	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-    DispatcherTestClass dispatcher = DispatcherTestClass( data_store, false, 200 );
-    std::map<std::string, std::string> parameters;
-    parameters[kAppNameModelKey] = "app";
-	
-    dispatcher.queueDispatch();
-	SleepMS( 2 * 1000 * 1.5 );
-	EXPECT_TRUE( dispatcher.mbCallbackComplete );
-}
-
-TEST_F( DispatcherTest, cancel_dispatch )
-{
-	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-    GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 200 );
-    dispatcher.startEventLoop();
-    std::map<std::string, std::string> parameters;
-    parameters[kAppNameModelKey] = "app";
-	
-    for( int i=0;i<1000;i++)
-    {
-        HitTestClass hit;
-        hit.setParameters( parameters );
-        dispatcher.storeHit( hit );
-    }
-    EXPECT_EQ( data_store.hitCount(), 1000 );
-    dispatcher.queueDispatch();
-    
-	SleepMS( 2 * 1000 * 1.5 );
-    
-    EXPECT_LT( data_store.hitCount(), 1000 );
-    dispatcher.cancelDispatch();
-    EXPECT_LT( data_store.hitCount(), 1000 );
-    int before_count = data_store.hitCount();
-	SleepMS( 5 );
-    // note: dispatch cancel can allow up to kDispatchBlockSize
-    EXPECT_GE( data_store.hitCount(), before_count - kDispatchBlockSize);
-    
-}
-
-
-
-
-TEST_F( DispatcherTest, options )
-{
-	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
-    GAI::Dispatcher dispatcher = GAI::Dispatcher( data_store, false, 2 );
-    // can get and set https
-    dispatcher.setUseHttps(false);
-    EXPECT_EQ( dispatcher.isUseHttps(), false );
-    dispatcher.setUseHttps(true);
-    EXPECT_EQ( dispatcher.isUseHttps(), true );
-}
-

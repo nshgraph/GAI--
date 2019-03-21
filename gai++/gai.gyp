@@ -285,6 +285,8 @@
       ],
       'sources': [
         'unittests/main.cpp',
+        'unittests/utilities.cpp',
+        'unittests/utilities.h',
         'unittests/test_datastoresqlite.cpp',
         'unittests/test_dispatcher.cpp',
         'unittests/test_hit.cpp',

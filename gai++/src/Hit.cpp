@@ -14,6 +14,7 @@ namespace GAI
 {
     
     Hit::Hit() :
+	mId( -1 ),
     mGaiVersion( kGAIVersion ),
 	mDispatchURL( "" ),
 	mTimestamp( 0 )
@@ -24,8 +25,9 @@ namespace GAI
     {
     }
     
-    Hit::Hit( const std::string& version, const std::string& url, const double timestamp ) :
-    mGaiVersion( version ),
+    Hit::Hit( const int id, const std::string& version, const std::string& url, const double timestamp ) :
+	mId( id ),
+	mGaiVersion( version ),
 	mDispatchURL( url ),
 	mTimestamp( timestamp )
     ///
@@ -71,6 +73,17 @@ namespace GAI
 		// set the url
         mDispatchURL = url;
     }
+
+	int Hit::getId() const
+	///
+	/// Retrieves the id for this hit
+	///
+	/// @return
+	///     The hit id
+	///
+	{
+		return mId;
+	}
     
     std::string Hit::getDispatchURL() const
     ///

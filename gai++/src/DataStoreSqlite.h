@@ -28,6 +28,7 @@ namespace GAI
     public:
         DataStoreSqlite( const std::string& path );
         ~DataStoreSqlite();
+
         // Functions for managing the datastore as a whole
         bool open();
         bool save();
@@ -40,13 +41,14 @@ namespace GAI
         bool deleteAllEntities();
         int entityCount();
         
-        // Functions for managing hits in the datastore
+		// Functions for managing hits in the datastore
+		bool deleteHit(const int id);
         bool deleteAllHits();
         bool addHit(const Hit& hit);
         bool addHits(const std::list<Hit>& hits);
         int hitCount();
-        std::list<Hit> fetchHits(const unsigned int limit, bool removeFetchedFromDataStore);
-        
+		std::list<Hit> fetchHits(const unsigned int offset, const unsigned int limit);
+
         // Functions for managing properties in the datastore
         bool deleteAllProperties();
         bool addProperty(const std::string& name, const std::string& value);
@@ -56,6 +58,7 @@ namespace GAI
         
         // assign opreator
         DataStoreSqlite& operator=( const DataStoreSqlite& other );
+
     private:
         // ensure that the database has all strutures necessary
         bool initializeDatabase();

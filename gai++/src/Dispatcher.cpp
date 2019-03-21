@@ -21,18 +21,22 @@ namespace GAI
     /// Struct used when making a request to manage failed dispatches
     ///
     {
-        RequestCallbackStruct( Dispatcher* dispatcher, const Hit& hit);
+        RequestCallbackStruct( Dispatcher* dispatcher, const int id);
         Dispatcher* dispatcher;
-        Hit hit;
+        int hitId;
     };
     
-    RequestCallbackStruct::RequestCallbackStruct( Dispatcher* dispatcher, const Hit& hit) :
+    RequestCallbackStruct::RequestCallbackStruct( Dispatcher* dispatcher, const int id) :
     dispatcher( dispatcher ),
-    hit( hit )
+    hitId( id )
     {
     }
 	
-	Dispatcher::Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval ) :
+	Dispatcher::Dispatcher( DataStore& data_store,
+						    const bool opt_out,
+						    const double dispatch_interval,
+						    const std::string& address,
+						    const int port ) :
 	mbOptOut( opt_out ),
 	mDispatchInterval( dispatch_interval ),
     mDataStore( data_store ),
@@ -42,6 +46,8 @@ namespace GAI
 	mbEvenLoopStarted(false),
     mbCancelDispatch(false),
     mbImmediateDispatch(false),
+	mLastDispatchedHitId(0),
+	mPendingRequests(0),
     mTimerThread( Dispatcher::TimerThreadFunction, (void*)this ),
     mURLConnection( NULL )
     ///
@@ -58,10 +64,10 @@ namespace GAI
     ///
 	{
         mURLConnection = new URLConnection( mDispatchEventBase );
-        mURLConnection->createUserAgentString("GAI++","1.0");
-        // begin the initial dispatch
-        setDispatchInterval(mDispatchInterval);
-        setUseHttps(false);
+        mURLConnection->createUserAgentString( "GAI++", "1.0" );
+
+        setDispatchInterval( mDispatchInterval );
+		setAddress( address, port );
 	}
 	
 	Dispatcher::~Dispatcher()
@@ -70,29 +76,20 @@ namespace GAI
     ///
 	{
 		mbThreadRunning = false;
-        mbCancelDispatch = true;
-        // ensure the thread has ended
-        mTimerThread.join();
-		
-        delete mURLConnection;
-        
-        // instruct the event loop to stop
-        event_base_loopbreak( mDispatchEventBase );
-		if( mDispatchEventBase )
-		{
-            // destroy event loop
-			event_base_free( mDispatchEventBase );
-		}
-		
-		mDataStore.close();
+		mbCancelDispatch = true;
+		event_base_loopbreak( mDispatchEventBase );
+		mTimerThread.join();
+
+		event_free( mDispatchEvent );
+		event_base_free( mDispatchEventBase );
 	}
-    
+
+	void Dispatcher::startEventLoop()
 	///
 	/// Starts the main event loop
 	///
 	/// @return Nothing
 	///
-	void Dispatcher::startEventLoop()
 	{
 		mbEvenLoopStarted = true;
 	}
@@ -129,17 +126,6 @@ namespace GAI
         mbImmediateDispatch = true;
 	}
 	
-	void Dispatcher::cancelDispatch()
-    ///
-    /// Cancel the current dispatch.
-    ///
-    /// @return
-    ///     Nothing
-    ///
-	{
-        mbCancelDispatch = true;
-	}
-	
 	bool Dispatcher::isOptOut() const
     ///
     /// Return whether Google Analytics tracking is enabled/disabled
@@ -165,31 +151,20 @@ namespace GAI
 	{
 		mbOptOut = opt_out;
 	}
-    void Dispatcher::setUseHttps(const bool aUseHttps)
-    ///
-    /// Set whether HTTPS will be used
-    ///
-    /// @param aUseHttps
-    ///     Whether to use Https
-    ///
-    {
-        this->mbUseHttps = aUseHttps;
-        if( aUseHttps )
-            mURLConnection->setAddress(kGAIURLHTTPS,kGAIPort);
-        else
-            mURLConnection->setAddress(kGAIURLHTTP,kGAIPort);
-    }
-    
-    bool Dispatcher::isUseHttps()
-    ///
-    /// Retreive whether the tracker will use secure connection
-    ///
-    /// @return
-    ///     Whether HTTPS will be used
-    ///
-    {
-        return this->mbUseHttps;
-    }
+
+	void Dispatcher::setAddress( const std::string& address, const int port )
+	///
+	/// Set the host address to be used for dispatched hits
+	///
+	/// @param address
+	///     Host Address
+	///
+	/// @param port
+	///     Host Port
+	///
+	{
+		mURLConnection->setAddress( address, port );
+	}
 	
 	int Dispatcher::getDispatchInterval() const
     ///
@@ -235,26 +210,22 @@ namespace GAI
     ///     Nothing
     ///
     {
-        mbCancelDispatch = false;
-        std::list<Hit> hits;
-        hits = mDataStore.fetchHits(kDispatchBlockSize, true);
-        while( hits.size() > 0 && !mbCancelDispatch )
+		std::list<Hit> hits;
+        hits = mDataStore.fetchHits( mLastDispatchedHitId, kDispatchBlockSize );
+
+		while( hits.size() > 0 && !mbCancelDispatch )
         {
             // for each hit
             for( std::list<Hit>::const_iterator it = hits.begin(), it_end = hits.end(); it != it_end; it++ )
             {
-                RequestCallbackStruct* cb_struct = new RequestCallbackStruct(this,(*it));
-                mURLConnection->requestPOST( UrlBuilder::createPOSTURL(*it), UrlBuilder::createPOSTPayload(*it), Dispatcher::RequestCallback, cb_struct );
+				RequestCallbackStruct* cb_struct = new RequestCallbackStruct( this, it->getId() );
+				mURLConnection->requestPOST( UrlBuilder::createPOSTURL(*it), UrlBuilder::createPOSTPayload(*it), Dispatcher::RequestCallback, cb_struct );
+				mLastDispatchedHitId = it->getId();
             }
+
             // fetch the next group of hits
-            hits = mDataStore.fetchHits(kDispatchBlockSize, true);
+            hits = mDataStore.fetchHits( mLastDispatchedHitId, kDispatchBlockSize );
         }
-        // put back any left over hits
-        if( hits.size() > 0 )
-        {
-            mDataStore.addHits( hits );
-        }
-        
     }
 	
     void Dispatcher::TimerThreadFunction( void* context )
@@ -277,7 +248,8 @@ namespace GAI
                 dispatcher->mbImmediateDispatch = false;
                 dispatcher->dispatch();
             }
-			if ( dispatcher->mbEvenLoopStarted )
+
+			if( dispatcher->mbEvenLoopStarted )
 			{
                 event_base_loop(dispatcher->mDispatchEventBase, EVLOOP_NONBLOCK);
 			}
@@ -287,7 +259,7 @@ namespace GAI
 #else
 			sleep( 2 );
 #endif
-        }
+		}
 	}
 	
 	void Dispatcher::TimerCallback( evutil_socket_t file_descriptor, short events, void* context )
@@ -324,22 +296,14 @@ namespace GAI
     /// @return
     ///     Nothing
     ///
-    {
-        RequestCallbackStruct* cb_struct = (RequestCallbackStruct*)param;
-        // if the callback wasn't successful then we need to put the hit back into the datastore
-        if( !success )
-        {
-            cb_struct->dispatcher->mDataStore.addHit(cb_struct->hit);
-        }
-		else
+	{
+		RequestCallbackStruct* cb_struct = (RequestCallbackStruct*)param;
+
+        if( success )
 		{
-			cb_struct->dispatcher->mURLConnection->getUserAgentString();
-			
-			DEBUG_PRINT( "URL: " << UrlBuilder::createPOSTURL(cb_struct->hit) << std::endl );
-			DEBUG_PRINT( "Payload: " << UrlBuilder::createPOSTPayload(cb_struct->hit) << std::endl );
-			DEBUG_PRINT( "User Agent: " << cb_struct->dispatcher->mURLConnection->getUserAgentString() << std::endl );
-		}
-     
+			cb_struct->dispatcher->mDataStore.deleteHit( cb_struct->hitId );
+        }
+
         delete cb_struct;
     }
 	
