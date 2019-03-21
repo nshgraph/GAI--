@@ -21,7 +21,11 @@ namespace GAI
 	class Dispatcher : public HitStore
 	{
     public:
-		Dispatcher( DataStore& data_store, bool opt_out, double dispatch_interval );
+		Dispatcher( DataStore& data_store,
+				    const bool opt_out,
+				    const double dispatch_interval,
+				    const std::string& address,
+				    const int port );
 		~Dispatcher();
         
 		void startEventLoop();
@@ -30,14 +34,11 @@ namespace GAI
 		
         void queueDispatch();
 		
-		void cancelDispatch();
-		
 		bool isOptOut() const;
 		void setOptOut( const bool opt_out );
-        
-        void setUseHttps(const bool aUseHttps);
-        bool isUseHttps();
-		
+
+		void setAddress( const std::string& address, const int port );
+
 		int getDispatchInterval() const;
 		void setDispatchInterval( const double dispatch_interval );
 		
@@ -51,13 +52,14 @@ namespace GAI
 		bool mbThreadRunning;
 		bool mbEvenLoopStarted;
         bool mbCancelDispatch;
-        bool mbImmediateDispatch;
+		bool mbImmediateDispatch;
+		int mPendingRequests;
+		int mLastDispatchedHitId;
+
 		event_base*	mDispatchEventBase;
 		event*		mDispatchEvent;
         tthread::thread	mTimerThread;
-		
-		
-        bool    mbUseHttps;         ///< whether to use a secure connection
+
 		bool	mbOptOut;			///< disable Google Analytics tracking
 		double	mDispatchInterval;	///< dispatch interval in seconds
         

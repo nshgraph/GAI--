@@ -18,6 +18,8 @@ namespace GAI
     public:
 		void setParameters( const std::map<std::string, std::string> parameters );
 
+		int getId() const;
+
 		std::string getDispatchURL() const;
 
 		std::string getGaiVersion() const;
@@ -31,8 +33,10 @@ namespace GAI
         friend DataStore; // this is required to allow DataStore's to deserialize Hits
 		
         Hit();
-		
-        Hit( const std::string& version, const std::string& url, const uint64_t timestamp );
+        Hit( const int id, const std::string& version, const std::string& url, const uint64_t timestamp );
+
+		int         mId;
+
         std::string mDispatchURL; // stores the encoded url representing all the parameters associated with this hit
         std::string mGaiVersion; // the Google analytics version this hit's parameters adhere to
         uint64_t mTimestamp; // the timestamp for this hit, in milliseconds

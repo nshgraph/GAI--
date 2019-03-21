@@ -7,19 +7,11 @@
 //
 
 #include "gtest/gtest.h"
+#include "utilities.h"
 
 #include "ClientID.h"
 #include "Timestamp.h"
 #include "DataStoreSqlite.h"
-
-
-
-#ifdef WIN32
-#include <windows.h>
-static void SleepMS(int ms){ Sleep(ms); }
-#else
-static void SleepMS(int ms){ usleep(ms*1000); }
-#endif
 
 TEST( ClientIDTest, create_clientID )
 {
@@ -68,7 +60,7 @@ TEST( TimestampTest, create_timestamp )
     timestamp1 = GAI::Timestamp::generateTimestamp();
     
     // now create a new one
-    SleepMS(1);
+	GAITest::SleepMS(1);
     timestamp2 = GAI::Timestamp::generateTimestamp();
     
     // timestamp should be in realm timestamp1 to 5s

@@ -216,6 +216,7 @@ namespace GAI
 		
         std::string mProductName;
 		std::string mProductVersion;
+		bool mbUseHttps;
 		
 		Dispatcher* mDispatcher;
         DataStore* mDataStore;
