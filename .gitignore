@@ -20,6 +20,7 @@
 xcuserdata
 Build/
 lib/
+*.DS_Store
 
 # Visual Studio Projects
 ipch/
@@ -27,6 +28,11 @@ ipch/
 *.sdf
 *.sln
 *.vcxproj*
+*.VC.db
+*.VC.VC.opendb
 
-# GAI lib project is generated with GYP
+# Project generated with GYP
 gai++/gai.xcodeproj
+gai++/.vs/
+*.gai
+*.db

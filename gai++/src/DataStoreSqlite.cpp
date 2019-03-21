@@ -147,6 +147,7 @@ namespace GAI
         result &= deleteAllProperties();
         return result;
     }
+
     int DataStoreSqlite::entityCount()
     ///
     /// Query how many entities of any type are in the datastore
@@ -157,7 +158,27 @@ namespace GAI
     {
         return hitCount() + propertyCount();
     }
-    
+
+	bool DataStoreSqlite::deleteHit(const int id)
+	///
+	/// Delete a hit with the givin id
+	///
+	/// @return
+	///     Whether the operation was successful
+	///
+	{
+		tthread::lock_guard<tthread::mutex> lock(mDBMutex);
+
+		char *zSQL = sqlite3_mprintf("DELETE FROM hits WHERE id = %i", id);
+		int rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
+		sqlite3_free(zSQL);
+
+		if( rc != SQLITE_OK)
+			return false;
+
+		return true;
+	}
+
     bool DataStoreSqlite::deleteAllHits()
     ///
     /// Delete all stored hits
@@ -188,7 +209,10 @@ namespace GAI
     {
         tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
-        char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f) ", hit.getGaiVersion().c_str(), hit.getDispatchURL().c_str(),hit.getTimestamp());
+        char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f)",
+									 hit.getGaiVersion().c_str(),
+									 hit.getDispatchURL().c_str(),
+									 static_cast<double>(hit.getTimestamp()));
         rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
         sqlite3_free(zSQL);
         if( rc != SQLITE_OK)
@@ -217,15 +241,16 @@ namespace GAI
         return success;
     }
     
-    std::list<Hit> DataStoreSqlite::fetchHits(const unsigned int limit, bool removeFetchedFromDataStore)
+    std::list<Hit> DataStoreSqlite::fetchHits(const unsigned int offset, const unsigned int limit)
     ///
     /// Retrieves hits from the datstore up to a limit, optionally removes them after retrieval (atomically)
-    ///
-    /// @param limit
-    ///     Maximum number of hits to return
-    /// @param removeFetchedFromDataStore
-    ///     Option to delete Hits from datastore before returning them
-    ///
+	///
+	/// @param offset
+	///     Maximum number of hits to return
+	///
+	/// @param limit
+	///     Maximum number of hits to return
+	///
     /// @return
     ///     A List of Hit objects corresponding to those retrieved from the datastore
     ///
@@ -234,34 +259,27 @@ namespace GAI
         std::list<Hit> hits;
         
         int rc;
-        sqlite3_stmt *statement = NULL;
-        char *zSQL = NULL;
+        sqlite3_stmt* statement = NULL;
+        char* zSQL = NULL;
         char* zSQL_delete = NULL;
         sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
-        
-        zSQL = sqlite3_mprintf("SELECT * FROM hits ORDER BY id LIMIT %i",limit);
+
+		zSQL = sqlite3_mprintf("SELECT * FROM hits WHERE id > %i ORDER BY id LIMIT %i", offset, limit);
         rc = sqlite3_prepare_v2(mDB, zSQL, -1, &statement, 0);
         
         // step through the returned hits
         while( sqlite3_step( statement ) == SQLITE_ROW)
         {
+			int id = sqlite3_column_int( statement, 0 );
             char* version = (char *)sqlite3_column_text( statement, 1 );
             char* url = (char *)sqlite3_column_text( statement, 2 );
-            double timestamp = sqlite3_column_double( statement, 3 );
+            uint64_t timestamp = static_cast<uint64_t>( sqlite3_column_double( statement, 3 ) );
             if( version && url )
             {
-                hits.push_back(createHit(version,url,timestamp));
+                hits.push_back(createHit(id, version, url, timestamp));
             }
         }
-        
-        // if appropriate, delete the hits
-        if( removeFetchedFromDataStore && rc == SQLITE_OK )
-        {
-            zSQL_delete = sqlite3_mprintf("DELETE FROM hits WHERE id IN (SELECT id FROM hits ORDER BY id LIMIT %i)",limit);
-            rc = sqlite3_exec(mDB, zSQL_delete, 0, 0, 0);
-            sqlite3_free(zSQL_delete);
-            
-        }
+
         sqlite3_free(zSQL);
         sqlite3_finalize(statement);
         
@@ -275,7 +293,6 @@ namespace GAI
         {
             sqlite3_exec(mDB, "COMMIT", NULL, NULL, NULL);
         }
-        
         
         return hits;
     }

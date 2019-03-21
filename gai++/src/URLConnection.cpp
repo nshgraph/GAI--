@@ -48,7 +48,8 @@ namespace GAI
     }
     
     URLConnection::URLConnection( event_base *base ) :
-    mEventBase(base)
+    mEventBase(base),
+	mConnection(NULL)
     ///
     /// Constructor
     ///
@@ -57,7 +58,15 @@ namespace GAI
     ///
     {
     }
-    
+
+	URLConnection::~URLConnection()
+	{
+		if( mConnection )
+		{
+			evhttp_connection_free( mConnection );
+		}
+	}
+
     void URLConnection::request( const std::string& url, URLConnectionCompleteCB callback, void* callback_data )
     ///
     /// Function to request a page via the GET protocol
@@ -139,7 +148,11 @@ namespace GAI
     ///     Host Port
     ///
     {
-        mConnection = evhttp_connection_base_new(mEventBase,NULL,address.c_str(), port);
+		if( mConnection )
+		{
+			evhttp_connection_free( mConnection );
+		}
+        mConnection = evhttp_connection_base_new(mEventBase, NULL, address.c_str(), port);
     }
     
     void URLConnection::createUserAgentString( const std::string& product, const std::string& version )

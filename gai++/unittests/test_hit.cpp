@@ -1,79 +1,44 @@
-//
-//  test_hit.cpp
-//  unittests
-//
-//  Created by Steve Hosking on 10/03/13.
-//  Copyright (c) 2013 hoseking. All rights reserved.
-//
 
 #include "gtest/gtest.h"
+#include "utilities.h"
 
 #include "GAIDefines.h"
 #include "Hit.h"
 
-#include <iostream>
-#include <string>
-
-class HitTestClass : public GAI::Hit
+TEST( HitTest, create_empty_hit )
 {
-public:
-    HitTestClass() : Hit()
-	{
-	}
-	
-    HitTestClass( const std::string& version, const std::string& url, const double timestamp ) : Hit( version, url, timestamp )
-	{
-	}
-};
-
-class HitTest : public ::testing::Test {
-protected:
-    
-    virtual void SetUp() {
-   }
-    
-    virtual void TearDown() {
-        
-    }
-    
-    // Objects declared here can be used by all tests in the test case for Foo.
-    
-};
-
-TEST_F( HitTest, create_empty_hit )
-{
-	HitTestClass hit;
+	GAITest::TestHit hit;
 	
 	EXPECT_TRUE( hit.getGaiVersion() == "1" );
 	EXPECT_TRUE( hit.getDispatchURL() == "" );
 	EXPECT_EQ( hit.getTimestamp(), 0 );
 }
 
-TEST_F( HitTest, create_hit )
+TEST( HitTest, create_hit )
 {
     const std::string test_version = "2";
     const std::string test_url = "url";
     const double test_timestamp = 100.0;
 	
-	HitTestClass hit( test_version, test_url, test_timestamp );
+	GAITest::TestHit hit( test_version, test_url, test_timestamp );
 	
 	EXPECT_TRUE( hit.getGaiVersion() == test_version );
 	EXPECT_TRUE( hit.getDispatchURL() == test_url );
 	EXPECT_EQ( hit.getTimestamp(), test_timestamp );
 }
 
-TEST_F( HitTest, parameters_add_to_url )
+TEST( HitTest, parameters_add_to_url )
 {
 	std::map<std::string, std::string> parameters;
 	parameters[ "key1" ] = "val1";
 	
-    HitTestClass hit;
+    GAITest::TestHit hit;
 	hit.setParameters( parameters );
 	
 	EXPECT_FALSE( hit.getDispatchURL() == "" );
 }
 
-TEST_F( HitTest, multiple_parameters_add_to_url )
+TEST( HitTest, multiple_parameters_add_to_url )
 {
 	std::string key;
 	std::string value;
@@ -83,7 +48,7 @@ TEST_F( HitTest, multiple_parameters_add_to_url )
 	parameters[ "key2" ] = "val2";
 	parameters[ "key3" ] = "val3";
 	
-    HitTestClass hit;
+    GAITest::TestHit hit;
 	hit.setParameters( parameters );
 	std::string url = hit.getDispatchURL();
 	
@@ -117,7 +82,7 @@ TEST_F( HitTest, multiple_parameters_add_to_url )
     }
 }
 
-TEST_F( HitTest, multiple_parameters_add_to_encoded_url )
+TEST( HitTest, multiple_parameters_add_to_encoded_url )
 {
 	std::string key;
 	std::string value;
@@ -132,7 +97,7 @@ TEST_F( HitTest, multiple_parameters_add_to_encoded_url )
 	encoded_parameters[ "key2" ] = "salt%26pepper";
 	encoded_parameters[ "key3" ] = "val%40val.com";
 	
-    HitTestClass hit;
+    GAITest::TestHit hit;
 	hit.setParameters( parameters );
 	std::string url = hit.getDispatchURL();
 	
@@ -166,11 +131,11 @@ TEST_F( HitTest, multiple_parameters_add_to_encoded_url )
     }
 }
 
-TEST_F( HitTest, timestamp )
+TEST( HitTest, timestamp )
 {
 	const double timestamp = 9999;
 	
-	HitTestClass hit;
+	GAITest::TestHit hit;
 	hit.setTimestamp( timestamp );
 	
 	EXPECT_EQ( hit.getTimestamp(), timestamp );
