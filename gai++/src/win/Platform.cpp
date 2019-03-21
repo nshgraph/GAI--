@@ -9,18 +9,14 @@
 #include "Platform.h"
 
 #include <windows.h>
-#include <winternl.h>
 #include <string>
 #include <sstream>
+#include <vector>
 
 /* File-local */
 namespace
 {
 	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
-
-	typedef NTSTATUS (WINAPI* _NtQueryInformationProcess)
-		(_In_ HANDLE ProcessHandle, _In_ PROCESSINFOCLASS ProcessInformationClass,
-		_Out_ PVOID ProcessInformation, _In_ ULONG ProcessInformationLength, _Out_opt_ PULONG ReturnLength);
 
 	bool PlatformIs64Bit()
 	{
@@ -42,23 +38,19 @@ namespace
 #endif
 	}
 
-	DWORD GetProcessPEBAddress(HANDLE hProc)
-	{
-		PROCESS_BASIC_INFORMATION peb;
-		DWORD tmp;
-		_NtQueryInformationProcess NtQueryInformationProcess_ = (_NtQueryInformationProcess)GetProcAddress(GetModuleHandle(L"ntdll.dll"), "NtQueryInformationProcess");
-		NtQueryInformationProcess_(hProc, ProcessBasicInformation, &peb, sizeof(PROCESS_BASIC_INFORMATION), &tmp);
-		return (DWORD)peb.PebBaseAddress;
-	}
-
 	void OSVersion( DWORD* major, DWORD* minor )
 	{
-		HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, GetCurrentProcessId());
-		DWORD pebAddress = GetProcessPEBAddress(handle);
-		DWORD OSMajorVersionAddress = pebAddress + 0x0a4;
-		DWORD OSMinorVersionAddress = pebAddress + 0x0a8;
-		ReadProcessMemory(handle, (void*)OSMajorVersionAddress, major, sizeof(*major), 0);
-		ReadProcessMemory(handle, (void*)OSMinorVersionAddress, minor, sizeof(*minor), 0);
+		LPCWSTR kernel32 = L"kernel32.dll";
+		DWORD dummy;
+		DWORD file_version_info_size = ::GetFileVersionInfoSizeExW( FILE_VER_GET_NEUTRAL, kernel32, &dummy );
+		std::vector<char> buffer( file_version_info_size );
+		::GetFileVersionInfoExW( FILE_VER_GET_NEUTRAL, kernel32, 0, file_version_info_size, &buffer[ 0 ] );
+		void *fixed_file_info_ptr = nullptr;
+		UINT size = 0;
+		::VerQueryValueW( buffer.data(), L"\\", &fixed_file_info_ptr, &size );
+		VS_FIXEDFILEINFO* fixed_file_info = static_cast<VS_FIXEDFILEINFO *>( fixed_file_info_ptr );
+		*major = HIWORD( fixed_file_info->dwFileVersionMS );
+		*minor = LOWORD( fixed_file_info->dwFileVersionMS );
 	}
 }
 
