@@ -7,8 +7,9 @@
 namespace
 {
 	// The Dispatcher queue only processes an event once
-	// every 2000ms, we must allow for this in some tests.
-	const int DISPATCHER_TIMEOUT = 2000;
+	// every 2000ms, we must allow for this in some tests
+	// with some extra margin for other delays
+	const int DISPATCHER_TIMEOUT = 3000;
 }
 
 class DispatcherTestClass : public GAI::Dispatcher
