@@ -10,7 +10,7 @@ namespace
 	class HitTestClass : public GAI::Hit
 	{
 	public:
-		HitTestClass(const std::string url, const uint64_t timestamp) : Hit("1", url, timestamp) {}
+		HitTestClass(const std::string url, const uint64_t timestamp) : Hit(1, "1", url, timestamp) {}
 	};
 
 	void reset_cache_buster()
