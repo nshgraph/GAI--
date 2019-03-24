@@ -241,7 +241,8 @@
           'link_settings': {
             'libraries' : [
               'Rpcrt4.lib',
-              'User32.lib'
+              'User32.lib',
+              'Mincore.lib',
             ],
           },
           'msbuild_settings': {
@@ -346,7 +347,6 @@
                   'AdditionalDependencies': [
                     'ws2_32.lib',
                     'Rpcrt4.lib',
-		    'Mincore.lib',
                   ],
                 }, 
               },
