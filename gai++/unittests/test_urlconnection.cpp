@@ -24,9 +24,7 @@ TEST( URLConnection, test_connections )
 {
 	GAITest::Server server( "/fail" );
 	
-    const unsigned long ms_timeout = 1000;
-    unsigned long time;
-    bool success;
+    bool success = false;
     event_base* eb = event_base_new();
 
     GAI::URLConnection connection = GAI::URLConnection( eb );
@@ -35,31 +33,20 @@ TEST( URLConnection, test_connections )
     success = false;
     server.clearReceivedRequest();
     connection.request( "/", URLConnectionTestCallback, &success );
-    
-    time = GAI::Timestamp::generateTimestamp();
-    while(GAI::Timestamp::generateTimestamp() < time + ms_timeout)
-    {
-        event_base_loop(eb, EVLOOP_NONBLOCK);
-    }
-    
-    GAITest::SleepMS( 1000 ); // allow server time to start running
-    
+  
+	event_base_loop( eb, EVLOOP_ONCE ); // send request
+	event_base_loop( eb, EVLOOP_ONCE ); // receive request
     EXPECT_TRUE( server.haveReceivedRequest() );
     EXPECT_TRUE( success );
     
-    success = false;
+    success = true;
     server.clearReceivedRequest();
     connection.request( "/fail", URLConnectionTestCallback, &success );
     
-    time = GAI::Timestamp::generateTimestamp();
-    while(GAI::Timestamp::generateTimestamp() < time + ms_timeout)
-    {
-        event_base_loop(eb, EVLOOP_NONBLOCK);
-    }
-    
+	event_base_loop( eb, EVLOOP_ONCE ); // send request
+	event_base_loop( eb, EVLOOP_ONCE ); // receive request
     EXPECT_TRUE( server.haveReceivedRequest() );
     EXPECT_FALSE( success );
     
-    // destroy event loop
     event_base_free( eb );
 }
