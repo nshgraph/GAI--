@@ -128,21 +128,18 @@ namespace GAI
         virtual int hitCount() = 0;
         
         ///
-        /// Retrieves hits from the datstore up to a limit, optionally removes them after retrieval (atomically)
+        /// Retrieves hits from the datstore from a given timestamp up to a limit
 		///
-		/// @param offset
-		///     The hit id to offset the fetch from
+		/// @param from_timestamp
+		///     The hit timestamp to begin the fetch from
 		///
 		/// @param limit
 		///     The maximum number of hits to return
 		///
-        /// @param removeFetchedFromDataStore
-        ///     Option to delete Hits from datastore before returning them
-        ///
         /// @return
         ///     A List of Hit objects corresponding to those retrieved from the datastore
         ///
-        virtual std::list<Hit> fetchHits(const unsigned int offset, const unsigned int limit) = 0;
+        virtual std::list<Hit> fetchHits(const uint64_t from_timestamp, const unsigned int limit) = 0;
         
         // Functions for managing properties in the datastore
         

@@ -5,6 +5,7 @@
 #include "tinythread.h"
 
 #include "Hit.h"
+#include "Timestamp.h"
 
 struct evhttp_request;
 
@@ -38,8 +39,8 @@ namespace GAITest
 	class TestHit : public GAI::Hit
 	{
 	public:
-		TestHit() : Hit() {}
-		TestHit( const std::string& version, const std::string& url, const double timestamp ) : Hit( -1, version, url, timestamp ) {}
+		TestHit() : Hit() { mTimestamp = GAI::Timestamp::generateTimestamp(); }
+		TestHit( const std::string& version, const std::string& url, const uint64_t timestamp ) : Hit( -1, version, url, timestamp ) {}
 		TestHit( const Hit& hit ) : Hit( hit.getId(), hit.getGaiVersion(), hit.getDispatchURL(), hit.getTimestamp() ) {}
 
 		bool operator== (const TestHit& o ) const

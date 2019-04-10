@@ -47,7 +47,7 @@ namespace GAI
         bool addHit(const Hit& hit);
         bool addHits(const std::list<Hit>& hits);
         int hitCount();
-		std::list<Hit> fetchHits(const unsigned int offset, const unsigned int limit);
+		std::list<Hit> fetchHits(const uint64_t from_timestamp, const unsigned int limit);
 
         // Functions for managing properties in the datastore
         bool deleteAllProperties();

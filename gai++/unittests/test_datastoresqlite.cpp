@@ -222,29 +222,36 @@ TEST_F( DataStoreSqlLiteTest, hits2 )
     EXPECT_EQ(test_hit_one, result_hit);
 }
 
-TEST_F( DataStoreSqlLiteTest, fetch_hits_offset )
+TEST_F( DataStoreSqlLiteTest, fetch_hits_timestamp )
 {
 	std::list<GAI::Hit> results;
-	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 0 );
-	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 0 );
+	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 10 );
+	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 20 );
 
 	GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
 	db.open();
 	db.addHit( test_hit_one );
 	db.addHit( test_hit_two );
 
-	results = db.fetchHits(0, 1);
+	results = db.fetchHits(0, 10);
+	EXPECT_EQ( 2, results.size() );
 	EXPECT_EQ( "1", results.front().getGaiVersion() );
-
-	results = db.fetchHits(1, 1);
+	results.pop_front();
 	EXPECT_EQ( "2", results.front().getGaiVersion() );
+
+	results = db.fetchHits(10, 10);
+	EXPECT_EQ( 1, results.size() );
+	EXPECT_EQ( "2", results.front().getGaiVersion() );
+
+	results = db.fetchHits(20, 10);
+	EXPECT_EQ( 0, results.size() );
 }
 
 TEST_F( DataStoreSqlLiteTest, fetch_hits_limit )
 {
 	std::list<GAI::Hit> results;
-	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 0 );
-	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 0 );
+	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 1 );
+	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 1 );
 
 	GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
 	db.open();
@@ -264,8 +271,8 @@ TEST_F( DataStoreSqlLiteTest, fetch_hits_limit )
 TEST_F( DataStoreSqlLiteTest, delete_hit )
 {
 	std::list<GAI::Hit> results;
-	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 0 );
-	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 0 );
+	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 1 );
+	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 1 );
 
 	GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
 	db.open();
@@ -281,8 +288,8 @@ TEST_F( DataStoreSqlLiteTest, delete_hit )
 TEST_F( DataStoreSqlLiteTest, delete_all_hits )
 {
 	std::list<GAI::Hit> results;
-	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 0 );
-	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 0 );
+	GAITest::TestHit test_hit_one = GAITest::TestHit( "1", "", 1 );
+	GAITest::TestHit test_hit_two = GAITest::TestHit( "2", "", 1 );
 
 	GAI::DataStoreSqlite db = GAI::DataStoreSqlite(test_db);
 	db.open();

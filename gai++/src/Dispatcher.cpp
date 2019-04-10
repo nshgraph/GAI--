@@ -47,8 +47,7 @@ namespace GAI
 	mbEvenLoopStarted(false),
     mbCancelDispatch(false),
     mbImmediateDispatch(false),
-	mLastDispatchedHitId(0),
-	mPendingRequests(0),
+	mPreviousTimestamp(0),
     mTimerThread( Dispatcher::TimerThreadFunction, (void*)this ),
     mURLConnection( NULL )
     ///
@@ -212,7 +211,7 @@ namespace GAI
     ///
     {
 		std::list<Hit> hits;
-        hits = mDataStore.fetchHits( mLastDispatchedHitId, kDispatchBlockSize );
+        hits = mDataStore.fetchHits( mPreviousTimestamp, kDispatchBlockSize );
 
 		while( hits.size() > 0 && !mbCancelDispatch )
         {
@@ -221,11 +220,11 @@ namespace GAI
             {
 				RequestCallbackStruct* cb_struct = new RequestCallbackStruct( this, it->getId() );
 				mURLConnection->requestPOST( UrlBuilder::createPOSTURL(*it), UrlBuilder::createPOSTPayload(*it, Timestamp::generateTimestamp() ), Dispatcher::RequestCallback, cb_struct );
-				mLastDispatchedHitId = it->getId();
+				mPreviousTimestamp = it->getTimestamp();
             }
 
             // fetch the next group of hits
-            hits = mDataStore.fetchHits( mLastDispatchedHitId, kDispatchBlockSize );
+            hits = mDataStore.fetchHits( mPreviousTimestamp, kDispatchBlockSize );
         }
     }
 	

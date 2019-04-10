@@ -43,7 +43,6 @@ protected:
     virtual void TearDown()
 	{
         unlink( test_db.c_str() );
-        
     }
     
     const std::string test_db;
@@ -122,8 +121,41 @@ TEST_F( DispatcherTest, dispatch_immediately )
 	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
 
 	dispatcher.queueDispatch();
-	GAITest::SleepMS( 100 + DISPATCHER_TIMEOUT );
+	GAITest::SleepMS( DISPATCHER_TIMEOUT );
 	EXPECT_TRUE( dispatcher.mbDispatchComplete );
+}
+
+TEST_F( DispatcherTest, dispatch_multiple )
+{
+	GAITest::Server server;
+
+	GAI::DataStoreSqlite data_store = GAI::DataStoreSqlite( test_db );
+	DispatcherTestClass dispatcher = DispatcherTestClass( data_store );
+	dispatcher.startEventLoop();
+
+	// Dispatch 1
+	dispatcher.storeHit( GAITest::TestHit() );
+	EXPECT_EQ( 1, data_store.entityCount() );
+	dispatcher.queueDispatch();
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for hit dispatch
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for post process
+	EXPECT_EQ( 0, data_store.entityCount() );
+	
+	// Dispatch 2
+	dispatcher.storeHit( GAITest::TestHit() );
+	EXPECT_EQ( 1, data_store.entityCount() );
+	dispatcher.queueDispatch();
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for hit dispatch
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for post process
+	EXPECT_EQ( 0, data_store.entityCount() );
+	
+	// Dispatch 3
+	dispatcher.storeHit( GAITest::TestHit() );
+	EXPECT_EQ( 1, data_store.entityCount() );
+	dispatcher.queueDispatch();
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for hit dispatch
+	GAITest::SleepMS( DISPATCHER_TIMEOUT ); // Wait for post process
+	EXPECT_EQ( 0, data_store.entityCount() );
 }
 
 TEST_F( DispatcherTest, opt_out )

@@ -5,15 +5,6 @@
 #include "GAIDefines.h"
 #include "Hit.h"
 
-TEST( HitTest, create_empty_hit )
-{
-	GAITest::TestHit hit;
-	
-	EXPECT_TRUE( hit.getGaiVersion() == "1" );
-	EXPECT_TRUE( hit.getDispatchURL() == "" );
-	EXPECT_EQ( hit.getTimestamp(), 0 );
-}
-
 TEST( HitTest, create_hit )
 {
     const std::string test_version = "2";

@@ -53,8 +53,7 @@ namespace GAI
 		bool mbEvenLoopStarted;
         bool mbCancelDispatch;
 		bool mbImmediateDispatch;
-		int mPendingRequests;
-		int mLastDispatchedHitId;
+		uint64_t mPreviousTimestamp;
 
 		event_base*	mDispatchEventBase;
 		event*		mDispatchEvent;

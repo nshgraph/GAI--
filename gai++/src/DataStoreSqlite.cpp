@@ -209,10 +209,10 @@ namespace GAI
     {
         tthread::lock_guard<tthread::mutex> lock(mDBMutex);
         int rc;
-        char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%f)",
+        char *zSQL = sqlite3_mprintf("INSERT INTO hits(version,url,timestamp) VALUES('%q','%q',%llu)",
 									 hit.getGaiVersion().c_str(),
 									 hit.getDispatchURL().c_str(),
-									 static_cast<double>(hit.getTimestamp()));
+									 hit.getTimestamp());
         rc = sqlite3_exec(mDB, zSQL, 0, 0, 0);
         sqlite3_free(zSQL);
         if( rc != SQLITE_OK)
@@ -241,16 +241,16 @@ namespace GAI
         return success;
     }
     
-    std::list<Hit> DataStoreSqlite::fetchHits(const unsigned int offset, const unsigned int limit)
+    std::list<Hit> DataStoreSqlite::fetchHits(const uint64_t from_timestamp, const unsigned int limit)
     ///
-    /// Retrieves hits from the datstore up to a limit, optionally removes them after retrieval (atomically)
-	///
-	/// @param offset
-	///     Maximum number of hits to return
-	///
-	/// @param limit
-	///     Maximum number of hits to return
-	///
+    /// Retrieves hits from the datstore from a given timestamp up to a limit
+    ///
+    /// @param from_timestamp
+    ///     The hit timestamp to begin the fetch from
+    ///
+    /// @param limit
+    ///     The maximum number of hits to return
+    ///
     /// @return
     ///     A List of Hit objects corresponding to those retrieved from the datastore
     ///
@@ -264,7 +264,7 @@ namespace GAI
         char* zSQL_delete = NULL;
         sqlite3_exec(mDB, "BEGIN", NULL, NULL, NULL);
 
-		zSQL = sqlite3_mprintf("SELECT * FROM hits WHERE id > %i ORDER BY id LIMIT %i", offset, limit);
+		zSQL = sqlite3_mprintf("SELECT * FROM hits WHERE timestamp > %llu ORDER BY timestamp LIMIT %i", from_timestamp, limit);
         rc = sqlite3_prepare_v2(mDB, zSQL, -1, &statement, 0);
         
         // step through the returned hits
